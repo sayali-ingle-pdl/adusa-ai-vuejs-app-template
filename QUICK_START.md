@@ -86,16 +86,41 @@ npm run build
 
 ### Step 6: Verify Setup
 
+After generation is complete, verify the application was created correctly:
+
 ```bash
-# Run linting
+# 1. Check TypeScript compilation (should have no errors)
+npx tsc --noEmit
+
+# 2. Run linting (should pass with no errors)
 npm run lint
 
-# Run tests
+# 3. Run tests (should all pass)
 npm run test:unit
 
-# Check TypeScript
-npx tsc --noEmit
+# 4. Check test coverage (should meet thresholds: >80% for services/stores, >70% for components)
+npm run test:unit -- --coverage
+
+# 5. Start dev server and verify it runs without errors
+npm run serve
+# Open browser to http://localhost:{your_port} and verify app loads
+
+# 6. Verify build succeeds
+npm run build
+# Check that dist/ directory is created with output files
+
+# 7. Verify all required files exist
+ls -la src/main.ts src/App.vue src/router/index.ts src/store/index.ts vite.config.ts
 ```
+
+**Expected Results:**
+- ✅ No TypeScript errors
+- ✅ All linting rules pass
+- ✅ All tests pass with adequate coverage
+- ✅ Dev server starts on configured port
+- ✅ Application renders in browser
+- ✅ Production build completes successfully
+- ✅ All configuration files are present
 
 ## Defining Your Application
 
