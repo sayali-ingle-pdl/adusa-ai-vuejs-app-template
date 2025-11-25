@@ -1,19 +1,19 @@
-# Vite Config Skill
+# Vite Config Skill - Examples
 
-## Purpose
-Generate the `vite.config.ts` file for building and serving the Vue 3 application.
+## Example 1: Standard Vite Configuration
 
-## Input Parameters
-Read from `copilot-instructions.md` and `docs/requirements/application-parameters.md`:
-- `application_id`: The application ID for style tag
-- `default_port`: The development server port
-- `api_base_path`: The base path for API proxy
-- `vite_build_format`: The build output format (system or es)
+**User Request:**
+```
+Generate vite config for my application
+```
 
-## Output
-Create the file: `vite.config.ts`
+**Parameters:**
+- `application_id`: `sup-omni-inventory-manager-web`
+- `default_port`: `8089`
+- `api_base_path`: `/omni-access-manager`
+- `vite_build_format`: `system`
 
-## Template
+**Generated File:** `vite.config.ts`
 
 ```typescript
 import { defineConfig } from 'vite';
@@ -65,9 +65,9 @@ export default defineConfig(({ mode, command }) => {
     base: mode === 'development' ? '/' : './',
 
     server: {
-      port: {{default_port}},
+      port: 8089,
       proxy: {
-        '^{{api_base_path}}': {
+        '^/omni-access-manager': {
           target: 'https://aksc-pdlspectrum-nonprd-cu-01.az.dev.peapod.com/dev',
           changeOrigin: true,
           secure: false,
@@ -80,13 +80,13 @@ export default defineConfig(({ mode, command }) => {
       target: 'esnext',
       lib: {
         entry: path.resolve(__dirname, 'src/main.ts'),
-        formats: ['{{vite_build_format}}'],
+        formats: ['system'],
         fileName: () => 'js/app.js',
       },
       rollupOptions: {
         external: [],
         output: {
-          format: '{{vite_build_format}}',
+          format: 'system',
           entryFileNames: 'js/app.js',
           exports: 'auto',
         },
@@ -107,7 +107,10 @@ export default defineConfig(({ mode, command }) => {
 ```
 
 ## Notes
-- The proxy configuration should be updated with the actual backend service URL
-- The `appId` is imported from the global constants file
-- CSS is injected by JavaScript in build mode for single-spa compatibility
-- SVG loader is configured to preserve viewBox for proper scaling
+
+- The configuration includes Vue 3 plugin for Single File Component support
+- CSS injection plugin is used only in build mode for single-spa micro frontend compatibility
+- SVG loader is configured with SVGO optimization while preserving viewBox
+- Proxy configuration routes API calls to the backend development server
+- Build output is in SystemJS format for single-spa integration
+- SCSS global theme imports are automatically available in all components

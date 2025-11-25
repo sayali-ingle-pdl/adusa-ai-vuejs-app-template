@@ -4,102 +4,79 @@
 Generate Docker-related files for containerization and deployment.
 
 ## Output
-Create the files:
-- `Dockerfile`
-- `nginx.default.conf`
-- `entrypoint.sh`
+Create the file: `Dockerfile`
 
-## Template: Dockerfile
+## Example File
+See: `examples.md` in this directory for complete examples and detailed explanations.
+
+## Template
 
 ```dockerfile
-# Build stage
-FROM node:22.16.0-alpine as build-stage
+FROM pdltoolsprdacr.azurecr.io/pdl/ubuntu-nodejs:22-stable
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY .npmrc ./
-
-# Install dependencies
-RUN npm ci
-
-# Copy source code
 COPY . .
 
-# Build application
+RUN --mount=type=secret,id=vue_app_access_token \
+export VITE_ACCESS_TOKEN=$(cat /run/secrets/vue_app_access_token) && \
+echo "@RoyalAholdDelhaize:registry=https://npm.pkg.github.com" > .npmrc && \
+echo "//npm.pkg.github.com/:_authToken=${VITE_ACCESS_TOKEN}" >> .npmrc && \
+npm install
+
+RUN rm -f .npmrc
+
+# Run lint check
+RUN npm run lint
+
+# Run styelint check
+RUN npx stylelint src/**/*.vue src/**/*.scss
+
+# Run unit tests
+RUN npm run test:unit -- --passWithNoTests
+
+# build qa env
 RUN npm run build
 
-# Production stage
-FROM nginx:alpine as production-stage
+RUN apt-get update -y\
+    && apt install -y nginx \
+    && apt install -y gettext-base \
+    # remove useless files from the current layer
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/lib/apt/lists.d/* \
+    && apt-get autoremove \
+    && apt-get clean \
+    && apt-get autoclean
 
-# Copy custom nginx config
-COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 
-# Copy built application
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+RUN ls -lh /app/dist && ls -lh /usr/share/nginx/html
+RUN cp -r /app/dist/* /usr/share/nginx/html
+RUN ls -lh /app/dist && ls -lh /usr/share/nginx/html
+RUN cp -a nginx.default.conf /etc/nginx/conf.d/default.conf
+RUN cp -a nginx-sites-available-default /etc/nginx/sites-available/default
 
-# Copy entrypoint script
-COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
+
+# DD source-code integration: https://app.datadoghq.com/source-code/setup/apm
+ARG DD_GIT_REPOSITORY_URL
+ARG DD_GIT_COMMIT_SHA
+ENV DD_GIT_REPOSITORY_URL=${DD_GIT_REPOSITORY_URL} 
+ENV DD_GIT_COMMIT_SHA=${DD_GIT_COMMIT_SHA}
+
+ENTRYPOINT [ "/entrypoint.sh" ]
 
 EXPOSE 80
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]
-```
-
-## Template: nginx.default.conf
-
-```nginx
-server {
-    listen 80;
-    server_name localhost;
-    
-    location / {
-        root /usr/share/nginx/html;
-        index index.html;
-        try_files $uri $uri/ /index.html;
-    }
-    
-    # Enable gzip compression
-    gzip on;
-    gzip_vary on;
-    gzip_min_length 1024;
-    gzip_types text/plain text/css text/xml text/javascript application/javascript application/xml+rss application/json;
-    
-    # Cache static assets
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-    
-    # Health check endpoint
-    location /health {
-        access_log off;
-        return 200 "healthy\n";
-        add_header Content-Type text/plain;
-    }
-}
-```
-
-## Template: entrypoint.sh
-
-```bash
-#!/bin/sh
-set -e
-
-# Environment variable substitution could go here if needed
-# For example, injecting runtime environment variables into JavaScript
-
-# Execute the main command
-exec "$@"
+STOPSIGNAL SIGTERM
 ```
 
 ## Notes
-- Multi-stage build for smaller final image
-- Uses nginx alpine for minimal production image
-- Enables gzip compression for better performance
-- Configures caching for static assets
-- Includes health check endpoint
-- Entrypoint allows for runtime configuration injection
+- Uses PDL custom Ubuntu Node.js 22 base image
+- Securely handles GitHub Packages authentication using Docker secrets
+- Runs quality checks during build: linting, style checking, and unit tests
+- Installs and configures nginx for serving the built application
+- Integrates with Datadog for source code tracking
+- Removes .npmrc after installation for security
+- Cleans up apt cache to reduce image size
+- Uses entrypoint script for runtime configuration

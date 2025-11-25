@@ -6,6 +6,9 @@ Generate the `jest.config.cjs` file for unit testing configuration.
 ## Output
 Create the file: `jest.config.cjs`
 
+## Example File
+See: `examples.md` in this directory for complete examples and detailed explanations.
+
 ## Template
 
 ```javascript

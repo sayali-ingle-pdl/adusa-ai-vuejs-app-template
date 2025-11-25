@@ -6,6 +6,9 @@ Generate the `.npmrc` file for npm package registry configuration.
 ## Output
 Create the file: `.npmrc`
 
+## Example File
+See: `examples.md` in this directory for complete examples and detailed explanations.
+
 ## Template
 
 ```
@@ -15,6 +18,9 @@ Create the file: `.npmrc`
 
 ## Notes
 - Configures GitHub Packages registry for @RoyalAholdDelhaize scope
-- Uses environment variable for authentication token
-- Developers need to replace ${GH_PACKAGE_LIBRARY_TOKEN} with their personal access token locally
-- After npm install, developers should revert changes to avoid committing tokens
+- Uses environment variable `${GH_PACKAGE_LIBRARY_TOKEN}` for authentication
+- Token must be set as environment variable or collected from user input
+- Users need to export GH_PACKAGE_LIBRARY_TOKEN before running npm install
+- Alternative: Replace `${GH_PACKAGE_LIBRARY_TOKEN}` with actual token temporarily
+- Never commit actual tokens to version control
+- File can be committed with placeholder variable

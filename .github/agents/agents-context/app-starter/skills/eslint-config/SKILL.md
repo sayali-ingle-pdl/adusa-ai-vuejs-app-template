@@ -6,6 +6,9 @@ Generate the `eslint.config.cjs` file for code linting with Vue and TypeScript s
 ## Output
 Create the file: `eslint.config.cjs`
 
+## Example File
+See: `examples.md` in this directory for complete examples and detailed explanations.
+
 ## Template
 
 ```javascript

@@ -1,42 +1,28 @@
 # Prettier Config Skill
 
 ## Purpose
-Generate Prettier configuration files for code formatting.
+Generate Prettier configuration file for code formatting.
 
 ## Output
-Create the files:
-- `.prettierrc.json`
-- `.prettierignore`
+Create the file: `.prettierrc`
 
-## Template: .prettierrc.json
+## Example File
+See: `examples.md` in this directory for complete examples and detailed explanations.
+
+## Template
 
 ```json
 {
-  "semi": true,
   "singleQuote": true,
-  "tabWidth": 2,
-  "trailingComma": "es5",
-  "printWidth": 100,
-  "arrowParens": "avoid",
-  "endOfLine": "auto"
+  "semi": true,
+  "trailingComma": "es5"
 }
-```
-
-## Template: .prettierignore
-
-```
-node_modules
-dist
-coverage
-build
-*.min.js
-*.min.css
-package-lock.json
 ```
 
 ## Notes
 - Enforces consistent code style across the project
-- Single quotes for strings
-- 100 character line width
-- ES5 trailing commas for better git diffs
-- Ignores generated and build files
+- Uses single quotes for strings
+- Requires semicolons at end of statements
+- ES5 trailing commas for better git diffs and version control
+- Minimal configuration using Prettier's sensible defaults
+- Works with ESLint and other code quality tools
