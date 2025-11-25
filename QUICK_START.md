@@ -15,7 +15,12 @@
    cd your-new-project
    ```
 
-2. **Update application parameters** in `docs/requirements/application-parameters.md`:
+2. **Remove the existing git repository** (so the agent can initialize a fresh one):
+   ```bash
+   rm -rf .git
+   ```
+
+3. **Update application parameters** in `docs/requirements/application-parameters.md`:
    ```markdown
    - application_name: `your-app-name`
    - default_port: `8090`
