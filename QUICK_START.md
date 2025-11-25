@@ -26,16 +26,26 @@
 
 Use the app-starter agent to generate the complete project:
 
-1. Open the project in VS Code
-2. Invoke GitHub Copilot Chat
-3. Reference the agent: `@app-starter-agent`
-4. Request: "Generate the complete Vue application structure based on the application parameters"
+1. Open the project in VS Code or GitHub Copilot CLI
+2. Invoke the `@app-starter` agent with a command like:
+   ```
+   @app-starter generate a new Vue 3 application
+   ```
+3. The agent will prompt you for required application parameters:
+   - Application name (kebab-case)
+   - NPM scope/organization
+   - Router base path
+   - API base path for proxying
+   - Development server port
+   - Build format (system or es)
 
 The agent will:
-- Read parameters from `copilot-instructions.md` and `docs/requirements/application-parameters.md`
-- Execute all 23 skills in the correct order
+- Collect all required parameters through interactive prompts
+- Execute all skills in the correct order
 - Generate all configuration files, source files, and tests
 - Create a runnable application
+
+**Note**: The agent does not cache parameters between sessions. Each time you invoke `@app-starter`, you'll be prompted for the necessary parameters.
 
 ### Step 3: Install Dependencies
 
