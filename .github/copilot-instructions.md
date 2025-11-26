@@ -44,6 +44,13 @@ Ask the user the following questions to gather the necessary parameters:
    - This will be used as `vite_build_format`
    - Used in: vite.config.ts build.lib.formats
 
+7. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
+   - This will be used as `github_token`
+   - Used in: .npmrc for authenticating with GitHub Package Registry
+   - Required permissions: `read:packages`
+   - Token will be inserted into .npmrc to enable component library installation
+   - **Security Note**: The token will be written to .npmrc which is gitignored. Never commit tokens to version control.
+
 ### Static Parameters (Pre-configured)
 
 The following parameters are pre-configured and should be used as defaults:

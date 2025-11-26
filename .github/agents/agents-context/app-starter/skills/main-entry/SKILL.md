@@ -1,7 +1,7 @@
 # Main Entry Skill
 
 ## Purpose
-Generate the `src/main.ts` file with single-spa lifecycle methods and Datadog RUM integration.
+Generate the `src/main.ts` file with single-spa lifecycle methods and Datadog RUM integration. Supports both micro-frontend mode (single-spa) and standalone mode.
 
 ## Input Parameters
 - `application_id`: The application ID for style tag
@@ -74,6 +74,15 @@ export const unmount = async function (props: object) {
     styleEl.remove();
   }
 };
+
+// Standalone mode: Mount app directly if not running in single-spa
+// This allows the micro-frontend to run independently for development/testing
+if (!(window as any).singleSpaNavigate) {
+  const app = createApp(App);
+  app.use(router);
+  app.use(store);
+  app.mount('#app');
+}
 ```
 
 ## Notes
@@ -81,3 +90,7 @@ export const unmount = async function (props: object) {
 - Caches and restores style tag for CSS isolation
 - Initializes Datadog RUM for monitoring
 - Sets up Vue Router and Vuex store
+- **Standalone Mode**: Automatically detects if running outside single-spa context
+  - Checks for `window.singleSpaNavigate` to determine if single-spa is present
+  - If not present, mounts the app directly to `#app` element
+  - Enables running the micro-frontend in standalone mode for development and testing
