@@ -1,217 +1,170 @@
 # Theme Skill
 
 ## Purpose
-Generate SCSS theme files with variables and mixins.
+Generate SCSS theme files with variables and shadows.
 
 ## Output
 Create the files:
-- `src/theme/_variables.scss`
-- `src/theme/_mixins.scss`
+- `src/theme/vars.scss`
+- `src/theme/shadow.scss`
 - `src/theme/index.scss`
 
-## Template: src/theme/_variables.scss
+## Template: src/theme/vars.scss
 
 ```scss
-// Color palette
-$color-primary: #0066cc;
-$color-secondary: #6c757d;
-$color-success: #28a745;
-$color-warning: #ffc107;
-$color-error: #dc3545;
-$color-info: #17a2b8;
+$global-gray-01: #282f37;
+$global-gray-02: #343d47;
+$global-gray-03: #7d7d7e;
+$global-gray-04: #9c9c9e;
+$global-gray-05: #d6d6d6;
+$global-gray-06: #e4e4e4;
+$global-gray-07: #dcdfe2;
+$global-gray-08: #f1f3f5;
+$global-black: #000;
+$global-green-01: #007c49;
+$global-green-02: #01ac4c;
 
-// Text colors
-$color-text-primary: #212529;
-$color-text-secondary: #6c757d;
-$color-text-disabled: #adb5bd;
-$color-text-white: #ffffff;
+// Status Colors
+$not-available-color: $global-gray-02;
+$in-progress-color: #ff9605;
+$picked-color: #277fc1;
+$staged-color: #6a3893;
+$invoiced-color: $global-green-02;
+$inactive-color: $global-gray-03;
+$alert-color: #e0281c;
+$alert-color-focus: #bc2217;
+$alert-color-light: #fadcda;
+$success-color: $global-green-02;
+$failure-color: $alert-color;
 
-// Background colors
-$color-bg-primary: #ffffff;
-$color-bg-secondary: #f8f9fa;
-$color-bg-tertiary: #e9ecef;
+// Background Colors
+$global-bg-color-01: #fff;
+$global-bg-color-02: #f9f9f9;
+$global-bg-color-03: #f2f3f5;
+$global-bg-color-04: #f1f1f1;
+$global-bg-color-05: #eaebee;
+$global-bg-color-06: #f5f5f5;
+$global-gray-overlay-01: rgba($global-gray-02, 0.04);
+$global-gray-overlay-02: rgba($global-gray-01, 0.2);
+$global-white-overlay-01: rgba($global-bg-color-01, 0.7);
+$alert-color-overlay: rgba($alert-color, 0.2);
+$success-color-overlay: rgba($global-green-02, 0.2);
 
-// Border colors
-$color-border-light: #dee2e6;
-$color-border-medium: #ced4da;
-$color-border-dark: #adb5bd;
+// Text Colors
+$primary-text-color: $global-gray-02;
+$secondary-text-color: $global-gray-03;
+$regressive-text-color: $global-green-01;
+$toggle-button-text-color: #007aff;
 
-// Spacing scale
-$spacing-xs: 0.25rem;   // 4px
-$spacing-sm: 0.5rem;    // 8px
-$spacing-md: 1rem;      // 16px
-$spacing-lg: 1.5rem;    // 24px
-$spacing-xl: 2rem;      // 32px
-$spacing-xxl: 3rem;     // 48px
+// Font Families
+$primary-font-family: Roboto, 'Open Sans', Arial, Helvetica, sans-serif;
+$title-font-family: 'Roboto Slab', 'Times New Roman', Times, serif;
+$caption-font-family: (
+  'Roboto Condensed',
+  Roboto,
+  'Open Sans',
+  Arial,
+  Helvetica,
+  sans-serif
+);
+$primary-font-size: 0.875rem;
 
-// Typography
-$font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-$font-family-monospace: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+// Standard sizing
+$global-border-radius: 0.75rem;
+$global-border-radius-progress: 0.125rem;
+$global-border-radius-table: 0.5rem;
+$global-border-radius-action: 1rem;
+$global-border-radius-input: 1.5rem;
+$global-icon-size: 1.5rem;
+$global-icon-background-size: 2rem;
 
-$font-size-xs: 0.75rem;   // 12px
-$font-size-sm: 0.875rem;  // 14px
-$font-size-base: 1rem;    // 16px
-$font-size-lg: 1.125rem;  // 18px
-$font-size-xl: 1.25rem;   // 20px
-$font-size-xxl: 1.5rem;   // 24px
-
-$font-weight-light: 300;
-$font-weight-normal: 400;
-$font-weight-medium: 500;
-$font-weight-semibold: 600;
-$font-weight-bold: 700;
-
-$line-height-base: 1.5;
-$line-height-tight: 1.25;
-$line-height-loose: 1.75;
-
-// Borders
-$border-radius-sm: 0.25rem;
-$border-radius-md: 0.375rem;
-$border-radius-lg: 0.5rem;
-$border-radius-full: 9999px;
-
-$border-width-thin: 1px;
-$border-width-medium: 2px;
-$border-width-thick: 4px;
-
-// Shadows
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-
-// Transitions
-$transition-fast: 150ms ease-in-out;
-$transition-base: 300ms ease-in-out;
-$transition-slow: 500ms ease-in-out;
-
-// Z-index scale
-$z-index-dropdown: 1000;
-$z-index-sticky: 1020;
-$z-index-fixed: 1030;
-$z-index-modal-backdrop: 1040;
-$z-index-modal: 1050;
-$z-index-popover: 1060;
-$z-index-tooltip: 1070;
-
-// Breakpoints
-$breakpoint-xs: 0;
-$breakpoint-sm: 576px;
-$breakpoint-md: 768px;
-$breakpoint-lg: 992px;
-$breakpoint-xl: 1200px;
-$breakpoint-xxl: 1400px;
+// Other
+$global-backdrop-filter: blur(0.25rem);
+$global-transition-time: 0.075s;
+$global-transition-time-form: $global-transition-time * 3;
+$icon-disabled-opacity: 0.4;
 ```
 
-## Template: src/theme/_mixins.scss
+## Template: src/theme/shadow.scss
 
 ```scss
-// Responsive breakpoint mixins
-@mixin respond-to($breakpoint) {
-  @if $breakpoint == 'xs' {
-    @media (min-width: $breakpoint-xs) {
-      @content;
-    }
-  } @else if $breakpoint == 'sm' {
-    @media (min-width: $breakpoint-sm) {
-      @content;
-    }
-  } @else if $breakpoint == 'md' {
-    @media (min-width: $breakpoint-md) {
-      @content;
-    }
-  } @else if $breakpoint == 'lg' {
-    @media (min-width: $breakpoint-lg) {
-      @content;
-    }
-  } @else if $breakpoint == 'xl' {
-    @media (min-width: $breakpoint-xl) {
-      @content;
-    }
-  } @else if $breakpoint == 'xxl' {
-    @media (min-width: $breakpoint-xxl) {
-      @content;
-    }
-  }
+// Global Shadow styles
+@use 'vars.scss' as *;
+
+@mixin global-shadow-0dp {
+  box-shadow: none;
 }
 
-// Flexbox utilities
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@mixin global-shadow-2dp {
+  box-shadow:
+    0 0.125rem 0.25rem 0 rgba($global-black, 0.08),
+    0 0.0625rem 0.125rem 0 rgba($global-black, 0.08),
+    0 0 0.0625rem 0 rgba($global-black, 0.08);
 }
 
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+@mixin global-shadow-4dp {
+  box-shadow:
+    0 0.25rem 0.5rem 0 rgba($global-black, 0.08),
+    0 0.125rem 0.25rem 0 rgba($global-black, 0.06),
+    0 0 0.125rem 0 rgba($global-black, 0.08);
 }
 
-// Truncate text
-@mixin truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+@mixin global-shadow-6dp {
+  box-shadow:
+    0 0.375rem 0.75rem 0 rgba($global-black, 0.08),
+    0 0.1875rem 0.5rem 0 rgba($global-black, 0.04),
+    0 0 0.25rem 0 rgba($global-black, 0.08);
 }
 
-// Multi-line truncate
-@mixin line-clamp($lines: 2) {
-  display: -webkit-box;
-  -webkit-line-clamp: $lines;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+@mixin global-shadow-8dp {
+  box-shadow:
+    0 0.5rem 1rem 0 rgba($global-black, 0.12),
+    0 0.25rem 0.5rem 0 rgba($global-black, 0.04),
+    0 0 0.25rem 0 rgba($global-black, 0.08);
 }
 
-// Visually hidden (accessible)
-@mixin visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+@mixin global-shadow-12dp {
+  box-shadow:
+    0 0.75rem 1.5rem 0 rgba($global-black, 0.12),
+    0 0.375rem 0.75rem 0 rgba($global-black, 0.04),
+    0 0 0.25rem 0 rgba($global-black, 0.08);
 }
 
-// Focus outline
-@mixin focus-outline {
-  outline: 2px solid $color-primary;
-  outline-offset: 2px;
+@mixin global-shadow-16dp {
+  box-shadow:
+    0 1rem 2rem 0 rgba($global-black, 0.16),
+    0 0.5rem 1rem 0 rgba($global-black, 0.08),
+    0 0 0.5rem 0 rgba($global-black, 0.04);
 }
 
-// Card style
-@mixin card {
-  background: $color-bg-primary;
-  border: $border-width-thin solid $color-border-light;
-  border-radius: $border-radius-md;
-  box-shadow: $shadow-sm;
+@mixin global-shadow-24dp {
+  box-shadow:
+    0 1.5rem 3rem 0 rgba($global-black, 0.24),
+    0 0.75rem 1.5rem 0 rgba($global-black, 0.12),
+    0 0 0.75rem 0 rgba($global-black, 0.04);
 }
 
-// Button reset
-@mixin button-reset {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
+@mixin global-shadow-2dp-top {
+  box-shadow:
+    0 -0.125rem 0.25rem 0 rgba($global-black, 0.08),
+    0 -0.0625rem 0.125rem 0 rgba($global-black, 0.08),
+    0 0 0.0625rem 0 rgba($global-black, 0.08);
+}
+
+@mixin global-shadow-bottom {
+  box-shadow: 0 0.25rem 1.25rem 0 rgba($global-black, 0.28);
 }
 ```
 
 ## Template: src/theme/index.scss
 
 ```scss
-@forward 'variables';
-@forward 'mixins';
+@forward './vars';
 ```
 
 ## Notes
-- Variables provide a comprehensive design system
-- Mixins offer reusable style patterns
+- `vars.scss` provides comprehensive design system variables
+- `shadow.scss` provides Material Design-inspired shadow mixins (0dp to 24dp)
 - Forward/use pattern enables clean imports in components
 - Use with `@use '@/theme/' as *;` in components
+- Shadow mixins reference `$global-black` from vars.scss

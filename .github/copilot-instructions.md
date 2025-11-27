@@ -127,7 +127,8 @@ src/
 │   ├── utils/
 │   └── EnvConsts.ts       # Environment variable exports
 └── theme/                  # SCSS theme files
-    ├── _variables.scss
+    ├── vars.scss
+    ├── shadow.scss
     ├── _mixins.scss
     └── index.scss
 ```

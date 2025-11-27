@@ -68,8 +68,8 @@ src/
 │   ├── EnvConsts.ts       # Environment variable exports
 │   └── utils/             # Helper functions
 └── theme/                  # SCSS variables and mixins
-    ├── _variables.scss    # Theme variables
-    ├── _mixins.scss       # Reusable mixins
+    ├── vars.scss          # Theme variables
+    ├── shadow.scss        # Shadow mixins
     └── index.scss         # Theme entry point
 ```
 
