@@ -103,6 +103,14 @@ The following environment variables should be configured in `.env.local` (gitign
 ## Project Structure Conventions
 
 ```
+public/                     # Static assets served directly
+├── favicon.ico
+├── favicon-16x16.png
+├── favicon-32x32.png
+├── apple-touch-icon.png
+├── android-chrome-192x192.png
+├── android-chrome-512x512.png
+└── site.webmanifest
 src/
 ├── App.vue                 # Root component
 ├── main.ts                 # Application entry point and single-spa lifecycle
