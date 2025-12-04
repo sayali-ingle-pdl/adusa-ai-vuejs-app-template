@@ -11,7 +11,7 @@
 
 1. **Copy this template** to your new project location:
    ```bash
-   cp -r adusa-ai-enhancement-vue-app-template your-new-project
+   cp -r adusa-ai-vuejs-app-template your-new-project
    cd your-new-project
    ```
 

@@ -13,15 +13,7 @@ See: `examples.md` in this directory for complete examples and detailed explanat
 
 ```
 @RoyalAholdDelhaize:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken={github_token}
 ```
 
 ## Notes
 - Configures GitHub Packages registry for @RoyalAholdDelhaize scope
-- **During initial setup**: Uses the `github_token` parameter collected during application setup
-- The token will be directly inserted into .npmrc to enable the first `npm install`
-- **After npm install**: The agent will replace the actual token with `${GH_PACKAGE_LIBRARY_TOKEN}` environment variable placeholder
-- This two-step process allows successful initial installation while keeping the committed .npmrc safe
-- Final committed version uses environment variable for security
-- Users need to set `GH_PACKAGE_LIBRARY_TOKEN` environment variable for subsequent npm installs
-- Never commit actual tokens to version control

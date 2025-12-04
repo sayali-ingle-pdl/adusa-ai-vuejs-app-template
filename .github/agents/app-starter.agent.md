@@ -58,12 +58,10 @@ When invoked, this agent should:
    - API base path
    - Development server port
    - Build format
-   - **GitHub Personal Access Token** (for @RoyalAholdDelhaize packages)
 2. Read and understand additional parameters from `docs/requirements/application-parameters.md` if present
 3. Execute all skills in sequence to generate the complete application structure
-4. **Important**: When executing the NPM RC Skill, replace `{github_token}` with the actual token provided by the user
-5. Run the required commands to install dependencies and verify the setup
-6. Verify that the application is in a runnable state
+4. Run the required commands to install dependencies and verify the setup
+5. Verify that the application is in a runnable state
 
 ## Execution Order
 
@@ -71,39 +69,35 @@ The skills should be executed in the following order to ensure dependencies are 
 
 ### Phase 1: Project Setup
 1. Package JSON Skill
-2. NPM RC Skill (**must use actual `github_token` value, not placeholder**)
-3. Git Ignore Skill (ensure .npmrc is included)
-4. **Run `npm install`** to install dependencies (will authenticate using token in .npmrc)
-5. **Replace token in .npmrc** with environment variable placeholder:
-   - Replace the actual `github_token` value with `${GH_PACKAGE_LIBRARY_TOKEN}`
-   - This allows the .npmrc to be safely committed to version control
-   - Final .npmrc should contain: `//npm.pkg.github.com/:_authToken=${GH_PACKAGE_LIBRARY_TOKEN}`
+2. NPM RC Skill
+3. Git Ignore Skill
+4. **Run `npm install`** to install dependencies
 
 ### Phase 2: Build Configuration
-6. TypeScript Config Skill
-7. Vite Config Skill
-8. Environment Files Skill
-9. Index HTML Skill
-10. Public Folder Skill
+5. TypeScript Config Skill
+6. Vite Config Skill
+7. Environment Files Skill
+8. Index HTML Skill
+9. Public Folder Skill
 
 ### Phase 3: Code Quality
-11. ESLint Config Skill
-12. Prettier Config Skill
-13. Babel Config Skill
-14. Jest Config Skill
-15. Husky Skill
+10. ESLint Config Skill
+11. Prettier Config Skill
+12. Babel Config Skill
+13. Jest Config Skill
+14. Husky Skill
 
 ### Phase 4: Application Structure
-16. TypeScript Shims Skill
-17. Global Constants Skill
-18. Environment Constants Skill
-19. Router Skill
-20. Store Skill
-21. App Component Skill
-22. Main Entry Skill
+15. TypeScript Shims Skill
+16. Global Constants Skill
+17. Environment Constants Skill
+18. Router Skill
+19. Store Skill
+20. App Component Skill
+21. Main Entry Skill
 
 ### Phase 5: Deployment
-23. Docker Skill
+22. Docker Skill
 
 ### Phase 6: Verification
 - Run `npm run lint` to verify linting setup

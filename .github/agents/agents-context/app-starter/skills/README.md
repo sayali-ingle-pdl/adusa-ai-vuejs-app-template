@@ -23,7 +23,7 @@ skills/
 
 ## File Conventions
 
-### SKILL.md (Required)
+### SKILL.md (Required) - AI-Consumable Template
 The main instruction file that defines:
 - **Purpose**: What the skill does
 - **Instructions**: Step-by-step process to execute
@@ -31,25 +31,51 @@ The main instruction file that defines:
 - **Output**: What files/artifacts are created
 - **Validation**: How to verify the output
 
+**Target size**: < 100 lines
+**Audience**: GitHub Copilot agents
+**Style**: Concise, template-focused, minimal prose
+
 This file is always loaded when the skill is invoked.
 
-### reference.md (Optional)
+### reference.md (Optional) - AI-Consumable Reference
 Detailed reference documentation including:
 - Complete API specifications
 - Configuration options
-- Dependency lists
+- Dependency lists with version numbers
 - Technical details
 
-Load this file when you need detailed information.
+**Target size**: < 200 lines
+**Audience**: GitHub Copilot agents
+**Style**: Factual, structured data
 
-### examples.md (Optional)
+Load this file when you need detailed specs.
+
+### examples.md (Optional) - AI-Optimized Examples
 Real-world examples showing:
 - Common use cases
 - Different configurations
 - Complete file samples
-- Edge cases
+- Template variable substitutions
+
+**Target size**: < 300 lines
+**Audience**: GitHub Copilot agents
+**Style**: Code-first, minimal explanations, critical notes only
 
 Load this file when you need to see concrete examples.
+
+### *_GUIDE.md (Optional) - Human Documentation
+Comprehensive tutorials and explanations:
+- Detailed explanations of how things work
+- Why certain patterns are used
+- Troubleshooting guides
+- Best practices
+- Step-by-step tutorials
+
+**Target size**: Unlimited
+**Audience**: Developers
+**Style**: Educational, comprehensive, tutorial-focused
+
+Created for developer reference, not consumed by AI agents.
 
 ### scripts/ (Optional)
 Utility scripts for:
@@ -59,6 +85,39 @@ Utility scripts for:
 - Automation
 
 Execute these scripts, don't load them as context.
+
+## Documentation Philosophy
+
+### Token Efficiency for AI Agents
+AI agents consume tokens when reading documentation. To optimize:
+
+1. **SKILL.md**: Keep under 100 lines - template + essential notes
+2. **examples.md**: Keep under 300 lines - show code, minimize prose
+3. **reference.md**: Keep under 200 lines - version specs + compatibility
+4. **Move verbose content to *_GUIDE.md**: Detailed explanations for developers
+
+### AI vs Human Documentation
+- **AI needs**: What to generate (code templates, patterns)
+- **Humans need**: Why and how it works (explanations, tutorials)
+
+**If it explains HOW or WHY** → Put in *_GUIDE.md
+**If it shows WHAT to generate** → Keep in examples.md
+
+### Optimization Status
+
+#### Optimized Skills
+- ✅ `package-json/`: Split into examples.md (184 lines) + PACKAGE_GUIDE.md
+
+#### Skills Needing Optimization
+Large examples.md files (>500 lines) that may benefit from splitting:
+- `nginx-default-conf/` (818 lines)
+- `jest-config/` (739 lines)
+- `stylelintrc/` (680 lines)
+- `sonar-properties/` (672 lines)
+- `nginx-sites-available/` (580 lines)
+- `prettier-config/` (564 lines)
+- `eslint-config/` (558 lines)
+- `prettierignore/` (554 lines)
 
 ## Usage Pattern
 
