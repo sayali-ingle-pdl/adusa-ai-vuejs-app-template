@@ -74,30 +74,30 @@ The skills should be executed in the following order to ensure dependencies are 
 4. **Run `npm install`** to install dependencies
 
 ### Phase 2: Build Configuration
-6. TypeScript Config Skill
-7. Vite Config Skill
-8. Environment Files Skill
-9. Index HTML Skill
-10. Public Folder Skill
+5. TypeScript Config Skill
+6. Vite Config Skill
+7. Environment Files Skill
+8. Index HTML Skill
+9. Public Folder Skill
 
 ### Phase 3: Code Quality
-11. ESLint Config Skill
-12. Prettier Config Skill
-13. Babel Config Skill
-14. Jest Config Skill
-15. Husky Skill
+10. ESLint Config Skill
+11. Prettier Config Skill
+12. Babel Config Skill
+13. Jest Config Skill
+14. Husky Skill
 
 ### Phase 4: Application Structure
-16. TypeScript Shims Skill
-17. Global Constants Skill
-18. Environment Constants Skill
-19. Router Skill
-20. Store Skill
-21. App Component Skill
-22. Main Entry Skill
+15. TypeScript Shims Skill
+16. Global Constants Skill
+17. Environment Constants Skill
+18. Router Skill
+19. Store Skill
+20. App Component Skill
+21. Main Entry Skill
 
 ### Phase 5: Deployment
-23. Docker Skill
+22. Docker Skill
 
 ### Phase 6: Verification
 - Run `npm run lint` to verify linting setup

@@ -22,6 +22,7 @@ npm config get //npm.pkg.github.com/:_authToken
 npm config set //npm.pkg.github.com/:_authToken ghp_YOUR_GITHUB_TOKEN
 
 This adds the token to `~/.npmrc` (user's home directory), which is NOT tracked in git.
+**Note:** it's important to make clear that this is a user action, not an automated step for the copilot.
 
 ## What Gets Generated
 
