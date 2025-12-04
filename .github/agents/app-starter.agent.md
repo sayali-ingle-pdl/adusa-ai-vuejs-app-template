@@ -60,8 +60,8 @@ When invoked, this agent should:
    - Build format
 2. Read and understand additional parameters from `docs/requirements/application-parameters.md` if present
 3. Execute all skills in sequence to generate the complete application structure
-5. Run the required commands to install dependencies and verify the setup
-6. Verify that the application is in a runnable state
+4. Run the required commands to install dependencies and verify the setup
+5. Verify that the application is in a runnable state
 
 ## Execution Order
 
