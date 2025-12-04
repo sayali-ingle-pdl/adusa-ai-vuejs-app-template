@@ -1,7 +1,13 @@
 # Package.json Reference
 
-**IMPORTANT FOR COPILOT**: Use the latest stable versions of all packages. The versions shown here are examples only - DO NOT copy them. Query npm for current stable versions before generating package.json.
+**IMPORTANT FOR COPILOT**: Always use the latest stable versions of all packages. The versions shown here are examples only—DO NOT copy them directly.
 
+To determine the latest stable version of a package, use one of the following methods:
+
+- Run `npm view <package> version` to get the latest published stable version.
+- Or, check the package's page on [npmjs.com](https://www.npmjs.com/package/<package>).
+
+When specifying versions in `package.json`, use the caret (`^`) prefix (e.g., `^1.2.3`) to allow updates to the latest minor and patch versions, unless a different range is required for compatibility.
 ## Required NPM Scripts
 
 **For Single-spa Micro Frontend:**
