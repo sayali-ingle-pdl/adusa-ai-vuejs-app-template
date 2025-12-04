@@ -114,7 +114,10 @@
 
 ## Package Selection Rules
 
-1. **Check deprecation status** before adding any package
+1. **Check deprecation status** before adding any package:
+   - Run `npm view <package>` and check for a `deprecated` warning in the output.
+   - If a package is deprecated, search for a maintained alternative and prefer that.
+   - If you must use a deprecated package, document the reason and the alternatives considered in the project README or a `DECISIONS.md` file.
 2. **Use latest stable versions** for all packages
 3. **Ensure Jest ecosystem versions match** - babel-jest, ts-jest, and @types/jest should match the Jest major version
 4. **Use caret (^) for most packages** - allows minor/patch updates
