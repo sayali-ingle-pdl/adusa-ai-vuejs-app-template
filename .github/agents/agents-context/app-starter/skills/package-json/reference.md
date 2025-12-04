@@ -1,7 +1,10 @@
 # Package.json Reference
 
-## Complete NPM Scripts
+**IMPORTANT FOR COPILOT**: Use the latest stable versions of all packages. The versions shown here are examples only - DO NOT copy them. Query npm for current stable versions before generating package.json.
 
+## Required NPM Scripts
+
+**For Single-spa Micro Frontend:**
 ```json
 {
   "dev": "vite preview --port {{default_port}}",
@@ -20,128 +23,99 @@
 }
 ```
 
-## Dependencies
-
-### Core Dependencies
+**For Standalone App (no single-spa):**
 ```json
 {
-  "vue": "{{vue_version}}",
-  "vue-router": "^4.1.6",
-  "vuex": "^4.0.0",
-  "axios": "^1.4.0",
-  "core-js": "^3.8.3"
+  "dev": "vite --port {{default_port}}",
+  "build": "vite build",
+  "preview": "vite preview",
+  "test:unit": "jest",
+  "test:unit:watch": "jest --watch",
+  "lint": "eslint --ext .js,.ts,.vue src",
+  "prettier": "prettier --write .",
+  "prepare": "husky"
 }
 ```
 
-### Single-spa Integration
-```json
-{
-  "single-spa-vue": "^2.1.0"
-}
-```
+## Required Dependencies
 
-### UI and Utilities
-```json
-{
-  "@royalaholddelhaize/pdl-spectrum-component-library-web": "npm:@RoyalAholdDelhaize/pdl-spectrum-component-library-web@^1.0.3",
-  "vue-class-component": "^8.0.0-0",
-  "vue-tippy": "^6.7.1",
-  "date-fns": "^2.30.0",
-  "date-fns-tz": "^2.0.0"
-}
-```
+### Always Include (Runtime)
+- `vue` - Latest stable (Vue 3)
+- `vue-router` - Latest stable (compatible with Vue 3)
+- `vuex` - Latest stable (compatible with Vue 3)
+- `axios` - Latest stable
+- `core-js` - Latest stable
 
-### Monitoring
-```json
-{
-  "@datadog/browser-rum": "^5.23.3"
-}
-```
+### Include for Single-spa Only
+- `single-spa-vue` - Latest stable
 
-## Dev Dependencies
+### Optional (Project-specific)
+- `@datadog/browser-rum` - If using Datadog monitoring
+- `@royalaholddelhaize/pdl-spectrum-component-library-web` - Internal component library (project-specific)
+- `vue-class-component` - If using class-style components
+- `vue-tippy` - If using tooltips
+- `date-fns` - Date manipulation
+- `date-fns-tz` - Timezone support for date-fns
 
-### Build Tools
-```json
-{
-  "vite": "{{vite_version}}",
-  "@vitejs/plugin-vue": "^5.2.3",
-  "vite-plugin-css-injected-by-js": "^3.5.2",
-  "vite-svg-loader": "^5.1.0"
-}
-```
+## Required Dev Dependencies
 
-### TypeScript
-```json
-{
-  "typescript": "{{typescript_version}}",
-  "@types/node": "^20.17.30",
-  "@types/jest": "^27.0.1",
-  "@types/jsdom": "^21.1.1"
-}
-```
+### Build Tools (Always)
+- `vite` - Latest stable
+- `@vitejs/plugin-vue` - Latest stable
+- `typescript` - Latest stable
+- `@types/node` - Latest stable
 
-### Testing
-```json
-{
-  "jest": "^27.0.5",
-  "@vue/test-utils": "^2.0.0-0",
-  "@vue/vue3-jest": "^27.0.0-alpha.1",
-  "babel-jest": "^27.0.6",
-  "ts-jest": "^27.0.4"
-}
-```
+### Single-spa Build Tools (If using single-spa)
+- `vite-plugin-css-injected-by-js` - Latest stable
+- `vite-svg-loader` - Latest stable
 
-### Babel
-```json
-{
-  "@babel/core": "^7.26.10",
-  "@babel/plugin-transform-runtime": "^7.26.10",
-  "@babel/preset-env": "^7.26.10"
-}
-```
+### Testing (Always)
+- `jest` - Latest stable
+- `@vue/test-utils` - Latest stable (Vue 3)
+- `@vue/vue3-jest` - Latest stable (must match Jest major version)
+- `babel-jest` - Latest stable (must match Jest major version)
+- `ts-jest` - Latest stable (must match Jest major version)
+- `@types/jest` - Latest stable (must match Jest major version)
+- `@types/jsdom` - Latest stable
 
-### Linting and Formatting
-```json
-{
-  "eslint": "^9.30.1",
-  "@eslint/js": "^9.30.1",
-  "@eslint/eslintrc": "^3.3.1",
-  "eslint-plugin-vue": "^9.33.0",
-  "eslint-plugin-prettier": "^5.5.4",
-  "eslint-config-prettier": "^10.1.8",
-  "@typescript-eslint/eslint-plugin": "^8.35.1",
-  "@typescript-eslint/parser": "^8.35.1",
-  "@vue/eslint-config-typescript": "^14.5.1",
-  "vue-eslint-parser": "^10.2.0",
-  "prettier": "^3.6.2",
-  "stylelint": "^16.23.1",
-  "stylelint-config-recommended-vue": "^1.6.1",
-  "stylelint-config-standard-scss": "^15.0.1"
-}
-```
+### Babel (Always)
+- `@babel/core` - Latest stable
+- `@babel/preset-env` - Latest stable
+- `@babel/plugin-transform-runtime` - Latest stable
 
-### SCSS
-```json
-{
-  "sass": "^1.90.0",
-  "sass-loader": "^16.0.5"
-}
-```
+### Linting (Always)
+- `eslint` - Latest stable (flat config format)
+- `@eslint/js` - Latest stable
+- `@eslint/eslintrc` - Latest stable
+- `eslint-plugin-vue` - Latest stable
+- `eslint-plugin-prettier` - Latest stable
+- `eslint-config-prettier` - Latest stable
+- `@typescript-eslint/eslint-plugin` - Latest stable
+- `@typescript-eslint/parser` - Latest stable
+- `@vue/eslint-config-typescript` - Latest stable
+- `vue-eslint-parser` - Latest stable
 
-### Git Hooks and Utilities
-```json
-{
-  "husky": "^9.1.7",
-  "lint-staged": "^16.1.5",
-  "npm-run-all": "^4.1.5",
-  "chokidar-cli": "^3.0.0",
-  "onchange": "^7.1.0"
-}
-```
+### Formatting (Always)
+- `prettier` - Latest stable
+- `stylelint` - Latest stable
+- `stylelint-config-recommended-vue` - Latest stable
+- `stylelint-config-standard-scss` - Latest stable
 
-## Notes
+### SCSS (Always)
+- `sass` - Latest stable
+- `sass-loader` - Latest stable
 
-- **Single-spa integration**: Required for micro frontend architecture
-- **Datadog**: Optional, remove if not using monitoring
-- **Component Library**: Replace `@royalaholddelhaize/pdl-spectrum-component-library-web` with your own component library or remove
-- **Version placeholders**: `{{vue_version}}`, `{{vite_version}}`, `{{typescript_version}}` must be replaced with actual values
+### Git Hooks & Utilities (Always)
+- `husky` - Latest stable
+- `lint-staged` - Latest stable
+- `npm-run-all` - Latest stable
+- `chokidar-cli` - Latest stable
+- `onchange` - Latest stable
+
+## Package Selection Rules
+
+1. **Check deprecation status** before adding any package
+2. **Use latest stable versions** for all packages
+3. **Ensure Jest ecosystem versions match** - babel-jest, ts-jest, and @types/jest should match the Jest major version
+4. **Use caret (^) for most packages** - allows minor/patch updates
+5. **Remove optional packages** if not needed for the project

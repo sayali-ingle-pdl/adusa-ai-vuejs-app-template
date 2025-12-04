@@ -44,21 +44,9 @@ Ask the user the following questions to gather the necessary parameters:
    - This will be used as `vite_build_format`
    - Used in: vite.config.ts build.lib.formats
 
-7. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
-   - This will be used as `github_token`
-   - Used in: .npmrc for authenticating with GitHub Package Registry
-   - Required permissions: `read:packages`
-   - Token will be inserted into .npmrc to enable component library installation
-   - **Security Note**: The token will be written to .npmrc which is gitignored. Never commit tokens to version control.
-
 ### Static Parameters (Pre-configured)
 
-The following parameters are pre-configured and should be used as defaults:
-
-- `node_version`: `v22.16.0` or equivalent
-- `vue_version`: `^3.5.13`
-- `vite_version`: `^6.3.5`
-- `typescript_version`: `4.9`
+The app will require latest Vue, TypeScript, and other libraries versions so verify if the current node and npm versions are up to date before generating the project. If not, check if the current node and npm version is compatible with the latest stable versions of Vue, or inform the user to update their environment.
 
 ### Auto-Derived Parameters
 

@@ -58,10 +58,8 @@ When invoked, this agent should:
    - API base path
    - Development server port
    - Build format
-   - **GitHub Personal Access Token** (for @RoyalAholdDelhaize packages)
 2. Read and understand additional parameters from `docs/requirements/application-parameters.md` if present
 3. Execute all skills in sequence to generate the complete application structure
-4. **Important**: When executing the NPM RC Skill, replace `{github_token}` with the actual token provided by the user
 5. Run the required commands to install dependencies and verify the setup
 6. Verify that the application is in a runnable state
 
@@ -71,13 +69,9 @@ The skills should be executed in the following order to ensure dependencies are 
 
 ### Phase 1: Project Setup
 1. Package JSON Skill
-2. NPM RC Skill (**must use actual `github_token` value, not placeholder**)
-3. Git Ignore Skill (ensure .npmrc is included)
-4. **Run `npm install`** to install dependencies (will authenticate using token in .npmrc)
-5. **Replace token in .npmrc** with environment variable placeholder:
-   - Replace the actual `github_token` value with `${GH_PACKAGE_LIBRARY_TOKEN}`
-   - This allows the .npmrc to be safely committed to version control
-   - Final .npmrc should contain: `//npm.pkg.github.com/:_authToken=${GH_PACKAGE_LIBRARY_TOKEN}`
+2. NPM RC Skill
+3. Git Ignore Skill
+4. **Run `npm install`** to install dependencies
 
 ### Phase 2: Build Configuration
 6. TypeScript Config Skill

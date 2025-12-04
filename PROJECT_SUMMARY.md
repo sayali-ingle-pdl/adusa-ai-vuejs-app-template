@@ -2,7 +2,7 @@
 
 ## Overview
 
-Successfully created **adusa-ai-enhancement-vue-app-template** - a comprehensive Vue 3 Vite application starter template with AI enablement.
+Successfully created **adusa-ai-vuejs-app-template** - a comprehensive Vue 3 Vite application starter template with AI enablement.
 
 ## What Was Created
 
