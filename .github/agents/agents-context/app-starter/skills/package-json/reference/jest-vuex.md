@@ -1,4 +1,8 @@
-# Package.json Reference
+# Package.json Reference - Jest + Vuex Configuration
+
+This reference is used when the user selects:
+- **Testing Framework**: Jest
+- **State Management**: Vuex
 
 ## Complete NPM Scripts
 
@@ -10,6 +14,7 @@
   "build": "vite build",
   "test:unit": "jest",
   "test:unit:watch": "jest --watch",
+  "test:coverage": "jest --coverage",
   "lint:init:watch": "npm run lint && npm run lint:watch",
   "lint:watch": "chokidar \"src/**/*.{js,ts,vue}\" -i node_modules -i dist -i .git --debounce 500 --initial false -c \"npm run lint\"",
   "lint": "eslint --ext .js,.ts,.vue src",
@@ -51,6 +56,8 @@
 }
 ```
 
+**Note**: Component library is only included if BOTH `component_library` AND `github_token` are provided in config.
+
 ### Monitoring
 ```json
 {
@@ -75,19 +82,20 @@
 {
   "typescript": "{{typescript_version}}",
   "@types/node": "^20.17.30",
-  "@types/jest": "^27.0.1",
+  "@types/jest": "^30.0.0",
   "@types/jsdom": "^21.1.1"
 }
 ```
 
-### Testing
+### Testing (Jest)
 ```json
 {
   "jest": "^30.2.0",
   "@vue/test-utils": "^2.4.6",
   "@vue/vue3-jest": "^29.2.6",
   "babel-jest": "^30.2.0",
-  "ts-jest": "^29.4.6"
+  "ts-jest": "^29.4.6",
+  "jest-environment-jsdom": "^30.2.0"
 }
 ```
 
@@ -141,6 +149,10 @@
 
 ## Notes
 
+- **State Management**: Uses Vuex 4 with TypeScript support
+- **Testing Framework**: Uses Jest 30.x with Vue Test Utils
+- **Test Configuration**: Requires `jest.config.cjs`
+- **Store Structure**: `src/store/` with modules in `src/store/modules/`
 - **Single-spa integration**: Required for micro frontend architecture
 - **Datadog**: Optional, remove if not using monitoring
 - **Component Library**: Replace `@royalaholddelhaize/pdl-spectrum-component-library-web` with your own component library or remove

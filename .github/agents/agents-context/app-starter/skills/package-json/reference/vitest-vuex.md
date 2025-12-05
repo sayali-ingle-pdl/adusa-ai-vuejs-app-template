@@ -1,4 +1,8 @@
-# Package.json Reference
+# Package.json Reference - Vitest + Vuex Configuration
+
+This reference is used when the user selects:
+- **Testing Framework**: Vitest
+- **State Management**: Vuex
 
 ## Complete NPM Scripts
 
@@ -8,8 +12,10 @@
   "build:watch": "vite build --watch",
   "serve": "npm-run-all --parallel build:watch dev lint:init:watch",
   "build": "vite build",
-  "test:unit": "jest",
-  "test:unit:watch": "jest --watch",
+  "test:unit": "vitest run",
+  "test:unit:watch": "vitest",
+  "test:ui": "vitest --ui",
+  "test:coverage": "vitest run --coverage",
   "lint:init:watch": "npm run lint && npm run lint:watch",
   "lint:watch": "chokidar \"src/**/*.{js,ts,vue}\" -i node_modules -i dist -i .git --debounce 500 --initial false -c \"npm run lint\"",
   "lint": "eslint --ext .js,.ts,.vue src",
@@ -51,6 +57,8 @@
 }
 ```
 
+**Note**: Component library is only included if BOTH `component_library` AND `github_token` are provided in config.
+
 ### Monitoring
 ```json
 {
@@ -75,28 +83,18 @@
 {
   "typescript": "{{typescript_version}}",
   "@types/node": "^20.17.30",
-  "@types/jest": "^27.0.1",
   "@types/jsdom": "^21.1.1"
 }
 ```
 
-### Testing
+### Testing (Vitest)
 ```json
 {
-  "jest": "^30.2.0",
+  "vitest": "^4.0.15",
+  "@vitest/ui": "^4.0.15",
+  "@vitest/coverage-v8": "^4.0.15",
   "@vue/test-utils": "^2.4.6",
-  "@vue/vue3-jest": "^29.2.6",
-  "babel-jest": "^30.2.0",
-  "ts-jest": "^29.4.6"
-}
-```
-
-### Babel
-```json
-{
-  "@babel/core": "^7.26.10",
-  "@babel/plugin-transform-runtime": "^7.26.10",
-  "@babel/preset-env": "^7.26.10"
+  "jsdom": "^25.0.1"
 }
 ```
 
@@ -141,6 +139,13 @@
 
 ## Notes
 
+- **State Management**: Uses Vuex 4 with TypeScript support
+- **Testing Framework**: Uses Vitest with native ESM support and faster execution
+- **Test Configuration**: Requires `vitest.config.ts`
+- **Test UI**: Includes `@vitest/ui` for interactive test debugging
+- **Store Structure**: `src/store/` with modules in `src/store/modules/`
+- **No Babel**: Vitest works natively with TypeScript, no Babel configuration needed
+- **Coverage**: Uses V8 coverage provider (`@vitest/coverage-v8`)
 - **Single-spa integration**: Required for micro frontend architecture
 - **Datadog**: Optional, remove if not using monitoring
 - **Component Library**: Replace `@royalaholddelhaize/pdl-spectrum-component-library-web` with your own component library or remove

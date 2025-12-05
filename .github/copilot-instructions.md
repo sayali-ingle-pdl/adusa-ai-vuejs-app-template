@@ -39,12 +39,27 @@ Ask the user the following questions to gather the necessary parameters:
    - This will be used as `default_port`
    - Used in: vite.config.ts server.port, README.md documentation, package.json scripts
 
-6. **What build format do you need?** 
-   - Options: `system` (for single-spa micro frontends) or `es` (for standalone apps)
-   - This will be used as `vite_build_format`
+6. **What type of application are you building?** 
+   - Options: `micro-frontend` or `standalone`
+   - **`micro-frontend`**: Your application will be part of a single-spa micro frontend architecture, where multiple applications can be composed together. This uses the SystemJS module format for dynamic loading and integration.
+   - **`standalone`**: Your application will run independently as a traditional single-page application (SPA). This uses ES module format optimized for modern browsers.
+   - This will be used as `application_type`
+   - Internally maps to: `micro-frontend` → `vite_build_format: "system"`, `standalone` → `vite_build_format: "es"`
    - Used in: vite.config.ts build.lib.formats
 
-7. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
+7. **Do you want to use Vitest for testing?** (default: Jest)
+   - Options: `vitest` or `jest`
+   - This will be used as `test_framework`
+   - If `vitest`: Use Vitest with @vitest/ui, configure vitest.config.ts
+   - If `jest`: Use Jest with @vue/vue3-jest, configure jest.config.js
+
+8. **Do you want to use Pinia for state management?** (default: Vuex)
+   - Options: `pinia` or `vuex`
+   - This will be used as `state_management`
+   - If `pinia`: Use Pinia with TypeScript support, create stores in `src/stores/`
+   - If `vuex`: Use Vuex 4 with modules, create store in `src/store/`
+
+9. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
    - This will be used as `github_token`
    - Used in: .npmrc for authenticating with GitHub Package Registry
    - Required permissions: `read:packages`
@@ -122,9 +137,11 @@ src/
 │   └── {ViewName}/        # View directory with view component and related files
 ├── router/                 # Vue Router configuration
 │   └── index.ts
-├── store/                  # Vuex state management
-│   ├── index.ts
-│   └── modules/           # Store modules by feature
+├── store/                  # State management (Vuex or Pinia)
+│   ├── index.ts           # If using Vuex: store setup
+│   └── modules/           # If using Vuex: store modules by feature
+├── stores/                 # If using Pinia: Pinia stores by feature
+│   └── {entity}Store.ts
 ├── services/               # API service layer
 │   └── {entity}Service.ts
 ├── interfaces/             # TypeScript interfaces and types
@@ -200,7 +217,7 @@ export const entityService = {
 
 ### Store Module Template
 
-When generating Vuex store modules:
+#### Vuex Store Module (if using Vuex)
 
 ```typescript
 import type { Module } from 'vuex';
@@ -233,14 +250,60 @@ const entityModule: Module<EntityState, RootState> = {
 export default entityModule;
 ```
 
+#### Pinia Store (if using Pinia)
+
+```typescript
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import type { EntityType } from '@/interfaces/entity';
+
+export const useEntityStore = defineStore('entity', () => {
+  // State
+  const items = ref<EntityType[]>([]);
+  const loading = ref(false);
+  
+  // Getters
+  const itemCount = computed(() => items.value.length);
+  
+  // Actions
+  async function fetchItems() {
+    loading.value = true;
+    try {
+      // fetch logic
+    } finally {
+      loading.value = false;
+    }
+  }
+  
+  return {
+    items,
+    loading,
+    itemCount,
+    fetchItems
+  };
+});
+```
+
 ## Testing Conventions
 
+### Jest Testing (if using Jest)
 - Use Jest with Vue Test Utils for component testing
 - Use `@vue/vue3-jest` transformer for `.vue` files
 - Mock external dependencies (axios, router, store)
 - Target >80% coverage for services and stores
 - Target >70% coverage for components
 - Test file naming: `{filename}.spec.ts`
+- Configuration: `jest.config.cjs`
+
+### Vitest Testing (if using Vitest)
+- Use Vitest with Vue Test Utils for component testing
+- Native ESM support with faster execution
+- Use `@vitest/ui` for interactive test UI
+- Mock external dependencies (axios, router, store)
+- Target >80% coverage for services and stores
+- Target >70% coverage for components
+- Test file naming: `{filename}.spec.ts` or `{filename}.test.ts`
+- Configuration: `vitest.config.ts`
 
 ## Linting and Formatting
 
