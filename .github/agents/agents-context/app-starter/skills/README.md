@@ -71,6 +71,11 @@ When executing a skill:
 
 ## Available Skills
 
+### Configuration and Orchestration
+- `configuration/` - Read and merge config.json with interactive prompts
+- `conditional-generation/` - Determine files to generate based on app type
+- `component-library/` - Conditionally install component library with GitHub token
+
 ### Package Management
 - `package-json/` - Generate package.json with dependencies
 - `npmrc/` - Generate .npmrc configuration

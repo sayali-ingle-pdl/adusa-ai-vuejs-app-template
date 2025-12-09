@@ -9,6 +9,20 @@ Agent specializing in bootstrapping and configuring Vue 3 Vite applications. Use
 
 **Usage**: `@app-starter generate a new Vue 3 application`
 
+**Detailed Instructions**: See `agents/agents-context/app-starter/.copilot-instructions.md` for:
+- Complete execution flow and orchestration logic
+- Skills-based architecture overview
+- Standalone vs micro-frontend comparison
+- File generation workflow
+- Validation checklists
+
+**Skills Directory**: `agents/agents-context/app-starter/skills/` contains all implementation:
+- `configuration/` - Config management (reads config.json, prompts, validates)
+- `conditional-generation/` - Determines files to generate based on app type
+- `component-library/` - Conditionally installs component library
+- `package-json/` - Generates package.json with correct dependencies
+- And 40+ other skills for complete application generation
+
 ## Application Parameters
 
 Before generating code, the agent should ask the user for the following application-specific parameters:
