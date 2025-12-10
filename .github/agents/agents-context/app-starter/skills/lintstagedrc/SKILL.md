@@ -9,15 +9,6 @@ Create the file: `.lintstagedrc.json`
 ## Example File
 See: `examples.md` in this directory for complete examples and detailed explanations.
 
-## Template
-
-```json
-{
-  "*.{js,ts,vue}": ["eslint --fix", "prettier --write"],
-  "*.{json,md,yml,yaml}": ["prettier --write"]
-}
-```
-
 ## Notes
 - Runs ESLint with auto-fix on JavaScript, TypeScript, and Vue files
 - Runs Prettier formatting on code and configuration files

@@ -59,13 +59,6 @@ Ask the user the following questions to gather the necessary parameters:
    - If `pinia`: Use Pinia with TypeScript support, create stores in `src/stores/`
    - If `vuex`: Use Vuex 4 with modules, create store in `src/store/`
 
-9. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
-   - This will be used as `github_token`
-   - Used in: .npmrc for authenticating with GitHub Package Registry
-   - Required permissions: `read:packages`
-   - Token will be inserted into .npmrc to enable component library installation
-   - **Security Note**: The token will be written to .npmrc which is gitignored. Never commit tokens to version control.
-
 ### Static Parameters (Pre-configured)
 
 The app will require latest Vue, TypeScript, and other libraries versions so verify whether the current node and npm versions are up to date before generating the project. If not, check whether the current node and npm versions are compatible with the latest stable versions of Vue, or inform the user to update their environment.

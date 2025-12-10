@@ -56,40 +56,6 @@
       "examples": ["vuex", "pinia"],
       "default": "vuex"
     },
-    "github_token": {
-      "type": "string",
-      "description": "GitHub Personal Access Token for accessing @RoyalAholdDelhaize packages (optional, will be prompted if not provided)",
-      "minLength": 40,
-      "examples": ["ghp_1234567890abcdefghijklmnopqrstuvwxyz1234"]
-    },
-    "node_version": {
-      "type": "string",
-      "description": "Node.js version to use",
-      "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$",
-      "default": "v22.16.0",
-      "examples": ["v22.16.0", "22.16.0"]
-    },
-    "vue_version": {
-      "type": "string",
-      "description": "Vue version to use",
-      "pattern": "^\\^?[0-9]+\\.[0-9]+\\.[0-9]+$",
-      "default": "^3.5.13",
-      "examples": ["^3.5.13", "3.5.13"]
-    },
-    "vite_version": {
-      "type": "string",
-      "description": "Vite version to use",
-      "pattern": "^\\^?[0-9]+\\.[0-9]+\\.[0-9]+$",
-      "default": "^6.3.5",
-      "examples": ["^6.3.5", "6.3.5"]
-    },
-    "typescript_version": {
-      "type": "string",
-      "description": "TypeScript version to use",
-      "pattern": "^\\^?[0-9]+\\.[0-9]+$",
-      "default": "^5.7.3",
-      "examples": ["^5.7.3", "5.7.3"]
-    },
     "enable_single_spa": {
       "type": "boolean",
       "description": "Enable single-spa micro frontend integration. Note: Should be false for standalone applications.",
@@ -99,18 +65,6 @@
       "type": "boolean",
       "description": "Enable Datadog RUM monitoring",
       "default": true
-    },
-    "component_library": {
-      "type": "string",
-      "description": "Component library to use (leave empty to skip)",
-      "default": "@royalaholddelhaize/pdl-spectrum-component-library-web",
-      "examples": ["@royalaholddelhaize/pdl-spectrum-component-library-web", "@myorg/component-library", ""]
-    },
-    "component_library_version": {
-      "type": "string",
-      "description": "Version of the component library",
-      "default": "^1.0.3",
-      "examples": ["^1.0.3", "1.2.0"]
     }
   },
   "required": [
