@@ -29,6 +29,8 @@ Before generating code, the agent should ask the user for the following applicat
 
 ### Required User Input
 
+**IMPORTANT**: Ask these questions **ONE AT A TIME** in a conversational flow. Do NOT ask all questions at once.
+
 Ask the user the following questions to gather the necessary parameters:
 
 1. **What is the name of your application?** (in kebab-case, e.g., `omni-inventory-manager-web`)
@@ -61,33 +63,91 @@ Ask the user the following questions to gather the necessary parameters:
    - Internally maps to: `micro-frontend` → `vite_build_format: "system"`, `standalone` → `vite_build_format: "es"`
    - Used in: vite.config.ts build.lib.formats
 
-7. **Do you want to use Vitest for testing?** (default: Jest)
+7. **Do you want to use the latest package versions from npm?** (recommended for new projects)
+   - Options: `yes` or `no`
+   - This will be used as `use_latest_versions`
+   - **`yes`**: Fetch latest versions from npm registry at generation time
+     - Uses latest recommended test framework (Vitest)
+     - Uses latest recommended state management (Pinia)
+     - All dependencies fetched from npm at generation time
+   - **`no`**: Use tested, stable versions and choose specific tools
+     - Proceed to ask about test framework (question 8)
+     - Proceed to ask about state management (question 9)
+   - Used in: package.json generation to select version strategy
+
+### Conditional Questions (Only if `use_latest_versions === false`)
+
+8. **Do you want to use Vitest for testing?** (default: Jest)
+   - **Only asked if user chose NO to latest versions**
    - Options: `vitest` or `jest`
    - This will be used as `test_framework`
    - If `vitest`: Use Vitest with @vitest/ui, configure vitest.config.ts
    - If `jest`: Use Jest with @vue/vue3-jest, configure jest.config.js
 
-8. **Do you want to use Pinia for state management?** (default: Vuex)
+9. **Do you want to use Pinia for state management?** (default: Vuex)
+   - **Only asked if user chose NO to latest versions**
    - Options: `pinia` or `vuex`
    - This will be used as `state_management`
    - If `pinia`: Use Pinia with TypeScript support, create stores in `src/stores/`
    - If `vuex`: Use Vuex 4 with modules, create store in `src/store/`
 
-9. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
-   - This will be used as `github_token`
-   - Used in: .npmrc for authenticating with GitHub Package Registry
-   - Required permissions: `read:packages`
-   - Token will be inserted into .npmrc to enable component library installation
-   - **Security Note**: The token will be written to .npmrc which is gitignored. Never commit tokens to version control.
+### Optional Questions (Always Asked)
 
-### Static Parameters (Pre-configured)
+10. **Do you want to include a component library?** (default: no)
+    - Options: `yes` or `no`
+    - This will be used as `include_component_library`
+    - **`yes`**: Include @RoyalAholdDelhaize/pdl-spectrum-component-library-web
+      - Proceeds to ask for GitHub token (question 11)
+    - **`no`**: Skip component library and GitHub token
+      - Skip question 11 entirely
 
-The following parameters are pre-configured and should be used as defaults:
+11. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
+    - **Only asked if user chose YES to component library (question 10)**
+    - This will be used as `github_token`
+    - Used in: .npmrc for authenticating with GitHub Package Registry
+    - Required permissions: `read:packages`
+    - Token will be inserted into .npmrc to enable component library installation
+    - **Security Note**: The token will be written to .npmrc which is gitignored. Never commit tokens to version control.
 
-- `node_version`: `v22.16.0` or equivalent
-- `vue_version`: `^3.5.13`
-- `vite_version`: `^6.3.5`
-- `typescript_version`: `4.9`
+### Version Management
+
+**IMPORTANT**: Package versions are managed centrally via `agents/agents-context/app-starter/skills/package-json/versions.json`.
+
+**How it works**:
+- All package versions defined in `versions.json` (in package-json skill)
+- Use `"latest"` to auto-fetch from npm registry at generation time
+- Use specific versions (e.g., `"^6.3.5"`) to pin for stability
+- The version-resolver skill resolves versions during generation
+
+**When user requests "latest configuration"**:
+1. Load `versions.json` from package-json skill
+2. For packages marked as `"latest"`: Run `npm view <package> version`
+3. Apply caret prefix: `3.5.13` → `^3.5.13`
+4. Replace placeholders in templates: `{{vue_version}}` → `^3.5.13`
+
+**Examples**:
+```json
+// All latest (development)
+{
+  "core": { "vue": "latest", "vite": "latest" }
+}
+
+// Pinned (production)
+{
+  "core": { "vue": "^3.5.13", "vite": "^6.3.5" }
+}
+
+// Mixed (hybrid)
+{
+  "core": { "vue": "latest", "typescript": "^5.7.3" }
+}
+```
+
+**Key files**:
+- `skills/package-json/SKILL.md` - Complete documentation with embedded version configuration
+- `skills/package-json/reference/latest-versions.md` - Latest versions template
+
+**DO NOT hardcode versions** in skills/examples. Use placeholders: `{{vue_version}}`, `{{vite_version}}`, etc.
 
 ### Auto-Derived Parameters
 

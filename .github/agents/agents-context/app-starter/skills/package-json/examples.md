@@ -1,5 +1,41 @@
 # Package.json Examples
 
+## Latest Versions Configuration
+
+**When user requests "latest configuration" or "use latest versions":**
+
+See `reference/latest-versions.md` for the complete template that uses dynamic version resolution.
+
+**Key Features**:
+- All versions resolved from `../../versions.json`
+- Packages marked as `"latest"` are fetched from npm registry
+- Automatic updates to newest compatible versions
+- Fallback to pinned versions if network unavailable
+
+**Example versions.json for latest configuration**:
+```json
+{
+  "core": {
+    "vue": "latest",
+    "vite": "latest",
+    "typescript": "latest"
+  },
+  "dependencies": {
+    "vue-router": "latest",
+    "vuex": "latest",
+    "axios": "latest"
+  },
+  "devDependencies": {
+    "eslint": "latest",
+    "prettier": "latest"
+  }
+}
+```
+
+**Result**: All packages use the latest versions available on npm at generation time.
+
+---
+
 ## Example: Complete Single-spa Micro Frontend Application
 
 ```json

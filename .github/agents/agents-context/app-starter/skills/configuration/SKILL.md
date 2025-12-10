@@ -3,6 +3,8 @@
 ## Purpose
 Read and merge application configuration from `config.json` file with interactive prompts and default values.
 
+**IMPORTANT**: When prompting users interactively, ask questions **ONE AT A TIME** in a conversational manner. Wait for each answer before asking the next question.
+
 ## When to Use
 Execute this skill at the beginning of the application generation process (Step 2 in AGENT_INSTRUCTIONS.md).
 
@@ -65,6 +67,7 @@ const defaults = {
   state_management: "vuex",
   enable_single_spa: true,
   enable_datadog: true,
+  include_component_library: false,  // Default to no component library
   component_library: "@royalaholddelhaize/pdl-spectrum-component-library-web",
   component_library_version: "^1.0.3"
 };
@@ -74,6 +77,9 @@ userConfig = { ...defaults, ...userConfig };
 ```
 
 ### Step 4: Prompt for Missing Required Fields
+
+**Ask questions ONE AT A TIME in order. Wait for user response before asking next question.**
+
 ```javascript
 const requiredFields = [
   'application_name',
@@ -81,33 +87,106 @@ const requiredFields = [
   'router_base_path',
   'api_base_path',
   'default_port',
-  'application_type'
+  'application_type',
+  'use_latest_versions'  // Added as required field
 ];
 
+// Ask ONE question at a time
 for (const field of requiredFields) {
   if (!userConfig[field]) {
+    // Show context and ask single question
+    console.log(`\n📝 Question ${requiredFields.indexOf(field) + 1}/${requiredFields.length}`);
     userConfig[field] = await promptUser(field);
+    
+    // Confirm response before moving to next question
+    console.log(`✓ Got it: ${userConfig[field]}\n`);
   } else {
     console.log(`✓ Using ${field} from config: ${userConfig[field]}`);
   }
 }
 ```
 
-### Step 5: Prompt for Optional GitHub Token
+### Step 5: Conditional Prompts Based on Version Choice
+
+**If user chose NOT to use latest versions, ask about test framework and state management.**
+
 ```javascript
-// Only prompt if component library is set and token is missing
-if (userConfig.component_library && !userConfig.github_token) {
-  console.log('\n📦 Component library configured: ' + userConfig.component_library);
-  console.log('   GitHub token required for private package installation\n');
+// Only ask these if user chose stable versions (not latest)
+if (userConfig.use_latest_versions === false || userConfig.use_latest_versions === 'no') {
   
-  userConfig.github_token = await promptUser('github_token', {
-    optional: true,
-    message: 'GitHub Personal Access Token (skip to exclude component library):'
-  });
+  // Prompt for test framework if not set
+  if (!userConfig.test_framework) {
+    console.log('\n🧪 Testing framework:');
+    userConfig.test_framework = await promptUser('test_framework', {
+      choices: ['jest', 'vitest'],
+      default: 'jest',
+      message: 'Which testing framework do you want to use?'
+    });
+    console.log(`✓ Will use ${userConfig.test_framework}\n`);
+  }
+
+  // Prompt for state management if not set
+  if (!userConfig.state_management) {
+    console.log('\n📊 State management:');
+    userConfig.state_management = await promptUser('state_management', {
+      choices: ['vuex', 'pinia'],
+      default: 'vuex',
+      message: 'Which state management library do you want to use?'
+    });
+    console.log(`✓ Will use ${userConfig.state_management}\n`);
+  }
+  
+} else {
+  // User chose latest versions - use recommended defaults
+  console.log('\n✓ Using latest versions with recommended tools:');
+  userConfig.test_framework = 'vitest';  // Latest recommendation
+  userConfig.state_management = 'pinia';  // Latest recommendation
+  console.log('  • Testing: Vitest (latest)');
+  console.log('  • State Management: Pinia (latest)\n');
 }
 ```
 
-### Step 6: Derive Auto-Calculated Values
+### Step 6: Prompt for Optional GitHub Token
+
+**Only ask for GitHub token if user wants component library.**
+
+```javascript
+// First, ask if they want a component library
+let needsComponentLibrary = false;
+
+if (userConfig.include_component_library === undefined) {
+  console.log('\n📦 Component library:');
+  needsComponentLibrary = await promptUser('include_component_library', {
+    type: 'confirm',
+    message: 'Do you want to include a component library?',
+    default: false,
+    hint: '(@RoyalAholdDelhaize/pdl-spectrum-component-library-web)'
+  });
+  userConfig.include_component_library = needsComponentLibrary;
+  console.log(`✓ ${needsComponentLibrary ? 'Will include component library' : 'No component library'}\n`);
+}
+
+// Only ask for token if component library is needed
+if (userConfig.include_component_library && !userConfig.github_token) {
+  console.log('\n🔑 GitHub authentication required for component library:');
+  
+  userConfig.github_token = await promptUser('github_token', {
+    type: 'password',
+    message: 'GitHub Personal Access Token (read:packages permission):',
+    optional: false
+  });
+  
+  if (userConfig.github_token) {
+    console.log('✓ Token received (will be stored in .npmrc)\n');
+  }
+} else if (!userConfig.include_component_library) {
+  // No component library means no token needed
+  userConfig.component_library = null;
+  console.log('ℹ  Skipping GitHub token (no component library needed)\n');
+}
+```
+
+### Step 7: Derive Auto-Calculated Values
 ```javascript
 // Derive main_component_name from application_name
 // Example: "omni-inventory-manager-web" → "OmniInventoryManagerWeb"
@@ -227,11 +306,54 @@ See `conditional-generation` skill for application type specific validations.
 ### Method 1: Interactive Terminal Prompts (Default)
 Run the agent and answer the prompts interactively.
 
+**IMPORTANT**: Questions are asked **ONE AT A TIME** in a conversational flow:
+- Agent asks question 1, waits for answer
+- Agent confirms answer, asks question 2, waits for answer
+- Agent confirms answer, asks question 3, and so on...
+- Progress indicator shown (e.g., "Question 3/6")
+
+**Example Interactive Flow**:
+```
+Agent: 📝 Question 1/7
+       What is the name of your application? (in kebab-case)
+User:  my-inventory-app-web
+Agent: ✓ Got it: my-inventory-app-web
+
+Agent: 📝 Question 2/7
+       What is your NPM scope/organization? (e.g., @my-org)
+User:  @my-company
+Agent: ✓ Got it: @my-company
+
+Agent: 📝 Question 3/7
+       What base path should the router use?
+User:  /my-inventory-app
+Agent: ✓ Got it: /my-inventory-app
+
+... continues through question 7 ...
+
+Agent: 📝 Question 7/7
+       Do you want to use the latest package versions from npm?
+User:  yes
+Agent: ✓ Got it: yes
+
+       ✓ Using latest versions with recommended tools:
+         • Testing: Vitest (latest)
+         • State Management: Pinia (latest)
+
+Agent: 📦 Component library:
+       Do you want to include a component library?
+User:  no
+Agent: ✓ No component library
+       ℹ  Skipping GitHub token (no component library needed)
+
+... and so on
+```
+
 ### Method 2: Configuration File (config.json)
 Create a `config.json` file in the project root. The agent will read values and skip prompting.
 
 ### Method 3: Hybrid Approach
-Provide some values in `config.json` and the agent will only prompt for missing required values.
+Provide some values in `config.json` and the agent will only prompt for missing required values (ONE AT A TIME).
 
 ## Related Skills
 - **conditional-generation**: Determines which files to generate based on config
