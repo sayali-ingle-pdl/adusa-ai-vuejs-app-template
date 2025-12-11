@@ -11,25 +11,6 @@ Generate `.env.standalone` file for running micro-frontend applications in stand
 ## Output
 Create the file: `.env.standalone` (only if `application_type === "micro-frontend"`)
 
-## Conditional Logic
-
-```javascript
-if (application_type === 'standalone') {
-  // SKIP THIS FILE - standalone apps don't need .env.standalone
-  return;
-}
-
-// Only create for micro-frontend apps
-if (application_type === 'micro-frontend') {
-  // Generate .env.standalone
-}
-```
-
-## Template
-
-```bash
-STANDALONE_SINGLE_SPA=true
-```
 
 ## Notes
 - **Micro-Frontend Only**: This file is only relevant for micro-frontend applications
@@ -40,7 +21,3 @@ STANDALONE_SINGLE_SPA=true
 - This file can be committed to the repository (no secrets)
 - Use with `npm run dev:standalone` or similar script (if using Vite modes)
 - The application will mount directly without waiting for single-spa lifecycle
-
-## Why Standalone Apps Don't Need This
-
-Standalone applications already run independently by default. They don't have single-spa integration, so there's no need for a separate "standalone mode" - they ARE standalone. Creating this file for standalone apps would be redundant and confusing.

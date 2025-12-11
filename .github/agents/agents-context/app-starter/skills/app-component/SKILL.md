@@ -6,9 +6,6 @@ Generate the `src/App.vue` root component.
 ## Output
 Create the file: `src/App.vue`
 
-## Template
-See: `examples.md` in this directory for complete template and detailed examples.
-
 ## Notes
 - Simple root component with router-view
 - The `id` attribute should use the `appId` constant from global constants

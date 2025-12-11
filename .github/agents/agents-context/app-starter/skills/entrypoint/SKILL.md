@@ -9,6 +9,7 @@ Create the file: `entrypoint.sh`
 ## Example File
 See: `examples.md` in this directory for complete examples and detailed explanations.
 
+
 ## Notes
 - Enables runtime environment variable injection into built JavaScript files
 - Uses `envsubst` to replace placeholders with actual environment variable values

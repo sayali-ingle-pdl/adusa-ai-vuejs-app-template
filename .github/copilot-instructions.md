@@ -128,6 +128,10 @@ The following are automatically set to use the latest recommended tools:
 
 **DO NOT hardcode versions** in skills/examples. Use placeholders: `{{vue_version}}`, `{{vite_version}}`, etc.
 
+### Static Parameters (Pre-configured)
+
+The app will require latest Vue, TypeScript, and other libraries versions so verify whether the current node and npm versions are up to date before generating the project. If not, check whether the current node and npm versions are compatible with the latest stable versions of Vue, or inform the user to update their environment.
+
 ### Auto-Derived Parameters
 
 The following parameters should be automatically derived from the user's inputs:
