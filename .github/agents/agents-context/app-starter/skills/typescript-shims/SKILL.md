@@ -5,8 +5,8 @@ Generate TypeScript declaration files (shims) to enable type-safe imports of non
 
 ## Output
 Create the files:
-- `src/shims-vue.d.ts`
-- `src/shims-svg.d.ts`
+- `/src/shims-vue.d.ts`
+- `/src/shims-svg.d.ts`
 
 ## Configuration Requirements
 

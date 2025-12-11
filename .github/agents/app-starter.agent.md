@@ -82,25 +82,35 @@ The skills should be executed in the following order to ensure dependencies are 
 
 ### Phase 3: Code Quality
 10. ESLint Config Skill
-11. Prettier Config Skill
-12. Babel Config Skill
-13. Jest Config Skill
-14. Husky Skill
+11. Browserlist Config Skill
+12. Lint Staged Config Skill
+12. Prettier Config Skill
+13. Babel Config Skill
+14. Jest Config Skill
+15. Stylelint Config Skill
+16. SonarQube Properties Skill
+17. Husky Skill
 
 ### Phase 4: Application Structure
-15. TypeScript Shims Skill
-16. Global Constants Skill
-17. Environment Constants Skill
-18. Router Skill
-19. Store Skill
-20. App Component Skill
-21. Main Entry Skill
+18. TypeScript Shims Skill
+19. Global Constants Skill
+20. Environment Constants Skill
+21. Router Skill
+22. Store Skill
+23. App Component Skill
+24. View Components Skill
+25. Main Entry Skill
+26. Theme Skill
 
 ### Phase 5: Deployment
-22. Docker Skill
+27. Docker Skill
+28. Nginx Default Configuration Skill
+29. Nginx Sites Available Skill
+30. Entrpoint Skill
 
 ### Phase 6: Verification
 - Run `npm run lint` to verify linting setup
+- Run `npx stylelint src/**/*.vue src/**/*.scss` to verify stylelint setup
 - Run `npm run build` to verify build configuration
 - Run `npm run test:unit` to verify test setup (if tests exist)
 
