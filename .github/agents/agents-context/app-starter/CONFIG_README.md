@@ -107,27 +107,6 @@ The agent will prompt for the missing fields: `router_base_path`, `api_base_path
 
 ### Optional Fields
 
-9. **github_token** (string)
-   - GitHub Personal Access Token for private packages
-   - If not provided, agent will prompt for it
-   - Security: This token will be written to `.npmrc` (which is gitignored)
-
-10. **node_version** (string)
-    - Default: `"v22.16.0"`
-    - Format: `v{major}.{minor}.{patch}`
-
-11. **vue_version** (string)
-    - Default: `"^3.5.13"`
-    - Format: semver with optional caret
-
-12. **vite_version** (string)
-    - Default: `"^6.3.5"`
-    - Format: semver with optional caret
-
-13. **typescript_version** (string)
-    - Default: `"^5.7.3"`
-    - Format: semver with optional caret
-
 14. **enable_single_spa** (boolean)
     - Default: `true`
     - Enable/disable single-spa micro frontend integration
@@ -135,14 +114,6 @@ The agent will prompt for the missing fields: `router_base_path`, `api_base_path
 15. **enable_datadog** (boolean)
     - Default: `true`
     - Enable/disable Datadog RUM monitoring
-
-16. **component_library** (string)
-    - Default: `"@royalaholddelhaize/pdl-spectrum-component-library-web"`
-    - Set to empty string `""` to skip component library
-
-17. **component_library_version** (string)
-    - Default: `"^1.0.3"`
-    - Version of the component library
 
 ## Auto-Derived Values
 
@@ -204,15 +175,8 @@ The agent should:
   "application_type": "micro-frontend",
   "test_framework": "jest",
   "state_management": "vuex",
-  "github_token": "ghp_YOUR_TOKEN_HERE",
-  "node_version": "v22.16.0",
-  "vue_version": "^3.5.13",
-  "vite_version": "^6.3.5",
-  "typescript_version": "^5.7.3",
   "enable_single_spa": true,
   "enable_datadog": true,
-  "component_library": "@myorg/components",
-  "component_library_version": "^2.0.0"
 }
 ```
 
@@ -229,13 +193,5 @@ The agent should:
   "state_management": "pinia",
   "enable_single_spa": false,
   "enable_datadog": false,
-  "component_library": "@myorg/components",
-  "component_library_version": "^2.0.0"
 }
 ```
-
-## Security Note
-
-⚠️ **Important**: Never commit `config.json` with sensitive data (like `github_token`) to version control. The `config.json` file should be added to `.gitignore`.
-
-The example file (`config.example.json`) is safe to commit as it contains placeholder values.

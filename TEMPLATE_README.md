@@ -1,4 +1,4 @@
-# adusa-ai-enhancement-vue-app-template
+# adusa-ai-vuejs-app-template
 Template for building Vue 3 Vite applications with context driven AI enablement
 
 This template provides a structured approach to building Vue 3 applications using Vite, TypeScript, and modern development practices. It includes comprehensive documentation templates, AI agent configurations, and requirements management tools to streamline the development process.
