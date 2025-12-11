@@ -1,39 +1,16 @@
 # Package JSON Skill
 
 ## Purpose
-Generate the `package.json` file for a Vue 3 Vite application with all necessary dependencies, dev dependencies, and scripts using the **latest stable versions**.
+Generate the `package.json` file for a Vue 3 Vite application with all necessary dependencies, dev dependencies, and scripts using the latest package versions from npm.
 
 ## Instructions
 
-**CRITICAL**: You MUST fetch the latest version for EVERY package. Never assume or hardcode versions.
-
-### Step 1: Gather Input Parameters
-Ask the user or read from `copilot-instructions.md` and `docs/requirements/application-parameters.md`:
-- `application_name`: The application name in kebab-case
-- `project_scope`: The NPM scope/organization
-- `default_port`: The development server port
-- `application_type`: "micro-frontend" or "standalone"
-- `test_framework`: "jest" or "vitest"
-- `state_management`: "vuex" or "pinia"
-
-### Step 2: Fetch Latest Versions for ALL Packages
-
-**MANDATORY**: Run `npm view <package> version` for EVERY SINGLE package before adding it to package.json.
-
-**IMPORTANT**: For testing framework compatibility:
-- If using Jest: Check `@vue/vue3-jest` version first - this determines the maximum Jest version you can use
-- All Jest-related packages (`jest`, `babel-jest`, `ts-jest`, `@types/jest`, `jest-environment-jsdom`) MUST match the major version
-- If `@vue/vue3-jest` is stuck at v29, then use Jest 29 for all Jest packages
-- If using Vitest: All packages can use latest versions
-
-### Step 3: Load Reference File
-Read `reference.md` for the complete package list and script templates
-
-### Step 4: Generate package.json
-Use the fetched versions to create the package.json file
-
-### Step 5: Create the File
-Save to project root: `package.json`
+1. **Gather Input Parameters** from user (see Input Parameters section below)
+2. **Fetch latest versions** from npm: `npm view <package> version`
+3. **Generate** package.json using the `reference/latest-versions.md` template
+4. **Replace placeholders** with resolved versions
+5. **Validate** output meets all requirements
+6. **Create** the file at project root: `package.json`
 
 ## Input Parameters
 
@@ -41,61 +18,188 @@ Ask the user or read from `copilot-instructions.md` and `docs/requirements/appli
 - `application_name`: The application name in kebab-case
 - `project_scope`: The NPM scope/organization
 - `default_port`: The development server port
-- `vue_version`: Vue version to use
-- `vite_version`: Vite version to use
-- `typescript_version`: TypeScript version to use
+- `test_framework`: Testing framework - always `vitest` (latest recommended)
+- `state_management`: State management library - always `pinia` (latest recommended)
+
+## Version Strategy
+
+**Always use latest versions from npm**:
+- Fetch from npm: `npm view <package> version`
+- Apply caret prefix: `3.5.13` → `^3.5.13`
+- Use template: `reference/latest-versions.md`
+- Use recommended tools: Vitest + Pinia
+
+## Template Reference
+
+Use: `reference/latest-versions.md` (fetches latest versions from npm)
 
 ## Output
 - File: `package.json` at project root
 - Format: Valid JSON with proper indentation (2 spaces)
 
+## Template Structure
 
-## Validation Checklist
-
-After creating package.json and running `npm install`:
-
-### 1. Version Validation
-```bash
-npm outdated
+```json
+{
+  "name": "{{project_scope}}/{{application_name}}",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    // See reference/latest-versions.md for complete scripts list
+  },
+  "dependencies": {
+    // See reference/latest-versions.md for complete dependencies
+  },
+  "devDependencies": {
+    // See reference/latest-versions.md for complete devDependencies
+  }
+}
 ```
-**Expected Result**: No outdated packages (all should show "Current" = "Wanted" = "Latest")
 
-**If outdated packages are found:**
-- ❌ STOP - You made a mistake in version fetching
-- ✅ For Jest packages: Check if they need to match @vue/vue3-jest version
-- ✅ For other packages: Update to latest unless there's a compatibility constraint
-- ✅ Document any version constraints in README.md
+## Validation
+- All version placeholders are replaced with actual values
+- Package name follows format `@scope/name`
+- `type` field is set to `"module"`
+- All required scripts are defined
+- Valid JSON syntax
 
-### 2. Security Validation
-```bash
-npm audit
+## Version Management
+
+### Fetching Latest Versions
+
+1. **Load version configuration** from this SKILL.md (see Version Configuration section below)
+
+2. **Resolve "latest" entries**:
+   - For all packages marked as `"latest"` in the configuration
+   - Fetch current version from npm: `npm view <package> version`
+   - Example: `"vue": "latest"` → `npm view vue version` → `"vue": "^3.5.13"`
+
+3. **Apply resolved versions**:
+   ```json
+   {
+     "dependencies": {
+       "vue": "{{vue_version}}",           // Resolved from npm
+       "vue-router": "{{vue_router_version}}",
+       "pinia": "{{pinia_version}}"
+     }
+   }
+   ```
+
+### Version Resolution Example
+
+```json
+// Version Configuration (from this SKILL.md)
+{
+  "core": {
+    "vue": "latest",
+    "vite": "latest"
+  }
+}
+
+// After fetching from npm
+{
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}
 ```
-**Expected Result**: 0 vulnerabilities
 
-### 3. Compatibility Validation
-- ✅ All Jest packages have matching major versions
-- ✅ TypeScript version is compatible with @typescript-eslint packages
-- ✅ ESLint version is compatible with all eslint-plugin-* packages
-- ✅ Sass version is compatible with sass-loader
+## Version Configuration (versions.json)
 
-### 4. Structure Validation
-- ✅ Package name follows format: `@scope/name` or just `name`
-- ✅ `type` field is set to `"module"`
-- ✅ All required scripts are defined
-- ✅ Valid JSON syntax (no trailing commas, proper quotes)
+This is the central version configuration embedded in this SKILL.md.
 
-## Common Pitfalls to Avoid
+Use this configuration to determine which versions to use:
 
-### ❌ DON'T:
-- Hardcode versions based on examples
-- Skip version checking for "minor" packages like @types/*
-- Assume all packages can use latest versions
-- Forget to check Jest ecosystem compatibility
-- Copy versions from reference.md examples
+```json
+{
+  "core": {
+    "node": "latest",
+    "vue": "latest",
+    "vite": "latest",
+    "typescript": "latest"
+  },
+  
+  "dependencies": {
+    "vue-router": "latest",
+    "vuex": "latest",
+    "pinia": "latest",
+    "axios": "latest",
+    "core-js": "latest",
+    "single-spa-vue": "latest",
+    "vue-class-component": "latest",
+    "vue-tippy": "latest",
+    "date-fns": "latest",
+    "date-fns-tz": "latest",
+    "@datadog/browser-rum": "latest"
+  },
+  
+  "devDependencies": {
+    "@vitejs/plugin-vue": "latest",
+    "@types/node": "latest",
+    "@types/jest": "latest",
+    "@types/jsdom": "latest",
+    "vite-plugin-css-injected-by-js": "latest",
+    "vite-svg-loader": "latest",
+    "vitest": "latest",
+    "@vitest/ui": "latest",
+    "jest": "latest",
+    "@vue/test-utils": "latest",
+    "@vue/vue3-jest": "latest",
+    "babel-jest": "latest",
+    "ts-jest": "latest",
+    "@babel/core": "latest",
+    "@babel/plugin-transform-runtime": "latest",
+    "@babel/preset-env": "latest",
+    "eslint": "latest",
+    "eslint-plugin-vue": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "vue-eslint-parser": "latest",
+    "@vue/eslint-config-typescript": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-plugin-prettier": "latest",
+    "@eslint/js": "latest",
+    "@eslint/eslintrc": "latest",
+    "prettier": "latest",
+    "sass": "latest",
+    "sass-loader": "latest",
+    "stylelint": "latest",
+    "stylelint-config-recommended-vue": "latest",
+    "stylelint-config-standard-scss": "latest",
+    "husky": "latest",
+    "lint-staged": "latest",
+    "npm-run-all": "latest",
+    "chokidar-cli": "latest",
+    "onchange": "latest"
+  },
+  
+  "componentLibraries": {
+    "@royalaholddelhaize/pdl-spectrum-component-library-web": "latest"
+  },
+  
+  "docker": {
+    "node": "22-stable",
+    "nginx": "alpine"
+  }
+}
+```
 
-### ✅ DO:
-- Run `npm view` for EVERY package
-- Check compatibility constraints (especially Jest with @vue/vue3-jest)
-- Use caret (^) for version ranges
-- Verify after installation with `npm outdated`
-- Document any intentional version pinning
+**Version Strategies**:
+- `"latest"` - Fetch current version from npm registry (e.g., `npm view vue version`)
+- `"^6.3.5"` - Pin to specific version with caret (allows minor/patch updates)
+- `"~6.3.5"` - Pin with tilde (allows patch updates only)
+- `"6.3.5"` - Exact version (no updates)
+
+**Note**: This configuration is embedded in this SKILL.md file. There is no separate versions.json file needed.
+
+## References
+
+- **Version Configuration**: See "Version Configuration (versions.json)" section above in this file
+- **Package Templates**: `reference/` directory (jest-vuex.md, vitest-pinia.md, latest-versions.md)
+- **Complete Examples**: `examples.md`
+
+

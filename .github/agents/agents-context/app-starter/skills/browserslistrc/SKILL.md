@@ -6,6 +6,9 @@ Generate Browserslist configuration to define supported browsers for CSS autopre
 ## Output
 Create the file: `.browserslistrc`
 
+## Template
+See: `examples.md` in this directory for complete template and detailed examples.
+
 ## Notes
 - Targets browsers with >1% market share
 - Supports last 2 versions of all major browsers

@@ -6,6 +6,9 @@ Generate .env.local file for local development environment configuration.
 ## Output
 Create the file: `.env.local`
 
+## Template
+See: `examples.md` in this directory for complete template and detailed examples.
+
 ## Notes
 - `.env.local` is used for local development environment variables
 - This file should be in `.gitignore` (never commit secrets)

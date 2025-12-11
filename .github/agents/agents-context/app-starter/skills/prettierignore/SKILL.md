@@ -6,6 +6,9 @@ Generate .prettierignore file to exclude files and directories from Prettier for
 ## Output
 Create the file: `.prettierignore`
 
+## Template
+See: `examples.md` in this directory for complete template and detailed examples.
+
 ## Notes
 - Excludes build output directories (dist, build)
 - Excludes dependencies (node_modules)

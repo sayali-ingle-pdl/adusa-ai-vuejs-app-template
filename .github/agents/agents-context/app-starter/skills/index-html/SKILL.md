@@ -9,6 +9,10 @@ Generate the `index.html` file as the entry point for the application.
 ## Output
 Create the file: `index.html`
 
+
+## Template
+See: `examples.md` in this directory for complete template and detailed examples.
+
 ## Notes
 - HTML entry point for the Vue application
 - Includes multiple favicon sizes for different devices
