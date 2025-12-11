@@ -1,5 +1,7 @@
 # Configuration Examples
 
+> **Note**: See `SKILL.md` for the basic structure. This file contains detailed field references and validation examples.
+
 ## Configuration Field Reference
 
 ### Required Fields

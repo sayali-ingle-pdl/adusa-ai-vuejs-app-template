@@ -63,51 +63,30 @@ Ask the user the following questions to gather the necessary parameters:
    - Internally maps to: `micro-frontend` → `vite_build_format: "system"`, `standalone` → `vite_build_format: "es"`
    - Used in: vite.config.ts build.lib.formats
 
-7. **Do you want to use the latest package versions from npm?** (recommended for new projects)
-   - Options: `yes` or `no`
-   - This will be used as `use_latest_versions`
-   - **`yes`**: Fetch latest versions from npm registry at generation time
-     - Uses latest recommended test framework (Vitest)
-     - Uses latest recommended state management (Pinia)
-     - All dependencies fetched from npm at generation time
-   - **`no`**: Use tested, stable versions and choose specific tools
-     - Proceed to ask about test framework (question 8)
-     - Proceed to ask about state management (question 9)
-   - Used in: package.json generation to select version strategy
-
-### Conditional Questions (Only if `use_latest_versions === false`)
-
-8. **Do you want to use Vitest for testing?** (default: Jest)
-   - **Only asked if user chose NO to latest versions**
-   - Options: `vitest` or `jest`
-   - This will be used as `test_framework`
-   - If `vitest`: Use Vitest with @vitest/ui, configure vitest.config.ts
-   - If `jest`: Use Jest with @vue/vue3-jest, configure jest.config.js
-
-9. **Do you want to use Pinia for state management?** (default: Vuex)
-   - **Only asked if user chose NO to latest versions**
-   - Options: `pinia` or `vuex`
-   - This will be used as `state_management`
-   - If `pinia`: Use Pinia with TypeScript support, create stores in `src/stores/`
-   - If `vuex`: Use Vuex 4 with modules, create store in `src/store/`
-
 ### Optional Questions (Always Asked)
 
-10. **Do you want to include a component library?** (default: no)
+7. **Do you want to include a component library?** (default: no)
     - Options: `yes` or `no`
     - This will be used as `include_component_library`
     - **`yes`**: Include @RoyalAholdDelhaize/pdl-spectrum-component-library-web
-      - Proceeds to ask for GitHub token (question 11)
+      - Proceeds to ask for GitHub token (question 8)
     - **`no`**: Skip component library and GitHub token
-      - Skip question 11 entirely
+      - Skip question 8 entirely
 
-11. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
-    - **Only asked if user chose YES to component library (question 10)**
+8. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
+    - **Only asked if user chose YES to component library (question 7)**
     - This will be used as `github_token`
     - Used in: .npmrc for authenticating with GitHub Package Registry
     - Required permissions: `read:packages`
     - Token will be inserted into .npmrc to enable component library installation
     - **Security Note**: The token will be written to .npmrc which is gitignored. Never commit tokens to version control.
+
+### Auto-Configured Parameters
+
+The following are automatically set to use the latest recommended tools:
+- `use_latest_versions`: Always `true` (fetch latest versions from npm)
+- `test_framework`: Always `vitest` (latest recommended testing framework)
+- `state_management`: Always `pinia` (latest recommended state management)
 
 ### Version Management
 

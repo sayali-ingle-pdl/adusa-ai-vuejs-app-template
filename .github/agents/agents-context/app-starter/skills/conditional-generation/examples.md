@@ -1,5 +1,7 @@
 # Conditional Generation Examples
 
+> **Note**: See `SKILL.md` for the basic logic. This file contains detailed examples for different application types.
+
 ## Example 1: Micro-Frontend Application
 
 ### Configuration

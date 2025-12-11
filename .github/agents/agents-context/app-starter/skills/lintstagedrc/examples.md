@@ -1,13 +1,6 @@
 # Lint-Staged Configuration Examples
 
-## Example: .lintstagedrc.json
-
-```json
-{
-  "*.{js,ts,vue}": ["eslint --fix", "prettier --write"],
-  "*.{json,md,yml,yaml}": ["prettier --write"]
-}
-```
+> **Note**: See `SKILL.md` for the basic template. This file contains detailed explanations and extended examples.
 
 ## What Each Configuration Does
 

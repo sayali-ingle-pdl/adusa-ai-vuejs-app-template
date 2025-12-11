@@ -9,14 +9,6 @@ Create the file: `babel.config.cjs`
 ## Example File
 See: `examples.md` in this directory for complete examples and detailed explanations.
 
-## Template
-
-```javascript
-module.exports = {
-  presets: ['@babel/preset-env'],
-};
-```
-
 ## Notes
 - Simple Babel configuration for Jest and test environments
 - Transpiles modern JavaScript (ES6+) for Node test environment

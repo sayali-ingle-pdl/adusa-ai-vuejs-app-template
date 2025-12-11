@@ -6,18 +6,8 @@ Generate Prettier configuration file for code formatting.
 ## Output
 Create the file: `.prettierrc`
 
-## Example File
-See: `examples.md` in this directory for complete examples and detailed explanations.
-
 ## Template
-
-```json
-{
-  "singleQuote": true,
-  "semi": true,
-  "trailingComma": "es5"
-}
-```
+See: `examples.md` in this directory for complete template and detailed examples.
 
 ## Notes
 - Enforces consistent code style across the project

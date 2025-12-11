@@ -1,14 +1,8 @@
-# Examples for tsconfig Skill
+# TypeScript Configuration Examples
 
-## Usage
+> **Note**: See `SKILL.md` for skill instructions. This file contains the template and detailed examples.
 
-Generate a TypeScript configuration file for a Vue 3 project:
-
-```
-@app-starter create tsconfig
-```
-
-## Generated File
+## Basic Template
 
 This skill creates `tsconfig.json` with the following configuration:
 

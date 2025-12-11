@@ -6,17 +6,8 @@ Generate .env.local file for local development environment configuration.
 ## Output
 Create the file: `.env.local`
 
-## Example File
-See: `examples.md` in this directory for complete examples and detailed explanations.
-
 ## Template
-
-```bash
-NODE_ENV=development
-VITE_DATADOG_ENV=local
-VITE_DATADOG_APPLICATION_ID=<>
-VITE_DATADOG_CLIENT_TOKEN=<>
-```
+See: `examples.md` in this directory for complete template and detailed examples.
 
 ## Notes
 - `.env.local` is used for local development environment variables

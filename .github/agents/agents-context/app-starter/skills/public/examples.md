@@ -1,5 +1,18 @@
 # Public Folder Examples
 
+> **Note**: See `SKILL.md` for skill instructions. This file contains implementation details and examples.
+
+## Implementation
+
+Copy the assets from the skill's assets directory to the project's public folder:
+
+```bash
+mkdir -p ./public
+cp -r .github/agents/agents-context/app-starter/skills/public/assets/* ./public/
+```
+
+The assets directory contains all required favicon and icon files ready to be copied.
+
 ## site.webmanifest
 
 The web app manifest enables Progressive Web App features:

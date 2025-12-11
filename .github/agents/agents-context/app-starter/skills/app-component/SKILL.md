@@ -7,32 +7,11 @@ Generate the `src/App.vue` root component.
 Create the file: `src/App.vue`
 
 ## Template
-
-```vue
-<template>
-  <div id="app">
-    <router-view />
-  </div>
-</template>
-
-<script setup lang="ts">
-// Root component - minimal setup
-// Router view will render the current route component
-</script>
-
-<style lang="scss">
-@use '@/theme/' as *;
-
-#app {
-  font-family: $font-family-base;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: $color-text-primary;
-}
-</style>
-```
+See: `examples.md` in this directory for complete template and detailed examples.
 
 ## Notes
 - Simple root component with router-view
+- The `id` attribute should use the `appId` constant from global constants
 - Imports theme variables for global styling
 - No scoped styles to allow global CSS
+- Component should be minimal and serve as a container for the router view

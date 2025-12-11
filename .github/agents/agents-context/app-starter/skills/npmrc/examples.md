@@ -1,10 +1,12 @@
 # NPM RC Configuration Examples
 
-## Example: .npmrc
+> **Note**: See `SKILL.md` for skill instructions. This file contains detailed explanations and extended examples.
+
+## Basic Template
 
 ```
 @RoyalAholdDelhaize:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GH_PACKAGE_LIBRARY_TOKEN}
+//npm.pkg.github.com/:_authToken={github_token}
 ```
 
 ## What Each Line Does

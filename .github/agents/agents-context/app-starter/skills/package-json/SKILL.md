@@ -1,19 +1,16 @@
 # Package JSON Skill
 
 ## Purpose
-Generate the `package.json` file for a Vue 3 Vite application with all necessary dependencies, dev dependencies, and scripts.
+Generate the `package.json` file for a Vue 3 Vite application with all necessary dependencies, dev dependencies, and scripts using the latest package versions from npm.
 
 ## Instructions
 
 1. **Gather Input Parameters** from user (see Input Parameters section below)
-2. **Check version strategy**: If `use_latest_versions` is true, use "Version Configuration" below; otherwise use pinned versions
-3. **Load versions**: For "latest" entries, fetch from npm: `npm view <package> version`
-4. **Select Template**: Choose appropriate template from `reference/` directory based on user choices
-   - If `use_latest_versions === true`: Use `reference/latest-versions.md`
-   - Otherwise: Select based on `test_framework` and `state_management`
-5. **Generate** package.json using the selected template
-6. **Validate** output meets all requirements
-7. **Create** the file at project root: `package.json`
+2. **Fetch latest versions** from npm: `npm view <package> version`
+3. **Generate** package.json using the `reference/latest-versions.md` template
+4. **Replace placeholders** with resolved versions
+5. **Validate** output meets all requirements
+6. **Create** the file at project root: `package.json`
 
 ## Input Parameters
 
@@ -21,42 +18,20 @@ Ask the user or read from `copilot-instructions.md` and `docs/requirements/appli
 - `application_name`: The application name in kebab-case
 - `project_scope`: The NPM scope/organization
 - `default_port`: The development server port
-- `use_latest_versions`: Whether to use latest versions from npm (`true` or `false`) - **REQUIRED**
-- `test_framework`: Testing framework (`jest` or `vitest`) - **Only if `use_latest_versions === false`**
-- `state_management`: State management library (`vuex` or `pinia`) - **Only if `use_latest_versions === false`**
+- `test_framework`: Testing framework - always `vitest` (latest recommended)
+- `state_management`: State management library - always `pinia` (latest recommended)
 
-**Version Strategy**:
-- If `use_latest_versions === true`: Use "Version Configuration" section below and fetch from npm
-  - Automatically uses: Vitest (test framework) + Pinia (state management) - latest recommendations
-- If `use_latest_versions === false`: Use pinned versions from selected template
-  - User chooses: test_framework and state_management
+## Version Strategy
 
-When `use_latest_versions` is true:
+**Always use latest versions from npm**:
 - Fetch from npm: `npm view <package> version`
 - Apply caret prefix: `3.5.13` → `^3.5.13`
 - Use template: `reference/latest-versions.md`
 - Use recommended tools: Vitest + Pinia
 
-When `use_latest_versions` is false:
-- User selects test framework (jest/vitest) and state management (vuex/pinia)
-- Use pinned versions from template (e.g., `reference/jest-vuex.md`)
-- No npm fetch needed
+## Template Reference
 
-## Template Reference Selection
-
-Based on `use_latest_versions`, `test_framework` and `state_management`, use the appropriate template from `reference/`:
-
-**If `use_latest_versions === true`**:
-- Use: `reference/latest-versions.md` (fetches latest versions from npm)
-- Automatically sets: `test_framework = "vitest"` and `state_management = "pinia"`
-- These are the latest recommended tools
-
-**If `use_latest_versions === false`**:
-- Select template based on user's choices:
-  - **Jest + Vuex**: `reference/jest-vuex.md`
-  - **Jest + Pinia**: `reference/jest-pinia.md`
-  - **Vitest + Vuex**: `reference/vitest-vuex.md`
-  - **Vitest + Pinia**: `reference/vitest-pinia.md`
+Use: `reference/latest-versions.md` (fetches latest versions from npm)
 
 ## Output
 - File: `package.json` at project root
@@ -71,13 +46,13 @@ Based on `use_latest_versions`, `test_framework` and `state_management`, use the
   "private": true,
   "type": "module",
   "scripts": {
-    // See reference.md for complete scripts list
+    // See reference/latest-versions.md for complete scripts list
   },
   "dependencies": {
-    // See reference.md for complete dependencies
+    // See reference/latest-versions.md for complete dependencies
   },
   "devDependencies": {
-    // See reference.md for complete devDependencies
+    // See reference/latest-versions.md for complete devDependencies
   }
 }
 ```
@@ -91,97 +66,47 @@ Based on `use_latest_versions`, `test_framework` and `state_management`, use the
 
 ## Version Management
 
-### Using Latest Versions
-When the user asks for the **latest configuration**, the skill should:
+### Fetching Latest Versions
 
-1. **Load versions.json**:
-   ```javascript
-   const versionsConfig = require('../../versions.json');
-   ```
+1. **Load version configuration** from this SKILL.md (see Version Configuration section below)
 
 2. **Resolve "latest" entries**:
-   - For packages marked as `"latest"` in versions.json
-   - Use the version-resolver skill to fetch from npm registry
-   - Example: `"vue": "latest"` → `"vue": "^3.5.13"`
+   - For all packages marked as `"latest"` in the configuration
+   - Fetch current version from npm: `npm view <package> version`
+   - Example: `"vue": "latest"` → `npm view vue version` → `"vue": "^3.5.13"`
 
 3. **Apply resolved versions**:
    ```json
    {
      "dependencies": {
-       "vue": "{{vue_version}}",           // Resolved from versions.json
+       "vue": "{{vue_version}}",           // Resolved from npm
        "vue-router": "{{vue_router_version}}",
-       "vuex": "{{vuex_version}}"
+       "pinia": "{{pinia_version}}"
      }
    }
    ```
 
-### Version Resolution Examples
+### Version Resolution Example
 
-**Example 1: All Latest**
 ```json
-// versions.json
+// Version Configuration (from this SKILL.md)
 {
   "core": {
     "vue": "latest",
     "vite": "latest"
-  },
-  "dependencies": {
-    "vue-router": "latest",
-    "axios": "latest"
   }
 }
 
-// Result after resolution
+// After fetching from npm
 {
   "dependencies": {
-    "vue": "^3.5.13",
-    "vue-router": "^4.6.3",
-    "axios": "^1.7.9"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "vite": "^6.3.5"
   }
 }
 ```
-
-**Example 2: Mixed (Latest + Pinned)**
-```json
-// versions.json
-{
-  "core": {
-    "vue": "latest",
-    "typescript": "^5.7.3"
-  }
-}
-
-// Result after resolution
-{
-  "dependencies": {
-    "vue": "^3.5.13"  // Fetched from npm
-  },
-  "devDependencies": {
-    "typescript": "^5.7.3"  // Used as-is
-  }
-}
-```
-
-### User Request Handling
-
-## User Request Handling
-
-**When user says**: "Generate package.json with latest versions" OR `use_latest_versions === true`
-**Action**:
-1. Use Version Configuration section below from this SKILL.md
-2. For all entries: Run `npm view <package> version` to fetch current version
-3. Apply caret prefix: `3.5.13` → `^3.5.13`
-4. Use template: `reference/latest-versions.md`
-5. Generate package.json with resolved versions
-
-**When user says**: "Use stable/tested versions" OR `use_latest_versions === false`
-**Action**:
-1. Select appropriate template from `reference/` based on test_framework and state_management
-2. Use pinned versions from selected template (no npm fetch needed)
-3. Generate package.json with specified versions
 
 ## Version Configuration (versions.json)
 

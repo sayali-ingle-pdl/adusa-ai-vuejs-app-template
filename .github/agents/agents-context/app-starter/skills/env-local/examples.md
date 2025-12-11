@@ -1,6 +1,8 @@
 # Environment Local Configuration Examples
 
-## Example: .env.local
+> **Note**: See `SKILL.md` for skill instructions. This file contains the template and detailed examples.
+
+## Basic Template
 
 ```bash
 NODE_ENV=development

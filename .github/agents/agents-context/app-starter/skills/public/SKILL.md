@@ -17,15 +17,7 @@ Create the following files in the `public/` directory:
 - `site.webmanifest` - Web app manifest file
 
 ## Implementation
-
-Copy the assets from the skill's assets directory to the project's public folder:
-
-```bash
-mkdir -p ./public
-cp -r .github/agents/agents-context/app-starter/skills/public/assets/* ./public/
-```
-
-The assets directory contains all required favicon and icon files ready to be copied.
+See: `examples.md` in this directory for implementation details and file examples.
 
 ## Notes
 - The public folder contains static assets that are served directly without processing

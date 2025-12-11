@@ -1,6 +1,8 @@
 # SonarQube Configuration Examples
 
-## Example: sonar-project.properties
+> **Note**: See `SKILL.md` for skill instructions. This file contains detailed explanations and extended examples.
+
+## Basic Template
 
 ```properties
 sonar.projectKey=adusa-digital-fulfillment_ex-facilitator_sup-omni-inventory-manager-web

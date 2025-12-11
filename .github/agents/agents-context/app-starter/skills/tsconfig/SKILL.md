@@ -7,41 +7,7 @@ Generate the `tsconfig.json` file for TypeScript compilation configuration.
 Create the file: `tsconfig.json`
 
 ## Template
-
-```json
-{
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": true,
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
-    "types": ["jest", "vite/client"],
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "src/shims-svg.d.ts"
-  ],
-  "exclude": ["node_modules", "src/**/*.spec.ts", "src/**/*.spec.tsx"]
-}
-```
+See: `examples.md` in this directory for complete template and detailed examples.
 
 ## Notes
 - The `paths` configuration enables `@/` alias for the `src/` directory

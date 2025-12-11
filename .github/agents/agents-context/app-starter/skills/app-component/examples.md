@@ -1,6 +1,34 @@
 # App Component Examples
 
-## App.vue Example
+> **Note**: See `SKILL.md` for skill instructions. This file contains the template and detailed examples.
+
+## Basic Template
+
+```vue
+<template>
+  <div id="app">
+    <router-view />
+  </div>
+</template>
+
+<script setup lang="ts">
+// Root component - minimal setup
+// Router view will render the current route component
+</script>
+
+<style lang="scss">
+@use '@/theme/' as *;
+
+#app {
+  font-family: $font-family-base;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: $color-text-primary;
+}
+</style>
+```
+
+## App.vue Example with Application ID
 
 ```vue
 <template>

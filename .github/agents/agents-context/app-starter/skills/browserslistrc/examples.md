@@ -1,6 +1,8 @@
 # Browserslist Configuration Examples
 
-## Example: .browserslistrc
+> **Note**: See `SKILL.md` for skill instructions. This file contains the template and detailed examples.
+
+## Basic Template
 
 ```
 > 1%

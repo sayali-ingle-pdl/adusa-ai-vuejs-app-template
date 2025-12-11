@@ -1,5 +1,7 @@
 # Package.json Examples
 
+> **Note**: See `SKILL.md` for the basic template logic. This file contains examples for different configurations.
+
 ## Latest Versions Configuration
 
 **When user requests "latest configuration" or "use latest versions":**

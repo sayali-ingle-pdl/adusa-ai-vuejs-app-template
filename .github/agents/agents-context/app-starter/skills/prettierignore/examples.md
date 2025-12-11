@@ -1,6 +1,8 @@
 # Prettier Ignore Configuration Examples
 
-## Example: .prettierignore
+> **Note**: See `SKILL.md` for skill instructions. This file contains the template and detailed examples.
+
+## Basic Template
 
 ```
 dist/
