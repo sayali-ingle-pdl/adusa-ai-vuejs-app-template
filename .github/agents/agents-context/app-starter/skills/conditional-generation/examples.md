@@ -68,6 +68,11 @@ export const datadogEnv = import.meta.env.VITE_DATADOG_ENV;
 **✅ package.json**
 ```json
 {
+  "scripts": {
+    "serve": "npm-run-all --parallel build:watch dev lint:init:watch",
+    "dev": "vite preview --port 8091",
+    "build:watch": "vite build --watch"
+  },
   "dependencies": {
     "vue": "^3.5.13",
     "single-spa-vue": "^3.0.2"
@@ -140,6 +145,11 @@ export const datadogEnv = import.meta.env.VITE_DATADOG_ENV;
 **✅ package.json**
 ```json
 {
+  "scripts": {
+    "serve": "vite serve --port 8090 --mode standalone",
+    "dev": "vite preview --port 8090",
+    "build": "vite build"
+  },
   "dependencies": {
     "vue": "^3.5.13"
   }

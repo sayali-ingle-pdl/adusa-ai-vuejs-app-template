@@ -29,14 +29,13 @@ All versions are dynamically resolved from `../versions.json`:
   "scripts": {
     "dev": "vite preview --port {{default_port}}",
     "build:watch": "vite build --watch",
-    "serve": "npm-run-all --parallel build:watch dev lint:init:watch",
+    "serve": "{{serve_command}}",
     "build": "vite build",
     "test:unit": "{{test_framework}}",
     "test:unit:watch": "{{test_framework}} --watch",
     "lint:init:watch": "npm run lint && npm run lint:watch",
     "lint:watch": "chokidar \"src/**/*.{js,ts,vue}\" -i node_modules -i dist -i .git --debounce 500 --initial false -c \"npm run lint\"",
     "lint": "eslint --ext .js,.ts,.vue src",
-    "serve:standalone": "vite serve --port {{default_port}} --mode standalone",
     "prettier": "prettier --write .",
     "prettier-watch": "onchange \"**/*\" \"!dist/**\" \"!node_modules/**\" -- prettier --write {{changed}}",
     "prepare": "husky"
@@ -93,6 +92,32 @@ All versions are dynamically resolved from `../versions.json`:
 ```
 
 ## Conditional Dependencies
+
+### Serve Command Based on Application Type
+
+The `serve` script differs based on application type:
+
+**Standalone Application** (`application_type === "standalone"`):
+```json
+{
+  "scripts": {
+    "serve": "vite serve --port {{default_port}} --mode standalone"
+  }
+}
+```
+
+**Micro-Frontend Application** (`application_type === "micro-frontend"`):
+```json
+{
+  "scripts": {
+    "serve": "npm-run-all --parallel build:watch dev lint:init:watch"
+  }
+}
+```
+
+**Explanation**:
+- **Standalone**: Uses Vite dev server directly for fast HMR and development
+- **Micro-Frontend**: Uses build-watch + preview to serve the built SystemJS bundle, which is required for single-spa integration
 
 ### Single-spa (Micro-Frontend)
 If `application_type === "micro-frontend"`:
