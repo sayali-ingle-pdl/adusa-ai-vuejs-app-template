@@ -19,6 +19,7 @@ From configuration:
 |---------|---------------|------------|
 | `.env.standalone` | ✅ Create | ❌ Skip |
 | `single-spa-vue` dependency | ✅ Include | ❌ Skip |
+| `serve` npm script | `npm-run-all --parallel build:watch dev lint:init:watch` | `vite serve --port {port} --mode standalone` |
 | `VITE_LAUNCHER_APP_URL` | ✅ Include | ❌ Skip |
 | `launcherAppUrl` in EnvConsts | ✅ Export | ❌ Skip |
 | main.ts template | single-spa lifecycle | Simple mount |
@@ -303,6 +304,8 @@ function validateConditionalGeneration(config) {
 ### Affects package-json Skill
 - Micro-frontend: Include single-spa-vue dependency
 - Standalone: Exclude single-spa-vue dependency
+- Micro-frontend: `serve` script = `"npm-run-all --parallel build:watch dev lint:init:watch"`
+- Standalone: `serve` script = `"vite serve --port {{default_port}} --mode standalone"`
 
 ### Affects vite-config Skill
 - Micro-frontend: Set build.lib.formats = ['system']

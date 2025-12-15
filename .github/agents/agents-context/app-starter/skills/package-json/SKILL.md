@@ -18,6 +18,7 @@ Ask the user or read from `copilot-instructions.md` and `docs/requirements/appli
 - `application_name`: The application name in kebab-case
 - `project_scope`: The NPM scope/organization
 - `default_port`: The development server port
+- `application_type`: Either `standalone` or `micro-frontend` (determines serve command)
 - `test_framework`: Testing framework - always `vitest` (latest recommended)
 - `state_management`: State management library - always `pinia` (latest recommended)
 
@@ -46,6 +47,7 @@ Use: `reference/latest-versions.md` (fetches latest versions from npm)
   "private": true,
   "type": "module",
   "scripts": {
+    "serve": "{{serve_command}}"  // Conditional based on application_type
     // See reference/latest-versions.md for complete scripts list
   },
   "dependencies": {
