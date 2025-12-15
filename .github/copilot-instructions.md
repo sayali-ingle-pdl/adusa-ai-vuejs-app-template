@@ -27,9 +27,20 @@ Agent specializing in bootstrapping and configuring Vue 3 Vite applications. Use
 
 Before generating code, the agent should ask the user for the following application-specific parameters:
 
-### Required User Input
+### Question Flow Preference
 
-**IMPORTANT**: Ask these questions **ONE AT A TIME** in a conversational flow. Do NOT ask all questions at once.
+**FIRST QUESTION - ALWAYS ASK THIS:**
+
+**How would you like to provide the application configuration?**
+- Options: `all-at-once` or `one-at-a-time`
+- **`all-at-once`**: Display all questions together in a single list for the user to answer
+- **`one-at-a-time`**: Interactive conversational flow where each question is asked individually after receiving the previous answer
+
+Based on the user's choice:
+- If **`all-at-once`**: Present questions 1-12 in a formatted list and wait for all answers
+- If **`one-at-a-time`**: Ask questions 1-12 sequentially, waiting for each answer before proceeding
+
+### Required User Input
 
 Ask the user the following questions to gather the necessary parameters:
 
@@ -81,12 +92,44 @@ Ask the user the following questions to gather the necessary parameters:
     - Token will be inserted into .npmrc to enable component library installation
     - **Security Note**: The token will be written to .npmrc which is gitignored. Never commit tokens to version control.
 
+9. **What Vue API pattern do you want to use?**
+    - Options: `composition-api` or `options-api`
+    - **`composition-api`**: Modern functional approach that organizes code by logical concerns using reactivity primitives like `ref()` and `reactive()`. Best for large applications requiring better code reusability and scalability through composables.
+    - **`options-api`**: Traditional method that structures code into predefined options like `data`, `methods`, and `computed`. Familiar for developers coming from Vue 2.
+    - This will be used as `vue_api_pattern`
+    - Used in: Component template generation, view file structure
+    - **Default recommendation**: `composition-api` for new Vue 3 projects
+
+10. **What state management library do you want to use?**
+    - Options: `pinia` or `vuex`
+    - **`pinia`**: The recommended state management solution for Vue 3. Lightweight, intuitive API with built-in TypeScript support and great DevTools integration. Works seamlessly with Composition API.
+    - **`vuex`**: The traditional Vue state management library. Still fully supported but considered legacy for new Vue 3 projects. Better suited for Options API or migrating from Vue 2.
+    - This will be used as `state_management`
+    - Used in: Store setup, store file generation, dependencies in package.json
+    - **Default recommendation**: `pinia` for new Vue 3 projects
+
+11. **What testing framework do you want to use?**
+    - Options: `vitest` or `jest`
+    - **`vitest`**: Modern testing framework built for Vite. Native ESM support, faster execution, better integration with Vite tooling, and includes UI mode for interactive testing.
+    - **`jest`**: Mature and widely-used testing framework. Extensive ecosystem and documentation but requires additional configuration for ESM and Vite.
+    - This will be used as `test_framework`
+    - Used in: Test configuration files, test dependencies in package.json, test file templates
+    - **Default recommendation**: `vitest` for new Vue 3 + Vite projects
+
+12. **Do you want to use the latest package versions?**
+    - Options: `yes` or `no`
+    - **`yes`**: Automatically fetch and use the latest stable versions from npm registry for all packages (Vue, Vite, TypeScript, etc.)
+    - **`no`**: Use pinned/tested versions specified in the template configuration
+    - This will be used as `use_latest_versions`
+    - Used in: package.json version resolution
+    - **Default recommendation**: `yes` for new projects, `no` for production stability
+    - **Note**: If `yes`, the generator will run `npm view <package> version` for each package and apply caret ranges
+
 ### Auto-Configured Parameters
 
-The following are automatically set to use the latest recommended tools:
-- `use_latest_versions`: Always `true` (fetch latest versions from npm)
-- `test_framework`: Always `vitest` (latest recommended testing framework)
-- `state_management`: Always `pinia` (latest recommended state management)
+The following are automatically set based on user selections:
+- `vite_build_format`: Set based on `application_type` (`micro-frontend` → `"system"`, `standalone` → `"es"`)
+- Package versions: Managed via `versions.json` or fetched from npm based on `use_latest_versions`
 
 ### Version Management
 
@@ -219,7 +262,9 @@ src/
 
 ### Component Template
 
-When generating Vue components, use this structure:
+When generating Vue components, use the structure based on the selected `vue_api_pattern`:
+
+#### Composition API (Recommended)
 
 ```vue
 <template>
@@ -241,7 +286,55 @@ const emit = defineEmits<{
   // emit definitions
 }>();
 
-// Component logic
+// Component logic using ref(), reactive(), computed()
+</script>
+
+<style scoped lang="scss">
+@use '@/theme/' as *;
+
+// Scoped styles
+</style>
+```
+
+#### Options API
+
+```vue
+<template>
+  <!-- Component template -->
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'ComponentName',
+  
+  props: {
+    // prop definitions
+  },
+  
+  emits: {
+    // emit definitions
+  },
+  
+  data() {
+    return {
+      // reactive data properties
+    };
+  },
+  
+  computed: {
+    // computed properties
+  },
+  
+  methods: {
+    // component methods
+  },
+  
+  mounted() {
+    // lifecycle hooks
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -343,14 +436,66 @@ export const useEntityStore = defineStore('entity', () => {
 
 ## Testing Conventions
 
+**IMPORTANT**: Test files MUST be generated alongside UI components, views, stores, directives, and utilities.
+
+### Test File Generation Rules
+
+When generating any of the following, **ALWAYS create a corresponding test file**:
+- **Vue Components** (`src/components/**/*.vue`) → `{ComponentName}.spec.ts` in same directory
+- **Views** (`src/views/**/*.vue`) → `{ViewName}.spec.ts` in same directory
+- **Store Modules** (Vuex: `src/store/modules/*.ts`, Pinia: `src/stores/*.ts`) → `{moduleName}.spec.ts` in same directory
+- **Directives** (`src/directives/*.ts`) → `{directiveName}.spec.ts` in same directory
+- **Utilities** (`src/shared/utils/*.ts`) → `{utilityName}.spec.ts` in same directory
+- **Mixins** (`src/shared/mixins/*.ts`) → `{mixinName}.spec.ts` in same directory
+- **Services** (`src/services/*.ts`) → **OPTIONAL** - typically mocked in component tests
+
+### Test File Location
+- Test files live **co-located** with their source files (not in separate `tests/` directory)
+- Naming convention: `{filename}.spec.ts` (use `.spec.ts` consistently)
+
 ### Jest Testing (if using Jest)
-- Use Jest with Vue Test Utils for component testing
+- Use Jest with Vue Test Utils (`@vue/test-utils`) for component testing
 - Use `@vue/vue3-jest` transformer for `.vue` files
+- Use `ts-jest` for TypeScript files
 - Mock external dependencies (axios, router, store)
 - Target >80% coverage for services and stores
 - Target >70% coverage for components
 - Test file naming: `{filename}.spec.ts`
 - Configuration: `jest.config.cjs`
+
+#### Jest Configuration Template
+```javascript
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  collectCoverage: true,
+  collectCoverageFrom: [
+    '**/src/**/*.{ts,js,vue}',
+    '!**/tests/**',
+    '!**/node_modules/**',
+    '!**/src/**/interfaces/*.ts',
+    '!**/src/**/router/*.ts',
+    '!**/src/**/services/**/*.ts',
+    '!**/src/**/shared/constants/**/*.ts',
+    '!**/src/**/shared/EnvConsts.ts',
+    '!**/src/store/index.ts',
+    '!**/src/App.vue',
+    '!**/src/main.ts',
+  ],
+  testMatch: ['**/src/**/*.spec.{ts,js,vue}'],
+  moduleFileExtensions: ['ts', 'js', 'json', 'vue'],
+  transform: {
+    '^.+\\.vue$': '@vue/vue3-jest',
+    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.js$': 'babel-jest',
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '\\.svg$': '<rootDir>/tests/unit/svgMock.cjs',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+  },
+};
+```
 
 ### Vitest Testing (if using Vitest)
 - Use Vitest with Vue Test Utils for component testing
@@ -361,6 +506,304 @@ export const useEntityStore = defineStore('entity', () => {
 - Target >70% coverage for components
 - Test file naming: `{filename}.spec.ts` or `{filename}.test.ts`
 - Configuration: `vitest.config.ts`
+
+### Component Test Template (Jest + Options API)
+
+When generating tests for components using **Options API**:
+
+```typescript
+import { shallowMount } from '@vue/test-utils';
+import { createStore } from 'vuex';
+import ComponentName from './ComponentName.vue';
+
+describe('ComponentName.vue', () => {
+  // Mock store modules if component uses Vuex
+  const mockStoreModule = {
+    getters: {
+      getSomeData: jest.fn().mockImplementation(() => 'mock data'),
+    },
+    actions: {
+      fetchData: jest.fn(),
+    },
+    namespaced: true,
+  };
+
+  const createWrapper = (customOptions = {}) => {
+    const store = createStore({
+      modules: {
+        moduleName: mockStoreModule,
+      },
+    });
+
+    return shallowMount(ComponentName, {
+      global: {
+        plugins: [store],
+      },
+      ...customOptions,
+    });
+  };
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('component exists', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.exists()).toBe(true);
+  });
+
+  describe('mounted lifecycle', () => {
+    it('fetches data on mount', () => {
+      createWrapper();
+      expect(mockStoreModule.actions.fetchData).toHaveBeenCalled();
+    });
+  });
+
+  describe('computed properties', () => {
+    it('returns correct computed value', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.vm.computedProperty).toBe('expected value');
+    });
+  });
+
+  describe('methods', () => {
+    it('handles button click correctly', async () => {
+      const wrapper = createWrapper();
+      await wrapper.find('button').trigger('click');
+      expect(mockStoreModule.actions.fetchData).toHaveBeenCalled();
+    });
+  });
+});
+```
+
+### Component Test Template (Jest + Composition API)
+
+When generating tests for components using **Composition API**:
+
+```typescript
+import { shallowMount } from '@vue/test-utils';
+import { createPinia, setActivePinia } from 'pinia';
+import ComponentName from './ComponentName.vue';
+import { useEntityStore } from '@/stores/entityStore';
+
+describe('ComponentName.vue', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
+
+  const createWrapper = (props = {}) => {
+    return shallowMount(ComponentName, {
+      global: {
+        plugins: [createPinia()],
+      },
+      props,
+    });
+  };
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('component exists', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.exists()).toBe(true);
+  });
+
+  describe('props', () => {
+    it('receives and displays prop correctly', () => {
+      const wrapper = createWrapper({ title: 'Test Title' });
+      expect(wrapper.text()).toContain('Test Title');
+    });
+  });
+
+  describe('emits', () => {
+    it('emits event on button click', async () => {
+      const wrapper = createWrapper();
+      await wrapper.find('button').trigger('click');
+      expect(wrapper.emitted('update')).toBeTruthy();
+    });
+  });
+
+  describe('composables/stores', () => {
+    it('calls store action', async () => {
+      const wrapper = createWrapper();
+      const store = useEntityStore();
+      const fetchSpy = jest.spyOn(store, 'fetchItems');
+      
+      await wrapper.vm.loadData();
+      expect(fetchSpy).toHaveBeenCalled();
+    });
+  });
+});
+```
+
+### View Test Template
+
+Views typically test:
+- Lifecycle hooks (mounted, beforeUnmount)
+- Navigation and routing
+- Store interactions
+- Event handlers
+- Conditional rendering
+
+```typescript
+import { shallowMount } from '@vue/test-utils';
+import { createStore } from 'vuex';
+import ViewName from './ViewName.vue';
+
+describe('ViewName.vue', () => {
+  const createWrapper = () => {
+    const store = createStore({
+      modules: {
+        // mock store modules
+      },
+    });
+
+    return shallowMount(ViewName, {
+      global: {
+        plugins: [store],
+        stubs: ['router-link'],
+      },
+    });
+  };
+
+  it('view exists', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.exists()).toBe(true);
+  });
+
+  describe('mounted lifecycle', () => {
+    it('sets up event listeners on mount', () => {
+      const addEventListenerSpy = jest.spyOn(document, 'addEventListener');
+      const wrapper = createWrapper();
+      expect(addEventListenerSpy).toHaveBeenCalledWith(
+        'click',
+        expect.any(Function),
+        true
+      );
+      wrapper.unmount();
+    });
+  });
+
+  describe('navigation', () => {
+    it('navigates to correct route on action', async () => {
+      const wrapper = createWrapper();
+      const pushMock = jest.fn();
+      Object.defineProperty(wrapper.vm, '$router', {
+        value: { push: pushMock },
+      });
+      
+      await wrapper.vm.navigateToDetails('123');
+      expect(pushMock).toHaveBeenCalledWith({
+        name: 'Details',
+        params: { id: '123' },
+      });
+    });
+  });
+});
+```
+
+### Store Test Template (Vuex)
+
+```typescript
+import store from '@/store';
+import entityModule from './entityModule';
+
+describe('entity store module', () => {
+  beforeEach(() => {
+    // Reset module state before each test
+  });
+
+  describe('mutations', () => {
+    it('sets items correctly', () => {
+      const state = { items: [] };
+      const items = [{ id: 1, name: 'Item 1' }];
+      entityModule.mutations.setItems(state, items);
+      expect(state.items).toEqual(items);
+    });
+  });
+
+  describe('actions', () => {
+    it('fetches items and commits mutation', async () => {
+      const commit = jest.fn();
+      const mockItems = [{ id: 1, name: 'Item 1' }];
+      
+      // Mock API call
+      jest.spyOn(entityService, 'getAll').mockResolvedValue(mockItems);
+      
+      await entityModule.actions.fetchItems({ commit });
+      expect(commit).toHaveBeenCalledWith('setItems', mockItems);
+    });
+  });
+
+  describe('getters', () => {
+    it('returns filtered items', () => {
+      const state = { items: [{ id: 1, active: true }, { id: 2, active: false }] };
+      const result = entityModule.getters.activeItems(state);
+      expect(result).toHaveLength(1);
+    });
+  });
+});
+```
+
+### Store Test Template (Pinia)
+
+```typescript
+import { setActivePinia, createPinia } from 'pinia';
+import { useEntityStore } from './entityStore';
+
+describe('entity store', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
+
+  it('initializes with default state', () => {
+    const store = useEntityStore();
+    expect(store.items).toEqual([]);
+    expect(store.loading).toBe(false);
+  });
+
+  describe('actions', () => {
+    it('fetches items successfully', async () => {
+      const store = useEntityStore();
+      const mockItems = [{ id: 1, name: 'Item 1' }];
+      
+      jest.spyOn(entityService, 'getAll').mockResolvedValue(mockItems);
+      
+      await store.fetchItems();
+      expect(store.items).toEqual(mockItems);
+      expect(store.loading).toBe(false);
+    });
+  });
+
+  describe('getters', () => {
+    it('returns correct item count', () => {
+      const store = useEntityStore();
+      store.items = [{ id: 1 }, { id: 2 }];
+      expect(store.itemCount).toBe(2);
+    });
+  });
+});
+```
+
+### Test Coverage Requirements
+
+- **Components**: >70% coverage (focus on user interactions, computed properties, methods)
+- **Views**: >70% coverage (lifecycle, navigation, major workflows)
+- **Stores**: >80% coverage (state mutations, actions, getters)
+- **Utilities**: >80% coverage (all functions and edge cases)
+- **Directives**: >70% coverage (behavior and DOM manipulation)
+
+### Test Organization Best Practices
+
+1. **Describe blocks**: Group related tests logically
+   - Component/View name as top-level describe
+   - Group by: lifecycle hooks, computed properties, methods, events
+2. **Test naming**: Use descriptive test names that explain expected behavior
+3. **AAA Pattern**: Arrange, Act, Assert in each test
+4. **Mocking**: Mock external dependencies (API calls, router, store)
+5. **Cleanup**: Use `afterEach` to clear mocks and reset state
+6. **Isolation**: Each test should be independent and not rely on others
 
 ## Linting and Formatting
 
