@@ -51,11 +51,25 @@ The App Starter Agent has access to the following skills for generating project 
 ## Usage
 
 When invoked, this agent should:
-1. Prompt the user for all required application parameters as defined in `copilot-instructions.md`.
+1. Prompt the user for all required application parameters as defined in `copilot-instructions.md`:
+   - Application name
+   - NPM scope/organization
+   - Router base path
+   - API base path
+   - Development server port
+   - Application type (micro-frontend or standalone)
+   - Vue API pattern (composition-api or options-api)
+   - State management (pinia or vuex)
+   - Testing framework (vitest or jest)
+   - Use latest versions (yes or no)
+   - Include component library (yes or no)
+   - GitHub token (only if component library is yes)
 2. Read and understand additional parameters from `docs/requirements/application-parameters.md` if present
 3. Execute all skills in sequence to generate the complete application structure
-4. Run the required commands to install dependencies and verify the setup
-5. Verify that the application is in a runnable state
+4. **CRITICAL**: Execute `view-components` skill to generate initial views
+5. **CRITICAL**: Execute `testing` skill to generate test files for all views and components
+6. Run the required commands to install dependencies and verify the setup
+7. Verify that the application is in a runnable state
 
 ## Pre-execution validations
 
@@ -69,50 +83,73 @@ When invoked, this agent should:
 
 The skills should be executed in the following order to ensure dependencies are properly handled:
 
-### Phase 1: Project Setup
-1. Package JSON Skill
-2. NPM RC Skill
-3. Git Ignore Skill
-4. **Run `npm install`** to install dependencies
+### Phase 1: Configuration and Setup
+1. **Configuration Skill** - Load and validate user configuration (interactive prompts or config.json)
+2. **Conditional Generation Skill** - Determine which files to generate based on application type
+3. Package JSON Skill
+4. NPM RC Skill (if component library is included)
+5. Git Ignore Skill
+6. **Run `npm install`** to install dependencies
 
 ### Phase 2: Build Configuration
-5. TypeScript Config Skill
-6. Vite Config Skill
-7. Environment Files Skill
-8. Index HTML Skill
-9. Public Folder Skill
+7. TypeScript Config Skill
+8. Vite Config Skill
+9. Environment Files Skill (env-local, env-standalone if micro-frontend)
+10. Index HTML Skill
+11. Public Folder Skill
 
 ### Phase 3: Code Quality
-10. ESLint Config Skill
-11. Browserlist Config Skill
-12. Lint Staged Config Skill
-12. Prettier Config Skill
-13. Babel Config Skill
-14. Jest Config Skill
-15. Stylelint Config Skill
-16. SonarQube Properties Skill
-17. Husky Skill - **IMPORTANT**: Create `.husky/pre-commit` file (do NOT rely on auto-generated default)
+12. ESLint Config Skill
+13. Browserlist Config Skill
+14. Lint Staged Config Skill
+15. Prettier Config Skill
+16. Prettier Ignore Skill
+17. Babel Config Skill (if using Jest)
+18. Jest Config Skill (if test_framework === jest)
+19. Vitest Config Skill (if test_framework === vitest)
+20. Stylelint Config Skill
+21. SonarQube Properties Skill
+22. Husky Skill - **IMPORTANT**: Create `.husky/pre-commit` file (do NOT rely on auto-generated default)
 
 ### Phase 4: Application Structure
-18. TypeScript Shims Skill
-19. Global Constants Skill
-20. Environment Constants Skill
-21. Router Skill
-22. Store Skill
-23. App Component Skill (creates App.vue + App.spec.ts)
-24. View Components Skill (creates 2 .vue + 2 .spec.ts files)
-25. Main Entry Skill
+23. TypeScript Shims Skill
+24. Global Constants Skill
+25. Environment Constants Skill
 26. Theme Skill
+27. Router Skill
+28. Store Skill (Vuex or Pinia based on configuration)
+29. App Component Skill (creates App.vue + App.spec.ts)
 
-**Note:** Skills 23-24 include validation checkpoints to ensure test files are created.
+### Phase 5: Views and Tests (CRITICAL - ALWAYS EXECUTE)
+30. **View Components Skill** - Generate initial view components:
+    - `src/views/Home/Home.vue`
+    - `src/views/PageNotFoundView/PageNotFoundView.vue`
+    - Templates based on `vue_api_pattern` (composition-api or options-api)
+    
+31. **Testing Skill** - Generate test files for all components and views:
+    - `src/views/Home/Home.spec.ts`
+    - `src/views/PageNotFoundView/PageNotFoundView.spec.ts`
+    - `src/App.spec.ts`
+    - Templates based on `test_framework`, `vue_api_pattern`, and `state_management`
 
-### Phase 5: Deployment
-27. Docker Skill
-28. Nginx Default Configuration Skill
-29. Nginx Sites Available Skill
-30. Entrypoint Skill
+32. Main Entry Skill (varies: single-spa lifecycle for micro-frontend, simple mount for standalone)
 
-### Phase 6: Verification
+### Phase 6: Deployment
+33. Docker Skill
+34. Nginx Default Configuration Skill
+35. Nginx Sites Available Skill
+36. Entrypoint Skill
+
+### Phase 7: Component Library (Optional)
+37. Component Library Skill (if include_component_library === true)
+
+### Phase 8: Verification
+- Verify directory structure exists:
+  - `src/views/Home/Home.vue` ✓
+  - `src/views/Home/Home.spec.ts` ✓
+  - `src/views/PageNotFoundView/PageNotFoundView.vue` ✓
+  - `src/views/PageNotFoundView/PageNotFoundView.spec.ts` ✓
+  - `src/App.spec.ts` ✓
 - Run lint to verify linting setup. Resolve any linting errors if they arise.
 - Run stylelint to verify stylelint setup. Resolve any stylelint errors if they arise.
 - Build the app to verify build configuration. Resolve any build errors if they arise.
@@ -124,5 +161,67 @@ After all skills have been executed, the agent should:
 
 1. Create a `.env.local` file with placeholder values for required environment variables
 2. Verify that all generated files follow the naming conventions
-3. Ensure that the application can be started with `npm run serve`
-4. Provide a summary of the generated structure and next steps for the developer
+3. **Verify that views and tests were generated**:
+   - Check `src/views/Home/Home.vue` exists
+   - Check `src/views/Home/Home.spec.ts` exists
+   - Check `src/views/PageNotFoundView/PageNotFoundView.vue` exists
+   - Check `src/views/PageNotFoundView/PageNotFoundView.spec.ts` exists
+   - Check `src/App.spec.ts` exists
+4. Ensure that the application can be started with `npm run serve`
+5. Run `npm run test` to verify all tests pass
+6. Provide a summary of the generated structure and next steps for the developer
+
+## Critical Rules
+
+### MANDATORY: Views and Tests Generation
+
+**RULE 1**: ALWAYS generate initial view components
+- The `view-components` skill MUST be executed in Phase 5
+- Generates: `src/views/Home/Home.vue` and `src/views/PageNotFoundView/PageNotFoundView.vue`
+
+**RULE 2**: ALWAYS generate test files for views and components
+- The `testing` skill MUST be executed immediately after `view-components` in Phase 5
+- Generates test files co-located with source files (not in separate tests/ directory)
+- Test file naming: `{ComponentName}.spec.ts`
+
+**RULE 3**: Test files MUST match configuration
+- Use correct testing framework (`jest` vs `vitest`)
+- Use correct API pattern (`composition-api` vs `options-api`)
+- Use correct state management mocking (`pinia` vs `vuex`)
+
+**WHY**: The testing skill documentation explicitly states:
+> "Test files MUST be generated alongside UI components, views, stores, directives, and utilities."
+
+### Template Selection Logic
+
+Based on user configuration, select appropriate templates:
+
+**View Templates**:
+- `composition-api` → Use `<script setup lang="ts">` pattern
+- `options-api` → Use `export default defineComponent()` pattern
+
+**Test Templates**:
+- Combination of: `{test_framework}-{vue_api_pattern}-{state_management}`
+- Examples:
+  - `vitest-composition-pinia` → Vitest + Composition API + Pinia
+  - `jest-options-vuex` → Jest + Options API + Vuex
+
+**main.ts Templates**:
+- `micro-frontend` → Single-spa lifecycle exports
+- `standalone` → Simple createApp and mount
+
+### Conditional File Generation
+
+Based on `application_type`:
+
+**Micro-Frontend**:
+- Generate `.env.standalone` ✅
+- Include `single-spa-vue` dependency ✅
+- Use SystemJS build format (`system`) ✅
+- Include `VITE_LAUNCHER_APP_URL` env var ✅
+
+**Standalone**:
+- Skip `.env.standalone` ❌
+- Skip `single-spa-vue` dependency ❌
+- Use ES module format (`es`) ✅
+- Skip `VITE_LAUNCHER_APP_URL` env var ❌

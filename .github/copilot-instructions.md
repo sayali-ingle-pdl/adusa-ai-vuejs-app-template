@@ -27,9 +27,20 @@ Agent specializing in bootstrapping and configuring Vue 3 Vite applications. Use
 
 Before generating code, the agent should ask the user for the following application-specific parameters:
 
-### Required User Input
+### Question Flow Preference
 
-**IMPORTANT**: Ask these questions **ONE AT A TIME** in a conversational flow. Do NOT ask all questions at once.
+**FIRST QUESTION - ALWAYS ASK THIS:**
+
+**How would you like to provide the application configuration?**
+- Options: `all-at-once` or `one-at-a-time`
+- **`all-at-once`**: Display all questions together in a single list for the user to answer
+- **`one-at-a-time`**: Interactive conversational flow where each question is asked individually after receiving the previous answer
+
+Based on the user's choice:
+- If **`all-at-once`**: Present questions 1-12 in a formatted list and wait for all answers
+- If **`one-at-a-time`**: Ask questions 1-12 sequentially, waiting for each answer before proceeding
+
+### Required User Input
 
 Ask the user the following questions to gather the necessary parameters:
 
@@ -81,12 +92,44 @@ Ask the user the following questions to gather the necessary parameters:
     - Token will be inserted into .npmrc to enable component library installation
     - **Security Note**: The token will be written to .npmrc which is gitignored. Never commit tokens to version control.
 
+9. **What Vue API pattern do you want to use?**
+    - Options: `composition-api` or `options-api`
+    - **`composition-api`**: Modern functional approach that organizes code by logical concerns using reactivity primitives like `ref()` and `reactive()`. Best for large applications requiring better code reusability and scalability through composables.
+    - **`options-api`**: Traditional method that structures code into predefined options like `data`, `methods`, and `computed`. Familiar for developers coming from Vue 2.
+    - This will be used as `vue_api_pattern`
+    - Used in: Component template generation, view file structure
+    - **Default recommendation**: `composition-api` for new Vue 3 projects
+
+10. **What state management library do you want to use?**
+    - Options: `pinia` or `vuex`
+    - **`pinia`**: The recommended state management solution for Vue 3. Lightweight, intuitive API with built-in TypeScript support and great DevTools integration. Works seamlessly with Composition API.
+    - **`vuex`**: The traditional Vue state management library. Still fully supported but considered legacy for new Vue 3 projects. Better suited for Options API or migrating from Vue 2.
+    - This will be used as `state_management`
+    - Used in: Store setup, store file generation, dependencies in package.json
+    - **Default recommendation**: `pinia` for new Vue 3 projects
+
+11. **What testing framework do you want to use?**
+    - Options: `vitest` or `jest`
+    - **`vitest`**: Modern testing framework built for Vite. Native ESM support, faster execution, better integration with Vite tooling, and includes UI mode for interactive testing.
+    - **`jest`**: Mature and widely-used testing framework. Extensive ecosystem and documentation but requires additional configuration for ESM and Vite.
+    - This will be used as `test_framework`
+    - Used in: Test configuration files, test dependencies in package.json, test file templates
+    - **Default recommendation**: `vitest` for new Vue 3 + Vite projects
+
+12. **Do you want to use the latest package versions?**
+    - Options: `yes` or `no`
+    - **`yes`**: Automatically fetch and use the latest stable versions from npm registry for all packages (Vue, Vite, TypeScript, etc.)
+    - **`no`**: Use pinned/tested versions specified in the template configuration
+    - This will be used as `use_latest_versions`
+    - Used in: package.json version resolution
+    - **Default recommendation**: `yes` for new projects, `no` for production stability
+    - **Note**: If `yes`, the generator will run `npm view <package> version` for each package and apply caret ranges
+
 ### Auto-Configured Parameters
 
-The following are automatically set to use the latest recommended tools:
-- `use_latest_versions`: Always `true` (fetch latest versions from npm)
-- `test_framework`: Always `vitest` (latest recommended testing framework)
-- `state_management`: Always `pinia` (latest recommended state management)
+The following are automatically set based on user selections:
+- `vite_build_format`: Set based on `application_type` (`micro-frontend` → `"system"`, `standalone` → `"es"`)
+- Package versions: Managed via `versions.json` or fetched from npm based on `use_latest_versions`
 
 ### Version Management
 
@@ -219,7 +262,9 @@ src/
 
 ### Component Template
 
-When generating Vue components, use this structure:
+When generating Vue components, use the structure based on the selected `vue_api_pattern`:
+
+#### Composition API (Recommended)
 
 ```vue
 <template>
@@ -241,7 +286,55 @@ const emit = defineEmits<{
   // emit definitions
 }>();
 
-// Component logic
+// Component logic using ref(), reactive(), computed()
+</script>
+
+<style scoped lang="scss">
+@use '@/theme/' as *;
+
+// Scoped styles
+</style>
+```
+
+#### Options API
+
+```vue
+<template>
+  <!-- Component template -->
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'ComponentName',
+  
+  props: {
+    // prop definitions
+  },
+  
+  emits: {
+    // emit definitions
+  },
+  
+  data() {
+    return {
+      // reactive data properties
+    };
+  },
+  
+  computed: {
+    // computed properties
+  },
+  
+  methods: {
+    // component methods
+  },
+  
+  mounted() {
+    // lifecycle hooks
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -343,24 +436,18 @@ export const useEntityStore = defineStore('entity', () => {
 
 ## Testing Conventions
 
-### Jest Testing (if using Jest)
-- Use Jest with Vue Test Utils for component testing
-- Use `@vue/vue3-jest` transformer for `.vue` files
-- Mock external dependencies (axios, router, store)
-- Target >80% coverage for services and stores
-- Target >70% coverage for components
-- Test file naming: `{filename}.spec.ts`
-- Configuration: `jest.config.cjs`
+**IMPORTANT**: Test files MUST be generated alongside UI components, views, stores, directives, and utilities.
 
-### Vitest Testing (if using Vitest)
-- Use Vitest with Vue Test Utils for component testing
-- Native ESM support with faster execution
-- Use `@vitest/ui` for interactive test UI
-- Mock external dependencies (axios, router, store)
-- Target >80% coverage for services and stores
-- Target >70% coverage for components
-- Test file naming: `{filename}.spec.ts` or `{filename}.test.ts`
-- Configuration: `vitest.config.ts`
+For detailed testing guidelines, patterns, and templates, see the **testing skill**: `agents/agents-context/app-starter/skills/testing/`
+
+### Quick Reference
+
+- **Test file location**: Co-located with source files (not in separate `tests/` directory)
+- **Naming convention**: `{filename}.spec.ts`
+- **Coverage targets**: Components/Views >70%, Stores/Utilities >80%
+- **Test patterns**: Component tests, View tests, Store tests (Vuex/Pinia), Utility tests, Directive tests
+
+See `skills/testing/SKILL.md` for complete documentation and `skills/testing/examples.md` for test templates.
 
 ## Linting and Formatting
 
