@@ -15,7 +15,7 @@ This creates the `.husky/` directory structure.
 **Do NOT rely on auto-generated default** - it creates a default hook with just `npm test` which is insufficient.
 
 ## Output
-Create the file: `.husky/pre-commit` with the content from `examples.md`
+Create the file: `.husky/pre-commit`
 
 ## Implementation Steps
 
@@ -27,9 +27,6 @@ Create the file: `.husky/pre-commit` with the content from `examples.md`
 
 2. **Make the hook executable**
 
-
-## Template
-See: `examples.md` in this directory for complete templates and setup instructions.
 
 ## Notes
 - Pre-commit hook ensures code quality before commits are made

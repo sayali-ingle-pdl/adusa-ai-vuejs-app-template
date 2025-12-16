@@ -108,7 +108,7 @@ The skills should be executed in the following order to ensure dependencies are 
 27. Docker Skill
 28. Nginx Default Configuration Skill
 29. Nginx Sites Available Skill
-30. Entrpoint Skill
+30. Entrypoint Skill
 
 ### Phase 6: Verification
 - Run lint to verify linting setup. Resolve any linting errors if they arise.
