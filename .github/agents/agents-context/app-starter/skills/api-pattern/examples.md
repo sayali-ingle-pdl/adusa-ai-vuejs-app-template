@@ -1,21 +1,18 @@
 # Vue API Pattern Examples
 
-This document provides comprehensive examples for both Composition API and Options API patterns.
-
----
+Concise examples showing key differences between Composition API and Options API.
 
 ## Table of Contents
 
 1. [Basic Component](#1-basic-component)
-2. [Component with Props and Emits](#2-component-with-props-and-emits)
-3. [Component with Lifecycle Hooks](#3-component-with-lifecycle-hooks)
-4. [Component with Computed Properties](#4-component-with-computed-properties)
-5. [Component with Watchers](#5-component-with-watchers)
-6. [Component with External Logic (Composables/Mixins)](#6-component-with-external-logic-composablesmixins)
-7. [View Component Example](#7-view-component-example)
-8. [Component with Store Integration (Pinia)](#8-component-with-store-integration-pinia)
-9. [Component with Store Integration (Vuex)](#9-component-with-store-integration-vuex)
-10. [Form Component with Validation](#10-form-component-with-validation)
+2. [Props and Emits](#2-props-and-emits)
+3. [Lifecycle and Data Fetching](#3-lifecycle-and-data-fetching)
+4. [Computed Properties and Watchers](#4-computed-properties-and-watchers)
+5. [External Logic (Composables vs Mixins)](#5-external-logic-composables-vs-mixins)
+6. [Store Integration](#6-store-integration)
+7. [Form with Validation](#7-form-with-validation)
+
+**Style Convention**: All components use `scoped lang="scss"` with `@use '@/theme/' as *;`. Styles omitted after first example.
 
 ---
 
@@ -85,21 +82,12 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.greeting-card {
-  padding: var(--spacing-md);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-}
-</style>
+<!-- Styles same as Composition API -->
 ```
 
 ---
 
-## 2. Component with Props and Emits
+## 2. Props and Emits
 
 ### Composition API
 
@@ -108,8 +96,8 @@ export default defineComponent({
   <div class="user-card">
     <h3>{{ user.name }}</h3>
     <p>{{ user.email }}</p>
-    <button @click="handleEdit">Edit</button>
-    <button @click="handleDelete">Delete</button>
+    <button @click="handleEdit" :disabled="readonly">Edit</button>
+    <button @click="handleDelete" :disabled="readonly">Delete</button>
   </div>
 </template>
 
@@ -131,27 +119,13 @@ const emit = defineEmits<{
 }>();
 
 function handleEdit() {
-  if (!props.readonly) {
-    emit('edit', props.user.id);
-  }
+  if (!props.readonly) emit('edit', props.user.id);
 }
 
 function handleDelete() {
-  if (!props.readonly) {
-    emit('delete', props.user.id);
-  }
+  if (!props.readonly) emit('delete', props.user.id);
 }
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.user-card {
-  padding: var(--spacing-md);
-  background: var(--surface-color);
-  border-radius: var(--border-radius);
-}
-</style>
 ```
 
 ### Options API
@@ -161,8 +135,8 @@ function handleDelete() {
   <div class="user-card">
     <h3>{{ user.name }}</h3>
     <p>{{ user.email }}</p>
-    <button @click="handleEdit">Edit</button>
-    <button @click="handleDelete">Delete</button>
+    <button @click="handleEdit" :disabled="readonly">Edit</button>
+    <button @click="handleDelete" :disabled="readonly">Delete</button>
   </div>
 </template>
 
@@ -191,34 +165,20 @@ export default defineComponent({
   
   methods: {
     handleEdit() {
-      if (!this.readonly) {
-        this.$emit('edit', this.user.id);
-      }
+      if (!this.readonly) this.$emit('edit', this.user.id);
     },
     
     handleDelete() {
-      if (!this.readonly) {
-        this.$emit('delete', this.user.id);
-      }
+      if (!this.readonly) this.$emit('delete', this.user.id);
     }
   }
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.user-card {
-  padding: var(--spacing-md);
-  background: var(--surface-color);
-  border-radius: var(--border-radius);
-}
-</style>
 ```
 
 ---
 
-## 3. Component with Lifecycle Hooks
+## 3. Lifecycle and Data Fetching
 
 ### Composition API
 
@@ -227,11 +187,9 @@ export default defineComponent({
   <div class="data-fetcher">
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">Error: {{ error }}</div>
-    <div v-else>
-      <ul>
-        <li v-for="item in items" :key="item.id">{{ item.name }}</li>
-      </ul>
-    </div>
+    <ul v-else>
+      <li v-for="item in items" :key="item.id">{{ item.name }}</li>
+    </ul>
   </div>
 </template>
 
@@ -264,19 +222,9 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (intervalId !== null) {
-    clearInterval(intervalId);
-  }
+  if (intervalId !== null) clearInterval(intervalId);
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.data-fetcher {
-  padding: var(--spacing-md);
-}
-</style>
 ```
 
 ### Options API
@@ -286,11 +234,9 @@ onBeforeUnmount(() => {
   <div class="data-fetcher">
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">Error: {{ error }}</div>
-    <div v-else>
-      <ul>
-        <li v-for="item in items" :key="item.id">{{ item.name }}</li>
-      </ul>
-    </div>
+    <ul v-else>
+      <li v-for="item in items" :key="item.id">{{ item.name }}</li>
+    </ul>
   </div>
 </template>
 
@@ -332,51 +278,34 @@ export default defineComponent({
   },
   
   beforeUnmount() {
-    if (this.intervalId !== null) {
-      clearInterval(this.intervalId);
-    }
+    if (this.intervalId !== null) clearInterval(this.intervalId);
   }
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.data-fetcher {
-  padding: var(--spacing-md);
-}
-</style>
 ```
 
 ---
 
-## 4. Component with Computed Properties
+## 4. Computed Properties and Watchers
 
 ### Composition API
 
 ```vue
 <template>
   <div class="shopping-cart">
-    <h2>Shopping Cart ({{ itemCount }} items)</h2>
+    <input v-model="searchQuery" placeholder="Search products..." />
+    <h2>Cart ({{ itemCount }} items)</h2>
     <ul>
-      <li v-for="item in cart" :key="item.id">
+      <li v-for="item in filteredCart" :key="item.id">
         {{ item.name }} - ${{ item.price }} x {{ item.quantity }}
       </li>
     </ul>
-    <div class="total">
-      <strong>Subtotal:</strong> ${{ subtotal.toFixed(2) }}
-    </div>
-    <div class="total">
-      <strong>Tax ({{ taxRate * 100 }}%):</strong> ${{ tax.toFixed(2) }}
-    </div>
-    <div class="total">
-      <strong>Total:</strong> ${{ total.toFixed(2) }}
-    </div>
+    <div><strong>Total:</strong> ${{ total.toFixed(2) }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import type { CartItem } from '@/interfaces/CartItem';
 
 const cart = ref<CartItem[]>([
@@ -384,37 +313,29 @@ const cart = ref<CartItem[]>([
   { id: '2', name: 'Product B', price: 49.99, quantity: 1 }
 ]);
 
-const taxRate = ref(0.08);
+const searchQuery = ref('');
 
-const itemCount = computed(() => {
-  return cart.value.reduce((sum, item) => sum + item.quantity, 0);
+// Computed properties
+const itemCount = computed(() => 
+  cart.value.reduce((sum, item) => sum + item.quantity, 0)
+);
+
+const filteredCart = computed(() => {
+  if (!searchQuery.value) return cart.value;
+  return cart.value.filter(item => 
+    item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
 });
 
-const subtotal = computed(() => {
-  return cart.value.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-});
+const total = computed(() => 
+  cart.value.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+);
 
-const tax = computed(() => {
-  return subtotal.value * taxRate.value;
-});
-
-const total = computed(() => {
-  return subtotal.value + tax.value;
+// Watcher
+watch(total, (newTotal, oldTotal) => {
+  console.log(`Total changed from $${oldTotal} to $${newTotal}`);
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.shopping-cart {
-  padding: var(--spacing-md);
-  
-  .total {
-    margin-top: var(--spacing-sm);
-    font-size: 1.1rem;
-  }
-}
-</style>
 ```
 
 ### Options API
@@ -422,21 +343,14 @@ const total = computed(() => {
 ```vue
 <template>
   <div class="shopping-cart">
-    <h2>Shopping Cart ({{ itemCount }} items)</h2>
+    <input v-model="searchQuery" placeholder="Search products..." />
+    <h2>Cart ({{ itemCount }} items)</h2>
     <ul>
-      <li v-for="item in cart" :key="item.id">
+      <li v-for="item in filteredCart" :key="item.id">
         {{ item.name }} - ${{ item.price }} x {{ item.quantity }}
       </li>
     </ul>
-    <div class="total">
-      <strong>Subtotal:</strong> ${{ subtotal.toFixed(2) }}
-    </div>
-    <div class="total">
-      <strong>Tax ({{ taxRate * 100 }}%):</strong> ${{ tax.toFixed(2) }}
-    </div>
-    <div class="total">
-      <strong>Total:</strong> ${{ total.toFixed(2) }}
-    </div>
+    <div><strong>Total:</strong> ${{ total.toFixed(2) }}</div>
   </div>
 </template>
 
@@ -453,7 +367,7 @@ export default defineComponent({
         { id: '1', name: 'Product A', price: 29.99, quantity: 2 },
         { id: '2', name: 'Product B', price: 49.99, quantity: 1 }
       ] as CartItem[],
-      taxRate: 0.08
+      searchQuery: ''
     };
   },
   
@@ -462,194 +376,32 @@ export default defineComponent({
       return this.cart.reduce((sum, item) => sum + item.quantity, 0);
     },
     
-    subtotal(): number {
-      return this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    },
-    
-    tax(): number {
-      return this.subtotal * this.taxRate;
+    filteredCart(): CartItem[] {
+      if (!this.searchQuery) return this.cart;
+      return this.cart.filter(item => 
+        item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     },
     
     total(): number {
-      return this.subtotal + this.tax;
+      return this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     }
-  }
-});
-</script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.shopping-cart {
-  padding: var(--spacing-md);
-  
-  .total {
-    margin-top: var(--spacing-sm);
-    font-size: 1.1rem;
-  }
-}
-</style>
-```
-
----
-
-## 5. Component with Watchers
-
-### Composition API
-
-```vue
-<template>
-  <div class="search-box">
-    <input 
-      v-model="searchQuery" 
-      placeholder="Search..."
-      @input="handleInput"
-    />
-    <div v-if="searching">Searching...</div>
-    <ul v-else>
-      <li v-for="result in results" :key="result.id">{{ result.name }}</li>
-    </ul>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref, watch } from 'vue';
-import { debounce } from '@/shared/utils/debounce';
-import { searchService } from '@/services/searchService';
-import type { SearchResult } from '@/interfaces/SearchResult';
-
-const searchQuery = ref('');
-const results = ref<SearchResult[]>([]);
-const searching = ref(false);
-
-async function performSearch(query: string) {
-  if (!query.trim()) {
-    results.value = [];
-    return;
-  }
-  
-  searching.value = true;
-  try {
-    results.value = await searchService.search(query);
-  } finally {
-    searching.value = false;
-  }
-}
-
-const debouncedSearch = debounce(performSearch, 300);
-
-watch(searchQuery, (newQuery) => {
-  debouncedSearch(newQuery);
-});
-
-function handleInput() {
-  // Additional input handling if needed
-}
-</script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.search-box {
-  padding: var(--spacing-md);
-  
-  input {
-    width: 100%;
-    padding: var(--spacing-sm);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-  }
-}
-</style>
-```
-
-### Options API
-
-```vue
-<template>
-  <div class="search-box">
-    <input 
-      v-model="searchQuery" 
-      placeholder="Search..."
-      @input="handleInput"
-    />
-    <div v-if="searching">Searching...</div>
-    <ul v-else>
-      <li v-for="result in results" :key="result.id">{{ result.name }}</li>
-    </ul>
-  </div>
-</template>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { debounce } from '@/shared/utils/debounce';
-import { searchService } from '@/services/searchService';
-import type { SearchResult } from '@/interfaces/SearchResult';
-
-export default defineComponent({
-  name: 'SearchBox',
-  
-  data() {
-    return {
-      searchQuery: '',
-      results: [] as SearchResult[],
-      searching: false
-    };
   },
   
   watch: {
-    searchQuery(newQuery: string) {
-      this.debouncedSearch(newQuery);
+    total(newTotal: number, oldTotal: number) {
+      console.log(`Total changed from $${oldTotal} to $${newTotal}`);
     }
-  },
-  
-  methods: {
-    async performSearch(query: string) {
-      if (!query.trim()) {
-        this.results = [];
-        return;
-      }
-      
-      this.searching = true;
-      try {
-        this.results = await searchService.search(query);
-      } finally {
-        this.searching = false;
-      }
-    },
-    
-    handleInput() {
-      // Additional input handling if needed
-    }
-  },
-  
-  created() {
-    this.debouncedSearch = debounce(this.performSearch, 300);
   }
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.search-box {
-  padding: var(--spacing-md);
-  
-  input {
-    width: 100%;
-    padding: var(--spacing-sm);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-  }
-}
-</style>
 ```
 
 ---
 
-## 6. Component with External Logic (Composables/Mixins)
+## 5. External Logic (Composables vs Mixins)
 
-### Composition API (with Composable)
+### Composition API (Composable)
 
 **Composable: `src/composables/useAuth.ts`**
 ```typescript
@@ -665,7 +417,6 @@ export function useAuth() {
   async function login(username: string, password: string) {
     loading.value = true;
     try {
-      // Login logic
       user.value = { id: '1', name: username, email: `${username}@example.com` };
     } finally {
       loading.value = false;
@@ -676,13 +427,7 @@ export function useAuth() {
     user.value = null;
   }
   
-  return {
-    user,
-    loading,
-    isAuthenticated,
-    login,
-    logout
-  };
+  return { user, loading, isAuthenticated, login, logout };
 }
 ```
 
@@ -694,9 +439,7 @@ export function useAuth() {
       <p>Welcome, {{ user?.name }}</p>
       <button @click="logout">Logout</button>
     </div>
-    <div v-else>
-      <button @click="showLogin">Login</button>
-    </div>
+    <button v-else @click="showLogin">Login</button>
   </div>
 </template>
 
@@ -709,17 +452,9 @@ function showLogin() {
   // Show login dialog
 }
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.auth-status {
-  padding: var(--spacing-md);
-}
-</style>
 ```
 
-### Options API (with Mixin)
+### Options API (Mixin)
 
 **Mixin: `src/mixins/authMixin.ts`**
 ```typescript
@@ -744,7 +479,6 @@ export const authMixin = defineComponent({
     async login(username: string, password: string) {
       this.loading = true;
       try {
-        // Login logic
         this.user = { id: '1', name: username, email: `${username}@example.com` };
       } finally {
         this.loading = false;
@@ -766,9 +500,7 @@ export const authMixin = defineComponent({
       <p>Welcome, {{ user?.name }}</p>
       <button @click="logout">Logout</button>
     </div>
-    <div v-else>
-      <button @click="showLogin">Login</button>
-    </div>
+    <button v-else @click="showLogin">Login</button>
   </div>
 </template>
 
@@ -778,7 +510,6 @@ import { authMixin } from '@/mixins/authMixin';
 
 export default defineComponent({
   name: 'AuthStatus',
-  
   mixins: [authMixin],
   
   methods: {
@@ -788,333 +519,38 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.auth-status {
-  padding: var(--spacing-md);
-}
-</style>
 ```
 
 ---
 
-## 7. View Component Example
+## 6. Store Integration
 
-### Composition API
+### Pinia (Recommended for Vue 3)
 
+**Composition API:**
 ```vue
-<template>
-  <div class="inventory-view">
-    <header class="view-header">
-      <h1>Inventory Management</h1>
-      <button @click="handleAddNew">Add New Item</button>
-    </header>
-    
-    <SearchBar 
-      v-model="searchQuery"
-      @search="handleSearch"
-    />
-    
-    <div v-if="loading" class="loading">Loading inventory...</div>
-    <div v-else-if="error" class="error">{{ error }}</div>
-    <div v-else>
-      <InventoryList 
-        :items="filteredItems"
-        @edit="handleEdit"
-        @delete="handleDelete"
-      />
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import SearchBar from '@/components/common/SearchBar.vue';
-import InventoryList from '@/components/inventory/InventoryList.vue';
-import { inventoryService } from '@/services/inventoryService';
-import type { InventoryItem } from '@/interfaces/InventoryItem';
-
-const router = useRouter();
-const items = ref<InventoryItem[]>([]);
-const searchQuery = ref('');
-const loading = ref(false);
-const error = ref<string | null>(null);
-
-const filteredItems = computed(() => {
-  if (!searchQuery.value) return items.value;
-  
-  return items.value.filter(item => 
-    item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
-});
-
-async function loadItems() {
-  loading.value = true;
-  error.value = null;
-  
-  try {
-    items.value = await inventoryService.getAll();
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Failed to load inventory';
-  } finally {
-    loading.value = false;
-  }
-}
-
-function handleSearch(query: string) {
-  searchQuery.value = query;
-}
-
-function handleAddNew() {
-  router.push('/inventory/new');
-}
-
-function handleEdit(itemId: string) {
-  router.push(`/inventory/edit/${itemId}`);
-}
-
-async function handleDelete(itemId: string) {
-  if (confirm('Are you sure you want to delete this item?')) {
-    try {
-      await inventoryService.delete(itemId);
-      await loadItems();
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to delete item';
-    }
-  }
-}
-
-onMounted(() => {
-  loadItems();
-});
-</script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.inventory-view {
-  padding: var(--spacing-lg);
-  
-  .view-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  .loading,
-  .error {
-    padding: var(--spacing-md);
-    text-align: center;
-  }
-  
-  .error {
-    color: var(--error-color);
-  }
-}
-</style>
-```
-
-### Options API
-
-```vue
-<template>
-  <div class="inventory-view">
-    <header class="view-header">
-      <h1>Inventory Management</h1>
-      <button @click="handleAddNew">Add New Item</button>
-    </header>
-    
-    <SearchBar 
-      v-model="searchQuery"
-      @search="handleSearch"
-    />
-    
-    <div v-if="loading" class="loading">Loading inventory...</div>
-    <div v-else-if="error" class="error">{{ error }}</div>
-    <div v-else>
-      <InventoryList 
-        :items="filteredItems"
-        @edit="handleEdit"
-        @delete="handleDelete"
-      />
-    </div>
-  </div>
-</template>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-import SearchBar from '@/components/common/SearchBar.vue';
-import InventoryList from '@/components/inventory/InventoryList.vue';
-import { inventoryService } from '@/services/inventoryService';
-import type { InventoryItem } from '@/interfaces/InventoryItem';
-
-export default defineComponent({
-  name: 'InventoryView',
-  
-  components: {
-    SearchBar,
-    InventoryList
-  },
-  
-  data() {
-    return {
-      items: [] as InventoryItem[],
-      searchQuery: '',
-      loading: false,
-      error: null as string | null
-    };
-  },
-  
-  computed: {
-    filteredItems(): InventoryItem[] {
-      if (!this.searchQuery) return this.items;
-      
-      return this.items.filter(item => 
-        item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    }
-  },
-  
-  methods: {
-    async loadItems() {
-      this.loading = true;
-      this.error = null;
-      
-      try {
-        this.items = await inventoryService.getAll();
-      } catch (err) {
-        this.error = err instanceof Error ? err.message : 'Failed to load inventory';
-      } finally {
-        this.loading = false;
-      }
-    },
-    
-    handleSearch(query: string) {
-      this.searchQuery = query;
-    },
-    
-    handleAddNew() {
-      this.$router.push('/inventory/new');
-    },
-    
-    handleEdit(itemId: string) {
-      this.$router.push(`/inventory/edit/${itemId}`);
-    },
-    
-    async handleDelete(itemId: string) {
-      if (confirm('Are you sure you want to delete this item?')) {
-        try {
-          await inventoryService.delete(itemId);
-          await this.loadItems();
-        } catch (err) {
-          this.error = err instanceof Error ? err.message : 'Failed to delete item';
-        }
-      }
-    }
-  },
-  
-  mounted() {
-    this.loadItems();
-  }
-});
-</script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.inventory-view {
-  padding: var(--spacing-lg);
-  
-  .view-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  .loading,
-  .error {
-    padding: var(--spacing-md);
-    text-align: center;
-  }
-  
-  .error {
-    color: var(--error-color);
-  }
-}
-</style>
-```
-
----
-
-## 8. Component with Store Integration (Pinia)
-
-### Composition API
-
-```vue
-<template>
-  <div class="user-profile">
-    <div v-if="loading">Loading profile...</div>
-    <div v-else-if="currentUser">
-      <h2>{{ currentUser.name }}</h2>
-      <p>{{ currentUser.email }}</p>
-      <button @click="handleUpdateProfile">Update Profile</button>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
-
 const currentUser = computed(() => userStore.currentUser);
 const loading = computed(() => userStore.loading);
 
-async function handleUpdateProfile() {
-  await userStore.updateProfile({
-    name: 'Updated Name',
-    email: currentUser.value?.email || ''
-  });
+async function handleUpdate() {
+  await userStore.updateProfile({ name: 'Updated Name' });
 }
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.user-profile {
-  padding: var(--spacing-md);
-}
-</style>
 ```
 
-### Options API
-
+**Options API:**
 ```vue
-<template>
-  <div class="user-profile">
-    <div v-if="loading">Loading profile...</div>
-    <div v-else-if="currentUser">
-      <h2>{{ currentUser.name }}</h2>
-      <p>{{ currentUser.email }}</p>
-      <button @click="handleUpdateProfile">Update Profile</button>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 
 export default defineComponent({
-  name: 'UserProfile',
-  
   computed: {
     ...mapState(useUserStore, ['currentUser', 'loading'])
   },
@@ -1122,91 +558,40 @@ export default defineComponent({
   methods: {
     ...mapActions(useUserStore, ['updateProfile']),
     
-    async handleUpdateProfile() {
-      await this.updateProfile({
-        name: 'Updated Name',
-        email: this.currentUser?.email || ''
-      });
+    async handleUpdate() {
+      await this.updateProfile({ name: 'Updated Name' });
     }
   }
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.user-profile {
-  padding: var(--spacing-md);
-}
-</style>
 ```
 
----
+### Vuex (Vue 2 Legacy)
 
-## 9. Component with Store Integration (Vuex)
-
-### Composition API
-
+**Composition API:**
 ```vue
-<template>
-  <div class="user-profile">
-    <div v-if="loading">Loading profile...</div>
-    <div v-else-if="currentUser">
-      <h2>{{ currentUser.name }}</h2>
-      <p>{{ currentUser.email }}</p>
-      <button @click="handleUpdateProfile">Update Profile</button>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import type { RootState } from '@/store';
 
 const store = useStore<RootState>();
-
 const currentUser = computed(() => store.state.user.currentUser);
 const loading = computed(() => store.state.user.loading);
 
-async function handleUpdateProfile() {
-  await store.dispatch('user/updateProfile', {
-    name: 'Updated Name',
-    email: currentUser.value?.email || ''
-  });
+async function handleUpdate() {
+  await store.dispatch('user/updateProfile', { name: 'Updated Name' });
 }
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.user-profile {
-  padding: var(--spacing-md);
-}
-</style>
 ```
 
-### Options API
-
+**Options API:**
 ```vue
-<template>
-  <div class="user-profile">
-    <div v-if="loading">Loading profile...</div>
-    <div v-else-if="currentUser">
-      <h2>{{ currentUser.name }}</h2>
-      <p>{{ currentUser.email }}</p>
-      <button @click="handleUpdateProfile">Update Profile</button>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'vuex';
 
 export default defineComponent({
-  name: 'UserProfile',
-  
   computed: {
     ...mapState('user', ['currentUser', 'loading'])
   },
@@ -1214,64 +599,38 @@ export default defineComponent({
   methods: {
     ...mapActions('user', ['updateProfile']),
     
-    async handleUpdateProfile() {
-      await this.updateProfile({
-        name: 'Updated Name',
-        email: this.currentUser?.email || ''
-      });
+    async handleUpdate() {
+      await this.updateProfile({ name: 'Updated Name' });
     }
   }
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.user-profile {
-  padding: var(--spacing-md);
-}
-</style>
 ```
 
 ---
 
-## 10. Form Component with Validation
+## 7. Form with Validation
 
 ### Composition API
 
 ```vue
 <template>
-  <form class="registration-form" @submit.prevent="handleSubmit">
+  <form @submit.prevent="handleSubmit">
     <div class="form-group">
       <label for="username">Username</label>
-      <input 
-        id="username"
-        v-model="form.username"
-        type="text"
-        @blur="validateUsername"
-      />
+      <input id="username" v-model="form.username" @blur="validateUsername" />
       <span v-if="errors.username" class="error">{{ errors.username }}</span>
     </div>
     
     <div class="form-group">
       <label for="email">Email</label>
-      <input 
-        id="email"
-        v-model="form.email"
-        type="email"
-        @blur="validateEmail"
-      />
+      <input id="email" v-model="form.email" type="email" @blur="validateEmail" />
       <span v-if="errors.email" class="error">{{ errors.email }}</span>
     </div>
     
     <div class="form-group">
       <label for="password">Password</label>
-      <input 
-        id="password"
-        v-model="form.password"
-        type="password"
-        @blur="validatePassword"
-      />
+      <input id="password" v-model="form.password" type="password" @blur="validatePassword" />
       <span v-if="errors.password" class="error">{{ errors.password }}</span>
     </div>
     
@@ -1356,91 +715,28 @@ async function handleSubmit() {
   }
 }
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.registration-form {
-  max-width: 400px;
-  padding: var(--spacing-lg);
-  
-  .form-group {
-    margin-bottom: var(--spacing-md);
-    
-    label {
-      display: block;
-      margin-bottom: var(--spacing-xs);
-      font-weight: 600;
-    }
-    
-    input {
-      width: 100%;
-      padding: var(--spacing-sm);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius);
-    }
-    
-    .error {
-      display: block;
-      margin-top: var(--spacing-xs);
-      color: var(--error-color);
-      font-size: 0.875rem;
-    }
-  }
-  
-  button {
-    width: 100%;
-    padding: var(--spacing-sm);
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
-}
-</style>
 ```
 
 ### Options API
 
 ```vue
 <template>
-  <form class="registration-form" @submit.prevent="handleSubmit">
+  <form @submit.prevent="handleSubmit">
     <div class="form-group">
       <label for="username">Username</label>
-      <input 
-        id="username"
-        v-model="form.username"
-        type="text"
-        @blur="validateUsername"
-      />
+      <input id="username" v-model="form.username" @blur="validateUsername" />
       <span v-if="errors.username" class="error">{{ errors.username }}</span>
     </div>
     
     <div class="form-group">
       <label for="email">Email</label>
-      <input 
-        id="email"
-        v-model="form.email"
-        type="email"
-        @blur="validateEmail"
-      />
+      <input id="email" v-model="form.email" type="email" @blur="validateEmail" />
       <span v-if="errors.email" class="error">{{ errors.email }}</span>
     </div>
     
     <div class="form-group">
       <label for="password">Password</label>
-      <input 
-        id="password"
-        v-model="form.password"
-        type="password"
-        @blur="validatePassword"
-      />
+      <input id="password" v-model="form.password" type="password" @blur="validatePassword" />
       <span v-if="errors.password" class="error">{{ errors.password }}</span>
     </div>
     
@@ -1532,69 +828,18 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped lang="scss">
-@use '@/theme/' as *;
-
-.registration-form {
-  max-width: 400px;
-  padding: var(--spacing-lg);
-  
-  .form-group {
-    margin-bottom: var(--spacing-md);
-    
-    label {
-      display: block;
-      margin-bottom: var(--spacing-xs);
-      font-weight: 600;
-    }
-    
-    input {
-      width: 100%;
-      padding: var(--spacing-sm);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius);
-    }
-    
-    .error {
-      display: block;
-      margin-top: var(--spacing-xs);
-      color: var(--error-color);
-      font-size: 0.875rem;
-    }
-  }
-  
-  button {
-    width: 100%;
-    padding: var(--spacing-sm);
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
-}
-</style>
 ```
 
 ---
 
 ## Summary
 
-These examples demonstrate the key patterns for both Composition API and Options API approaches. When generating Vue components:
+**Key Differences**:
+- **Composition API**: `<script setup>`, `ref()`, `reactive()`, composables
+- **Options API**: `data()`, `methods`, `computed`, mixins
 
-1. **Choose the pattern** based on user selection (`composition-api` or `options-api`)
-2. **Follow TypeScript conventions** - Always use `lang="ts"` in script tags
-3. **Use scoped styles** - Always include `scoped lang="scss"` in style tags
-4. **Import theme variables** - Use `@use '@/theme/' as *;` in styles
-5. **Type everything** - Define interfaces for props, emits, and data structures
-6. **Follow naming conventions** - PascalCase for component names and files
-7. **Include proper error handling** - Try-catch blocks and error states
-8. **Add loading states** - For async operations
+**TypeScript**: Always use `lang="ts"` in script tags and define interfaces for props/data
 
-The Composition API is recommended for new Vue 3 projects due to better TypeScript support, improved code reusability, and better tree-shaking. The Options API is still fully supported and may be preferred for teams transitioning from Vue 2 or those who prefer the object-based structure.
+**Styles**: Always use `scoped lang="scss"` with `@use '@/theme/' as *;`
+
+**Recommendation**: Composition API for new Vue 3 projects (better TypeScript support, code reusability, tree-shaking)
