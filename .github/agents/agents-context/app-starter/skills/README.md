@@ -151,6 +151,7 @@ When executing a skill:
 - `editorconfig/` - Generate .editorconfig
 
 ### Testing
+- `testing/` - Test file generation patterns and best practices
 - `jest-config/` - Generate Jest configuration
 - `babel-config/` - Generate Babel configuration
 
