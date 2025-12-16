@@ -5,9 +5,23 @@ Generate the `src/App.vue` root component **WITH UNIT TEST**. The component MUST
 
 **CRITICAL**: This skill requires creating BOTH the App.vue component file AND its App.spec.ts test file. Do not skip test file creation.
 
+## 🚨 MANDATORY FILE COUNT
+**Total Required: 2 files**
+- `src/App.vue` (1 file) + `src/App.spec.ts` (1 file) = 2 files
+
+**If you create fewer than 2 files, you have FAILED this skill.**
+
 ## Output
 - Create the file: `src/App.vue`
 - Create the unit test file: `src/App.spec.ts` ⚠️ **REQUIRED**
+
+## Execution Order (Test-Driven Development)
+**IMPORTANT**: Follow this order strictly to ensure tests are never forgotten:
+
+1. **Create `src/App.spec.ts` FIRST** with failing tests
+2. **Then create `src/App.vue`** to make tests pass
+
+This TDD approach ensures you never create a component without its test.
 
 ## Requirements
 - Simple root component with router-view
@@ -35,11 +49,36 @@ The App.spec.ts file should include:
 
 ## Execution Checklist
 Use this checklist to ensure all required files are created:
+- [ ] Create `src/App.spec.ts` with comprehensive tests **FIRST**
 - [ ] Create `src/App.vue` component
-- [ ] Create `src/App.spec.ts` with comprehensive tests
 - [ ] Verify both files exist in src/ directory
 - [ ] Run unit test to ensure tests pass
 - [ ] Verify test output shows tests for App component
+
+## 🛑 BLOCKING VALIDATION CHECKPOINT
+**STOP AND VERIFY before proceeding to the next skill:**
+
+### Automated Verification
+Run this command to verify test file exists:
+```bash
+# Check for App.spec.ts
+if [ ! -f "src/App.spec.ts" ]; then
+  echo "❌ MISSING: src/App.spec.ts"
+  exit 1
+fi
+echo "✅ App.spec.ts present"
+```
+
+### Manual Verification
+1. ✓ Count files: Must be exactly 2 files (App.vue + App.spec.ts)
+2. ✓ `src/App.vue` exists in src/ directory
+3. ✓ `src/App.spec.ts` exists alongside `src/App.vue`
+4. ✓ Running `npm test` confirms all tests pass
+5. ✓ Test output shows at least 3-5 tests for App component
+6. ✓ No test files are skipped or marked as pending
+
+### If Validation Fails
+**DO NOT PROCEED** to the next skill. Go back and create the missing test file immediately.
 
 ## Validation
 After creating all files, validate:

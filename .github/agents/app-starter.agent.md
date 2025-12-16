@@ -99,10 +99,12 @@ The skills should be executed in the following order to ensure dependencies are 
 20. Environment Constants Skill
 21. Router Skill
 22. Store Skill
-23. App Component Skill
-24. View Components Skill
+23. App Component Skill (creates App.vue + App.spec.ts)
+24. View Components Skill (creates 2 .vue + 2 .spec.ts files)
 25. Main Entry Skill
 26. Theme Skill
+
+**Note:** Skills 23-24 include validation checkpoints to ensure test files are created.
 
 ### Phase 5: Deployment
 27. Docker Skill
