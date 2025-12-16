@@ -1,6 +1,36 @@
 # Jest Configuration Examples
 
-## Example of jest.config.cjs
+## ⚠️ CRITICAL DEPRECATION WARNING
+
+**Date**: December 2025
+**Status**: This example may be outdated
+
+**🚨 HIGH PRIORITY - DO NOT USE WITHOUT VERIFICATION**
+
+**⚠️ JEST IS LEGACY FOR VUE 3**: Vitest is the officially recommended test framework for Vue 3 projects as of 2024+. Jest support for Vue 3 may be deprecated.
+
+Before using this example:
+1. ✅ **CRITICAL**: Verify `@vue/vue3-jest` is still maintained (check npm last publish date)
+2. ✅ Verify `ts-jest` is compatible with current TypeScript and Jest versions
+3. ✅ Check if `v8` coverage provider is still recommended over `babel`
+4. ✅ Verify `jsdom` test environment compatibility with current version
+5. ✅ Check which ESM packages in your project need `transformIgnorePatterns`
+6. ✅ Verify Jest configuration options haven't been deprecated
+7. ✅ Consider migrating to Vitest for better Vue 3 support
+
+**If `@vue/vue3-jest` is unmaintained:**
+- **STOP**: Strongly consider migrating to Vitest
+- Consult Vue.js documentation for official testing recommendations
+- Check for community forks or alternatives
+
+---
+
+## Example: jest.config.cjs (Preferred Format)
+
+**Configuration Date**: December 2025
+**Jest Version**: 29.x
+**Format**: CommonJS
+**Status**: Legacy for Vue 3 projects
 
 ```javascript
 module.exports = {
@@ -27,7 +57,7 @@ module.exports = {
   ],
   moduleFileExtensions: ['ts', 'js', 'json', 'vue'],
   transform: {
-    '^.+\\.vue$': '@vue/vue3-jest',
+    '^.+\\.vue$': '@vue/vue3-jest',  // ⚠️ Verify this package is still maintained!
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.js$': 'babel-jest',
   },
@@ -36,7 +66,7 @@ module.exports = {
     '/dist/',
     'src/shared/EnvConsts.ts',
   ],
-  transformIgnorePatterns: ['node_modules/(?!axios)'],
+  transformIgnorePatterns: ['node_modules/(?!axios)'],  // ⚠️ Update based on your ESM packages
   setupFiles: ['<rootDir>/tests/unit/testSetup.ts'],
   moduleNameMapper: {
     '^@/shared/EnvConsts$': '<rootDir>/tests/unit/mockEnvConsts.ts',
@@ -46,12 +76,355 @@ module.exports = {
       '<rootDir>/tests/unit/fileMock.cjs',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
-  coverageProvider: 'v8',
+  coverageProvider: 'v8',  // ⚠️ Verify 'v8' is still recommended over 'babel'
 };
 ```
 
-*** Important Notes ***
-- The above is an example of the structure of jest.config.cjs that is desired. 
-- The codes and configurations may be outdated.
-- When reviewing the above example, make sure to codes and configuration to apply the latest best pratice.
-- If any configuration is deprecated, apply the latest configuration that matches the outdated one.
+---
+
+## Configuration Option Explanations
+
+### Essential Options
+
+**`preset: 'ts-jest'`**
+- Preset configuration for TypeScript support
+- **Why**: Handles TypeScript transformation automatically
+- **Verify**: Check `ts-jest` is compatible with current Jest version
+- **Alternative**: Can be omitted if not using TypeScript
+
+**`testEnvironment: 'jsdom'`**
+- Simulates browser environment for DOM testing
+- **Why**: Vue components require DOM APIs
+- **Values**: `'jsdom'` (browser) | `'node'` (Node.js)
+- **Verify**: Check jsdom version compatibility
+
+**`coverageProvider: 'v8'`**
+- Uses V8's native code coverage (faster, more accurate)
+- **Why**: Better performance than Babel-based coverage
+- **Default**: `'babel'` in older Jest versions
+- **Values**: `'v8'` | `'babel'`
+- **Verify**: Check if `'v8'` is still recommended
+
+### Transform Configuration
+
+**`transform`** - File transformers for different file types:
+```javascript
+{
+  '^.+\\.vue$': '@vue/vue3-jest',    // Vue SFC files
+  '^.+\\.tsx?$': 'ts-jest',          // TypeScript files
+  '^.+\\.js$': 'babel-jest',         // JavaScript files
+}
+```
+
+**⚠️ CRITICAL**: Verify `@vue/vue3-jest` maintenance status:
+```bash
+# Check last publish date
+npm view @vue/vue3-jest time
+
+# If last publish > 1 year ago, consider Vitest migration
+```
+
+### ESM Package Handling
+
+**`transformIgnorePatterns`** - Packages to transform (not ignore):
+```javascript
+transformIgnorePatterns: ['node_modules/(?!axios)']
+```
+
+**Common ESM Packages** (as of December 2025 - verify current list):
+- `axios` - HTTP client
+- `lodash-es` - Lodash ES modules
+- `uuid` - UUID generator
+- `nanoid` - ID generator
+- `date-fns` - Date utilities (if using ESM version)
+
+**How to detect ESM packages in your project**:
+```bash
+# Check for "type": "module" in package
+npm view axios type
+
+# Or check exports field
+npm view axios exports
+```
+
+**Example with multiple ESM packages**:
+```javascript
+transformIgnorePatterns: [
+  'node_modules/(?!(axios|lodash-es|uuid|nanoid)/)'
+]
+```
+
+### Coverage Configuration
+
+**`collectCoverageFrom`** - Files to include in coverage:
+```javascript
+[
+  '!**/tests/**',                     // Exclude test files
+  '!**/node_modules/**',              // Exclude dependencies
+  '**/src/**/*.{ts,js,vue}',          // Include all source files
+  '!**/src/**/interfaces/*.ts',       // Exclude type definitions
+  '!**/src/**/router/*.ts',           // Exclude router config
+  '!**/src/**/services/**/*.ts',      // Exclude service layer
+  '!**/src/**/shared/constants/**',   // Exclude constants
+  '!**/src/main.ts',                  // Exclude entry point
+  '!**/src/App.vue',                  // Exclude root component
+]
+```
+
+**Why exclude these files**:
+- **Interfaces/Types**: No runtime code to test
+- **Router**: Configuration, tested through E2E
+- **Services**: API calls, tested with mocks
+- **Constants**: Static data, no logic
+- **main.ts**: Application bootstrap, tested through E2E
+
+### Module Name Mapper
+
+**`moduleNameMapper`** - Resolve imports and mock assets:
+```javascript
+{
+  '^@/(.*)$': '<rootDir>/src/$1',        // Path alias resolution
+  '\\.svg$': '<rootDir>/tests/unit/svgMock.cjs',  // SVG mocks
+  '\\.(css|less|scss|sass)$': 'identity-obj-proxy',  // Style mocks
+  '\\.(jpg|jpeg|png)$': '<rootDir>/tests/unit/fileMock.cjs',  // Image mocks
+}
+```
+
+---
+
+## ESM Package Detection Guide
+
+### Step 1: Identify ESM Packages
+```bash
+# Check your package.json dependencies
+npm list --depth=0
+
+# For each suspicious package, check if it's ESM-only
+npm view <package-name> type
+npm view <package-name> exports
+```
+
+### Step 2: Common ESM Packages (Verify Current Status)
+
+**Definitely ESM** (as of 2025):
+- `node-fetch@3+` (ESM-only)
+- `chalk@5+` (ESM-only)
+- `got@12+` (ESM-only)
+
+**Hybrid (both CJS and ESM)**:
+- `axios` (has ESM exports, needs transformation)
+- `lodash-es` (ESM variant of lodash)
+- `date-fns` (ESM version available)
+
+### Step 3: Update transformIgnorePatterns
+
+**Single ESM package**:
+```javascript
+transformIgnorePatterns: ['node_modules/(?!axios)']
+```
+
+**Multiple ESM packages**:
+```javascript
+transformIgnorePatterns: [
+  'node_modules/(?!(axios|lodash-es|uuid)/)'
+]
+```
+
+**All node_modules transformed** (slow, not recommended):
+```javascript
+transformIgnorePatterns: []
+```
+
+---
+
+## Coverage Provider Comparison
+
+### V8 Coverage (`coverageProvider: 'v8'`)
+
+**Pros**:
+- ✓ Faster (native V8 instrumentation)
+- ✓ More accurate (actual code execution paths)
+- ✓ No transpilation overhead
+- ✓ Better source map support
+
+**Cons**:
+- ✗ Requires Node.js 10.10.0+
+- ✗ May have edge cases with complex builds
+
+**Recommended**: **Yes** (as of December 2025 - verify current recommendation)
+
+### Babel Coverage (`coverageProvider: 'babel'`)
+
+**Pros**:
+- ✓ Mature and stable
+- ✓ Works with older Node.js versions
+- ✓ Well-tested with complex transpilation
+
+**Cons**:
+- ✗ Slower (requires Babel transpilation)
+- ✗ Less accurate (based on transpiled code)
+- ✗ Higher memory usage
+
+**Recommended**: **Legacy** (use v8 unless compatibility issues)
+
+---
+
+## How to Verify Current Standards
+
+### Check Package Maintenance Status
+
+**@vue/vue3-jest**:
+```bash
+# Check last publish date (CRITICAL)
+npm view @vue/vue3-jest time
+
+# Check current version
+npm view @vue/vue3-jest version
+
+# Check npm page for maintenance notices
+open https://www.npmjs.com/package/@vue/vue3-jest
+```
+
+**If last publish > 1 year**: **Consider Vitest migration**
+
+### Check Jest Version
+
+```bash
+npm view jest version
+npx jest --version
+```
+
+### Check Transformer Compatibility
+
+```bash
+# ts-jest
+npm view ts-jest peerDependencies
+
+# @vue/vue3-jest
+npm view @vue/vue3-jest peerDependencies
+```
+
+### Test Configuration
+
+```bash
+# Run tests with coverage
+npm run test:unit -- --coverage
+
+# Run specific test file
+npm run test:unit -- path/to/test.spec.ts
+
+# Debug Jest config
+npx jest --showConfig
+```
+
+---
+
+## Alternative Formats (If .cjs Deprecated)
+
+### jest.config.js (JavaScript)
+
+```javascript
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  // ... rest of config
+};
+```
+
+### jest.config.mjs (ES Module)
+
+```javascript
+export default {
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  // ... rest of config
+};
+```
+
+### package.json Field
+
+```json
+{
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom"
+  }
+}
+```
+
+---
+
+## Migration to Vitest (Recommended)
+
+### Why Migrate to Vitest?
+
+1. **Official Vue 3 Support**: Maintained by Vue team
+2. **Better Performance**: Faster test execution with Vite
+3. **Native ESM**: No transformation issues
+4. **Better DX**: Hot module reload for tests
+5. **Vue-Specific Features**: Better Vue component testing
+
+### Migration Steps
+
+1. **Remove Jest dependencies**:
+```bash
+npm uninstall jest @vue/vue3-jest ts-jest @types/jest babel-jest
+```
+
+2. **Install Vitest**:
+```bash
+npm install -D vitest @vitest/ui jsdom
+```
+
+3. **Create vitest.config.ts**:
+```typescript
+import { defineConfig } from 'vitest/config';
+import vue from '@vitejs/plugin-vue';
+
+export default defineConfig({
+  plugins: [vue()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+  },
+});
+```
+
+4. **Update test files**: Minimal changes needed, mostly imports
+
+---
+
+## Common Issues and Solutions
+
+**Issue**: `@vue/vue3-jest` fails to transform Vue files
+- **Solution**: Verify package is still maintained, check version compatibility
+- **Alternative**: Migrate to Vitest
+
+**Issue**: ESM package transformation errors
+- **Solution**: Add package to `transformIgnorePatterns` exclusion list
+- **Check**: Verify package is actually ESM-only
+
+**Issue**: Coverage shows 0% for all files
+- **Solution**: Check `coverageProvider` setting, verify v8 compatibility
+- **Alternative**: Try `babel` coverage provider
+
+**Issue**: TypeScript type errors in tests
+- **Solution**: Verify `ts-jest` version matches TypeScript version
+- **Check**: Ensure `tsconfig.json` includes test files
+
+**Issue**: `Cannot find module '@/...'` errors
+- **Solution**: Verify `moduleNameMapper` includes `'^@/(.*)$': '<rootDir>/src/$1'`
+- **Check**: Ensure paths match your project structure
+
+---
+
+## Important Reminders
+
+1. **Always Research First**: Verify `@vue/vue3-jest` maintenance status before using
+2. **Vitest Preferred**: For new Vue 3 projects, use Vitest instead of Jest
+3. **ESM Detection**: Check which packages need `transformIgnorePatterns`
+4. **Coverage Provider**: Use `v8` unless compatibility issues (verify current recommendation)
+5. **Transformer Compatibility**: Ensure all transformers match current tool versions
+6. **Legacy Status**: Jest is legacy for Vue 3; plan migration to Vitest
+7. **Test Environment**: `jsdom` required for Vue component testing
+8. **Module Mapping**: Ensure path aliases match vite.config.ts/tsconfig.json
