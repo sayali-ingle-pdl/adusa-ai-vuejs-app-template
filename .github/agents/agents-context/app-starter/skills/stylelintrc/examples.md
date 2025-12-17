@@ -121,160 +121,31 @@ Before using this example:
 
 ---
 
-## Rule Explanations
+## Key Rule Overrides Explained
 
-### Extended Configurations
+**Config Extends**:
+- `stylelint-config-standard-scss` (SCSS) or `stylelint-config-standard` (CSS) - Community best practices
+- `stylelint-config-recommended-vue` - Vue SFC `<style>` block support
 
-**`stylelint-config-standard-scss`** (for SCSS projects)
-- Provides standard SCSS linting rules
-- Includes SCSS-specific syntax support (@use, @forward, @mixin, etc.)
-- **Why**: Comprehensive SCSS best practices from the community
-- **Verify**: Run `npm view stylelint-config-standard-scss version`
-- **Compatibility**: Requires Stylelint 16.0.0+
+**Critical Rules** (verify if deprecated):
+- `"import-notation": "string"` - Enforce double quotes in `@use "file"`
+- `"color-function-notation": "legacy"` - Allow `rgb(255, 255, 255)` syntax
+- `"alpha-value-notation": "number"` - Allow `0.5` not `50%` for opacity
+- `"media-feature-range-notation": "prefix"` - Allow `(min-width: 768px)` syntax
+- `"unit-allowed-list": [em, rem, %, px, s, in, deg, fr, vh, vw]` - Prevent typos
 
-**`stylelint-config-standard`** (for CSS projects)
-- Provides standard CSS linting rules
-- Modern CSS features support (custom properties, grid, etc.)
-- **Why**: Comprehensive CSS best practices from the community
-- **Verify**: Run `npm view stylelint-config-standard version`
-- **Compatibility**: Requires Stylelint 16.0.0+
+**Disabled Rules** (null = off, too strict for real-world use):
+- `"property-no-vendor-prefix": null` - Allow `-webkit-`, `-moz-` prefixes
+- `"no-descending-specificity": null` - Allow flexible CSS specificity
+- `"selector-class-pattern": null` - Allow BEM, camelCase, kebab-case
+- `"at-rule-no-unknown": null` - Allow SCSS/PostCSS custom at-rules
+- `"declaration-property-value-no-unknown": null` - Allow new CSS features
 
-**`stylelint-config-recommended-vue`**
-- Vue single-file component (SFC) support
-- Lints `<style>` blocks in `.vue` files
-- **Why**: Essential for Vue component style linting
-- **Verify**: Run `npm view stylelint-config-recommended-vue version`
-- **Compatibility**: Works with both CSS and SCSS
+**SCSS-Only Rules** (when SCSS detected):
+- `"scss/at-extend-no-missing-placeholder": null` - Allow `@extend .class`
+- `"scss/dollar-variable-colon-space-after": "always"` - Enforce `$var: value` spacing
 
-### Rule Overrides (Why Each Rule is Configured)
-
-#### Import and Module Rules
-
-**`"import-notation": "string"`**
-- Forces `@use "file"` instead of `@use 'file'`
-- **Why**: Consistency in import statements
-- **Values**: `"string"` | `"url"`
-- **Affects**: SCSS `@use`, `@import`, `@forward`
-
-**`"no-invalid-position-at-import-rule": null`**
-- Disables errors for `@import` position
-- **Why**: SCSS `@use` rules can be flexible in order
-- **Default**: Error if `@import` not at top
-- **Disabled**: Too strict for real-world SCSS modules
-
-#### Color and Value Rules
-
-**`"color-function-notation": "legacy"`**
-- Allows `rgb(255, 255, 255)` instead of `rgb(255 255 255)`
-- **Why**: Legacy syntax more readable and widely used
-- **Values**: `"modern"` | `"legacy"`
-- **Affects**: `rgb()`, `rgba()`, `hsl()`, `hsla()`
-- **⚠️ Verify**: Check if Stylelint 16+ changed default
-
-**`"alpha-value-notation": "number"`**
-- Allows `rgba(0, 0, 0, 0.5)` instead of `rgba(0, 0, 0, 50%)`
-- **Why**: Decimal notation more common and intuitive
-- **Values**: `"number"` | `"percentage"`
-- **Affects**: Opacity/alpha values in color functions
-
-**`"value-keyword-case": null`**
-- Disables case enforcement for CSS keywords
-- **Why**: Allow both `currentColor` and `currentcolor`
-- **Default**: Enforces lowercase
-- **Disabled**: Too strict, both are valid
-
-#### Vendor Prefix Rules
-
-**`"property-no-vendor-prefix": null`**
-- Allows `-webkit-`, `-moz-`, `-ms-` prefixes
-- **Why**: Sometimes required for browser compatibility
-- **Default**: Error on vendor prefixes
-- **Disabled**: Autoprefixer not always used, prefixes still needed
-
-#### Media Query Rules
-
-**`"media-feature-range-notation": "prefix"`**
-- Allows `(min-width: 768px)` instead of `(width >= 768px)`
-- **Why**: Classic syntax more familiar and widely supported
-- **Values**: `"prefix"` | `"context"`
-- **Affects**: Media query range syntax
-
-#### Unit Rules
-
-**`"unit-allowed-list": [...]`**
-- Whitelist of allowed CSS units
-- **Why**: Prevent typos like `pz` or uncommon units
-- **Allowed**: `em`, `rem`, `%`, `px`, `s`, `in`, `deg`, `fr`, `vh`, `vw`
-- **Common use cases**:
-  - `px`, `rem`, `em` - Sizing
-  - `%` - Percentages
-  - `vh`, `vw` - Viewport units
-  - `deg` - Rotations
-  - `fr` - Grid fractions
-  - `s` - Transitions/animations
-  - `in` - Print styles
-
-#### Specificity and Selector Rules
-
-**`"no-descending-specificity": null`**
-- Disables error for decreasing specificity order
-- **Why**: Too strict for component-based CSS
-- **Default**: Error if less specific selector comes after more specific
-- **Disabled**: Real-world CSS often requires flexible specificity
-
-**`"selector-class-pattern": null`**
-- Disables class naming pattern enforcement
-- **Why**: Allow BEM, camelCase, kebab-case, etc.
-- **Default**: Enforces kebab-case
-- **Disabled**: Projects use various naming conventions
-
-**`"selector-pseudo-element-colon-notation": null`**
-- Allows both `::before` and `:before`
-- **Why**: Legacy syntax still valid
-- **Default**: Enforces double colon `::`
-- **Disabled**: Both syntaxes widely used
-
-#### At-Rule Rules
-
-**`"at-rule-no-unknown": null`**
-- Disables errors for unknown at-rules
-- **Why**: SCSS has custom at-rules, PostCSS plugins add more
-- **Default**: Error on unrecognized at-rules
-- **Disabled**: Prevents false positives with SCSS/PostCSS
-
-**`"at-rule-empty-line-before": null`**
-- Disables empty line requirement before at-rules
-- **Why**: Flexible formatting preferences
-- **Default**: Requires empty line before at-rules
-- **Disabled**: Too strict for compact styles
-
-#### SCSS-Specific Rules (SCSS projects only)
-
-**`"scss/at-extend-no-missing-placeholder": null`**
-- Allows `@extend .class` without placeholder `%`
-- **Why**: Sometimes extending classes is necessary
-- **Default**: Error if extending non-placeholder
-- **Disabled**: Too strict for practical SCSS usage
-
-**`"scss/dollar-variable-colon-space-after": "always"`**
-- Enforces space after colon in SCSS variables
-- **Why**: Consistency and readability
-- **Format**: `$color: red` not `$color:red`
-- **Values**: `"always"` | `"never"` | `"at-least-one-space"`
-
-#### Declaration Rules
-
-**`"declaration-empty-line-before": null`**
-- Disables empty line requirement before declarations
-- **Why**: Allow compact property groups
-- **Default**: Requires empty line before declarations (in some cases)
-- **Disabled**: Too strict for real-world CSS
-
-**`"declaration-property-value-no-unknown": null`**
-- Disables errors for unknown property values
-- **Why**: CSS evolves, new values added frequently
-- **Default**: Error on unrecognized property values
-- **Disabled**: Prevents false positives for new CSS features
+**Why These Defaults**: Balance strictness with practical Vue/SCSS development patterns
 
 ---
 
