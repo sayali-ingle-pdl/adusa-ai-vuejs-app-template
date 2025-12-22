@@ -9,18 +9,31 @@
 
 ### Step 1: Start a New Project
 
-1. **Copy this template** to your new project location:
+1. **Optional pre-requisite for Ahold GitHub registry hosted Component Library**
+   If this project requires installation of component library that is hosted in Ahold GitHub registry, then a PAT token will be required to install it.
+   Please create a PAT token in GitHub, and make sure to assign it read: package permission.
+   Then follow the guidelines below:
+      - In the home directory (of your computer), create a file named ```.npmrc```
+      - Add the following content to the file:
+         ```bash
+         @RoyalAholdDelhaize:registry=https://npm.pkg.github.com
+         //npm.pkg.github.com/:_authToken={YOUR_TOKEN}
+         ```
+      - Replace the ```{YOUR_TOKEN}``` placeholder with the PAT created earlier.
+      - Save and exit the file.
+
+2. **Copy this template** to your new project location:
    ```bash
    cp -r adusa-ai-vuejs-app-template your-new-project
    cd your-new-project
    ```
 
-2. **Remove the existing git repository** (so the agent can initialize a fresh one):
+3. **Remove the existing git repository** (so the agent can initialize a fresh one):
    ```bash
    rm -rf .git
    ```
 
-3. **Update application parameters** in `docs/requirements/application-parameters.md`:
+4. **Update application parameters** in `docs/requirements/application-parameters.md`:
    ```markdown
    - application_name: `your-app-name`
    - default_port: `8090`
@@ -55,12 +68,7 @@ The agent will:
 ### Step 3: Install Dependencies
 
 ```bash
-# Update .npmrc with your GitHub token
-# Replace ${GH_PACKAGE_LIBRARY_TOKEN} with your actual token
-
 npm install
-
-# Revert .npmrc changes (don't commit token)
 ```
 
 ### Step 4: Configure Environment
