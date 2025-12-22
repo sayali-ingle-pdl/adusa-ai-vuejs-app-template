@@ -1,42 +1,88 @@
 # Babel Config Skill
 
 ## Purpose
-Generate the `babel.config.cjs` file for transpilation in tests.
+Generate a Babel configuration file for transpilation in tests.
+
+## 🔍 BEFORE GENERATING - RESEARCH CURRENT STANDARDS
+**⚠️ CRITICAL: Always verify current standards before generating. This skill may reference outdated conventions.**
+
+1. **Check latest Babel documentation**: https://babeljs.io/docs/configuration
+2. **Verify current config file format**: Run `npm view @babel/core version` to check latest Babel version
+3. **Verify current preset package names**: Check if `@babel/preset-env`, `@babel/preset-typescript` are still current
+4. **Check for deprecation warnings**: Review latest Babel release notes for breaking changes
+5. **If standards have changed**: Use NEW standards from official docs, NOT the examples below
+
+## 🚨 MANDATORY FILE COUNT
+**Total Required: 1 file**
+- Babel config file (1 file) - extension may be `.cjs`, `.mjs`, `.js`, or `.json` depending on current standards
+
+**If this file is not created, test transpilation will FAIL.**
+
+## Requirements (Dynamic - Verify Current Standards)
+- Check current Babel best practices before generating
+- Use latest recommended presets from official Babel documentation
+- Use current standard file extension for Babel configs
+- Verify package names exist in npm registry before adding: `npm view <package> version`
+- If `@babel/preset-env` is deprecated, use its successor
+- If `.cjs` extension is outdated, use current standard
 
 ## Output
-Create the file: `babel.config.cjs`
+Create a Babel configuration file with the currently recommended format
 
+## Example Configuration (As of December 2025 - May be outdated)
+⚠️ **VERIFY these packages and conventions are still current before using:**
 
-## When to Use Babel
+### Example File: `babel.config.cjs`
+- **Extension**: `.cjs` (CommonJS format - verify this is still standard)
+- **Presets**: 
+  - `@babel/preset-env` (for ES6+ transpilation - check if deprecated)
+  - `@babel/preset-typescript` (for TypeScript - check if deprecated)
+- **Plugins**:
+  - `@babel/plugin-transform-runtime` (check if still recommended)
 
-### ✅ Use Babel For:
-- Jest test transpilation
-- Supporting older Node.js versions
-- Custom transformations
-- Legacy browser support
+**If any of these are deprecated or outdated:**
+- Check: https://babeljs.io/docs/ for current replacements
+- Check: `npm view @babel/core@latest` for latest version info
+- Check: Babel migration guides for breaking changes
 
-### ❌ Don't Use Babel For:
-- Vite production builds (use esbuild/Vite)
-- Modern browser-only apps (use native ES modules)
-- Simple projects without tests
+## Execution Checklist
+Use this checklist to ensure the file is created:
+- [ ] **FIRST**: Research current Babel standards (see "BEFORE GENERATING" section)
+- [ ] Create Babel config file at project root (verify correct extension)
+- [ ] File includes current standard presets for ES6+ and TypeScript
+- [ ] File includes current standard plugins (if any)
+- [ ] Verify packages exist in npm: `npm view <package> version`
+- [ ] Verify file exists: `ls babel.config.*`
 
-## Babel in Vue/Vite Projects
+## 🛑 BLOCKING VALIDATION CHECKPOINT
+**STOP AND VERIFY before proceeding to the next skill:**
 
-### Development & Production
-- **Vite** handles transpilation
-- Fast with esbuild
-- No Babel needed
+### Automated Verification (Flexible for any extension)
+Run this command to verify the file exists:
+```bash
+# Check for babel config file (any valid extension)
+if [ ! -f babel.config.cjs ] && [ ! -f babel.config.mjs ] && [ ! -f babel.config.js ] && [ ! -f babel.config.json ]; then
+  echo "❌ MISSING: babel config file (expected: .cjs, .mjs, .js, or .json)"
+  exit 1
+fi
+echo "✅ Babel config file present"
+```
 
-### Testing (Jest)
-- **Babel** transforms test files
-- Jest requires transpilation
-- `babel.config.cjs` necessary
+### Manual Verification
+1. ✓ Babel config file exists at project root (any current standard extension)
+2. ✓ File contains current standard presets for ES6+ transpilation and TypeScript
+3. ✓ File contains current standard plugins (if required)
+4. ✓ All package names verified to exist: `npm view <package> version`
+5. ✓ Configuration follows latest Babel documentation standards
 
+### If Validation Fails
+**DO NOT PROCEED** to the next skill. Create the missing file immediately.
 
 ## Notes
-- Simple Babel configuration for Jest and test environments
+- Babel configuration for test environment transpilation (Jest/Vitest with Babel)
 - Transpiles modern JavaScript for Node test environment
-- Uses CommonJS format (.cjs) for compatibility
-- `@babel/preset-env` automatically determines necessary transformations
+- File format depends on current Babel standards (check docs)
+- Presets automatically determine necessary transformations
 - Enables use of modern syntax in test files
-- Required for Jest to process ES modules and modern JavaScript features
+- Required for test frameworks to process ES modules and modern JavaScript features
+- **Always verify current standards** - Babel ecosystem evolves over time
