@@ -103,6 +103,25 @@ const os = require('os');
 const homeNpmrc = path.join(os.homedir(), '.npmrc');
 const tokenExists = fs.existsSync(homeNpmrc);
 
+if (!tokenExists) {
+  console.log('⚠️  GitHub token not found in ~/.npmrc');
+  console.log('📖 Setup instructions: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token');
+  
+  // Prompt user to skip or continue
+  const skipInstallation = prompt('Would you like to skip component library installation? (yes/no): ');
+  
+  if (skipInstallation.toLowerCase() === 'yes') {
+    console.log('✓ Skipping component library installation');
+    userConfig.include_component_library = 'no';
+    return; // Exit this skill
+  } else {
+    console.log('⚠️  Continuing with installation. Please configure token before running npm install.');
+  }
+} else {
+  console.log('✓ GitHub authentication configured in ~/.npmrc');
+}
+```
+
 ### Step 3: Add Component Library to package.json
 
 ```javascript
@@ -171,7 +190,6 @@ if (userConfig.include_component_library === 'yes') {
 ```
 **Action**: Skip skill entirely, no validation needed
 
-## Security Best Practices
 ## Output
 Component library added to `package.json` dependencies using npm alias format:
 ```json
@@ -206,8 +224,8 @@ Component library added to `package.json` dependencies using npm alias format:
 chmod 600 ~/.npmrc
 ```
 
-## Skill Outcome
-Component library added to `package.json` dependencies
+## Postconditions
+When this skill completes successfully, the component library is added to `package.json` dependencies.
 
 ## Integration with Other Skills
 
