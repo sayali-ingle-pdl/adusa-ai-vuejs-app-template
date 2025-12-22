@@ -13,13 +13,13 @@
    If this project requires installation of component library that is hosted in Ahold GitHub registry, then a PAT token will be required to install it.
    Please create a PAT token in GitHub, and make sure to assign it read: package permission.
    Then follow the guidelines below:
-      - In the home directory (of your computer), create a file named ```.npmrc```
+      - In the home directory (of your computer), create a file named ``` .npmrc ```
       - Add the following content to the file:
          ```bash
          @RoyalAholdDelhaize:registry=https://npm.pkg.github.com
          //npm.pkg.github.com/:_authToken={YOUR_TOKEN}
          ```
-      - Replace the ```{YOUR_TOKEN}``` placeholder with the PAT created earlier.
+      - Replace the ``` {YOUR_TOKEN} ``` placeholder with the PAT created earlier.
       - Save and exit the file.
 
 2. **Copy this template** to your new project location:

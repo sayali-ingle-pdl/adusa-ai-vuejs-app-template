@@ -102,7 +102,7 @@ The skills should be executed in the following order to ensure dependencies are 
 ### Phase 3: Code Quality
 13. ESLint Config Skill
 14. Browserlist Config Skill
-15 . Lint Staged Config Skill
+15. Lint Staged Config Skill
 16. Prettier Config Skill
 17. Prettier Ignore Skill
 18. Babel Config Skill (if using Jest)

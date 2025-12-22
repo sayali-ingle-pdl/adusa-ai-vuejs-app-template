@@ -19,7 +19,7 @@ Conditionally install and configure the component library based on user request 
 1. User answered `yes` to component library question
 2. GitHub authentication token exists in `~/.npmrc` (home directory)
 
-**Do not ask user for token:**: Never ask user to provide token.
+**Do not ask user for token:** Never ask user to provide token.
 
 **If token missing**: Inform user with setup instructions, offer to skip installation
 
@@ -133,28 +133,6 @@ if (userConfig.include_component_library === 'yes') {
   
   console.log(`✓ Component library configured: ${aliasKey} → ${aliasValue}`);
 }
-```In package.json generation
-if (userConfig.include_component_library === 'yes') {
-  // Fetch latest version if not specified
-  if (!userConfig.component_library_version) {
-    const { execSync } = require('child_process');
-    try {
-      const latestVersion = execSync(
-        'npm view @RoyalAholdDelhaize/pdl-spectrum-component-library-web version --registry=https://npm.pkg.github.com',
-        { encoding: 'utf-8' }
-      ).trim();
-      userConfig.component_library_version = `^${latestVersion}`;
-    } catch (error) {
-      console.log('⚠️  Could not fetch latest version, using default');
-      userConfig.component_library_version = '^1.0.0';
-    }
-  }
-  
-  // Add to dependencies
-  dependencies[userConfig.component_library] = userConfig.component_library_version;
-  
-  console.log(`✓ Component library configured: ${userConfig.component_library}@${userConfig.component_library_version}`);
-}
 ```
 
 ### Step 4: Trigger npmrc Skill
@@ -228,7 +206,7 @@ Component library added to `package.json` dependencies using npm alias format:
 chmod 600 ~/.npmrc
 ```
 
-## Output
+## Skill Outcome
 Component library added to `package.json` dependencies
 
 ## Integration with Other Skills

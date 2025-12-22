@@ -159,7 +159,6 @@ if [ ! -f ~/.npmrc ]; then
 else
   echo "ℹ️  ~/.npmrc exists - assuming GitHub authentication configured"
   echo "ℹ️  Ensure token has 'read:packages' scope"
-fiecho "ℹ️  User needs to configure personal access token"
 fi
 
 # Test npm config reading
@@ -178,12 +177,11 @@ exit 0
 
 After generation, manually verify:
 
-4. **Home config exists**: `test -f ~/.npmrc && echo "Configured" || echo "Not configured"`
+1. **Home config exists**: `test -f ~/.npmrc && echo "Configured" || echo "Not configured"`
 2. **Content check**: `cat .npmrc` (should only show registry, no tokens)
 3. **No tokens embedded**: `grep "_authToken" .npmrc` (should return nothing)
-4. **Home token exists**: `grep "npm.pkg.github.com" ~/.npmrc` (should find token)
-5. **Registry config**: `npm config get @RoyalAholdDelhaize:registry` (should return GitHub URL)
-6. **Test authentication**: `npm whoami --registry=https://npm.pkg.github.com` (should show username)
+4. **Registry config**: `npm config get @RoyalAholdDelhaize:registry` (should return GitHub URL)
+5. **Test authentication**: `npm whoami --registry=https://npm.pkg.github.com` (should show username)
 
 ## Template
 See: `examples.md` in this directory for complete examples and adaptation guide.
