@@ -71,6 +71,14 @@ When invoked, this agent should:
 6. Run the required commands to install dependencies and verify the setup
 7. Verify that the application is in a runnable state
 
+## Pre-execution validations
+
+- Review the provided application parameters to ensure all required inputs are present and valid. If any required parameters are missing or invalid, prompt the user to provide or correct them before proceeding.
+- Review the templates and instructions in each skill directory to ensure they align with the desired application structure and configurations.
+- Confirm that the necessary tools (Node.js, npm, Vue CLI, Vite, etc.) are available in the environment where the agent will run.
+- Ask questions if you are unsure about any application parameters or configurations before proceeding with code generation.
+- Ask questions if you are unsure about the prompts provided in the template.
+
 ## Execution Order
 
 The skills should be executed in the following order to ensure dependencies are properly handled:
@@ -101,7 +109,7 @@ The skills should be executed in the following order to ensure dependencies are 
 19. Vitest Config Skill (if test_framework === vitest)
 20. Stylelint Config Skill
 21. SonarQube Properties Skill
-22. Husky Skill
+22. Husky Skill - **IMPORTANT**: Create `.husky/pre-commit` file (do NOT rely on auto-generated default)
 
 ### Phase 4: Application Structure
 23. TypeScript Shims Skill
@@ -110,7 +118,7 @@ The skills should be executed in the following order to ensure dependencies are 
 26. Theme Skill
 27. Router Skill
 28. Store Skill (Vuex or Pinia based on configuration)
-29. App Component Skill
+29. App Component Skill (creates App.vue + App.spec.ts)
 
 ### Phase 5: Views and Tests (CRITICAL - ALWAYS EXECUTE)
 30. **View Components Skill** - Generate initial view components:
@@ -142,10 +150,10 @@ The skills should be executed in the following order to ensure dependencies are 
   - `src/views/PageNotFoundView/PageNotFoundView.vue` ✓
   - `src/views/PageNotFoundView/PageNotFoundView.spec.ts` ✓
   - `src/App.spec.ts` ✓
-- Run `npm run lint` to verify linting setup
-- Run `npx stylelint src/**/*.vue src/**/*.scss` to verify stylelint setup
-- Run `npm run test` to verify test setup (tests MUST pass)
-- Run `npm run build` to verify build configuration
+- Run lint to verify linting setup. Resolve any linting errors if they arise.
+- Run stylelint to verify stylelint setup. Resolve any stylelint errors if they arise.
+- Build the app to verify build configuration. Resolve any build errors if they arise.
+- Run unit test to verify test setup (if tests exist). Resolve any test errors if they arise.
 
 ## Post-Generation Tasks
 
