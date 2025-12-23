@@ -1,3 +1,8 @@
+---
+name: prettierignore
+description: Generates .prettierignore to exclude build outputs, dependencies, and generated files from Prettier formatting. Prevents formatting of dist/, node_modules/, and coverage/ directories.
+---
+
 # Prettier Ignore Skill
 
 ## Purpose

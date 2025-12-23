@@ -1,3 +1,8 @@
+---
+name: testing
+description: Generates test files and testing utilities for Vue 3 applications. Ensures mandatory .spec.ts files are created alongside components, views, stores, directives, and utilities.
+---
+
 # Testing Skill
 
 ## Purpose

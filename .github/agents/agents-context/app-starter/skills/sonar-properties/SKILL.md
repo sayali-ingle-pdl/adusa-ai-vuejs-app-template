@@ -1,3 +1,8 @@
+---
+name: sonar-properties
+description: Generates sonar-project.properties for SonarQube code quality analysis and coverage reporting. Auto-detects test framework (Jest/Vitest) and configures coverage paths.
+---
+
 # SonarQube Properties Skill
 
 ## Purpose

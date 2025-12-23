@@ -1,3 +1,8 @@
+---
+name: stylelintrc
+description: Generates .stylelintrc configuration for linting CSS, SCSS, and Vue component styles. Auto-detects stylesheet type and fetches latest package versions for plugins.
+---
+
 # Stylelint Configuration Skill
 
 ## Purpose

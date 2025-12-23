@@ -1,3 +1,8 @@
+---
+name: conditional-generation
+description: Determines which files and dependencies to generate based on application type (standalone vs micro-frontend). Controls conditional features.
+---
+
 # Conditional File Generation Skill
 
 ## Purpose

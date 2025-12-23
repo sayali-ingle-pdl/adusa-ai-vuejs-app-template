@@ -1,3 +1,8 @@
+---
+name: api-pattern
+description: Provides Vue component structure templates for Composition API and Options API. Used when generating .vue components and views to match user's selected API pattern preference.
+---
+
 # API Pattern Skill
 
 ## Purpose

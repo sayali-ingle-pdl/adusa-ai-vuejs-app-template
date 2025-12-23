@@ -1,3 +1,8 @@
+---
+name: store
+description: Generates src/store/index.ts with Vuex store configuration and namespaced modules for state management.
+---
+
 # Store Skill
 
 ## Purpose

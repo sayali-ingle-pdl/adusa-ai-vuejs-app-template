@@ -1,3 +1,8 @@
+---
+name: nginx-sites-available
+description: Generates nginx-sites-available-default configuration file for serving the Vue application on Debian/Ubuntu-based nginx installations.
+---
+
 # Nginx Sites Available Default Skill
 
 ## Purpose

@@ -1,3 +1,8 @@
+---
+name: prettier-config
+description: Generates .prettierrc configuration file for code formatting with Prettier. Defines formatting rules for consistent code style across the project.
+---
+
 # Prettier Config Skill
 
 ## Purpose
