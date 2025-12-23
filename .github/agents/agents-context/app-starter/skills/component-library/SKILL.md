@@ -108,7 +108,8 @@ if (!tokenExists) {
   console.log('📖 Setup instructions: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token');
   
   // Prompt user to skip or continue
-  const skipInstallation = prompt('Would you like to skip component library installation? (yes/no): ');
+  // Implementation: Use readline, inquirer, or prompts library for user interaction
+  const skipInstallation = await askUser('Would you like to skip component library installation? (yes/no): ');
   
   if (skipInstallation.toLowerCase() === 'yes') {
     console.log('✓ Skipping component library installation');

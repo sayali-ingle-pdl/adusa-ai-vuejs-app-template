@@ -205,7 +205,6 @@ See: `examples.md` in this directory for complete examples and adaptation guide.
 - **Registry Only**: Project `.npmrc` maps scope to registry endpoint
 - **Authentication Separate**: npm automatically uses `~/.npmrc` token for authentication
 - **No Environment Variables**: Token not needed in .env files
-- **Clean Separation**: Project config (committed) vs user credentials (local)
 
 ### Organization Adaptation
 To adapt for different organizations:

@@ -11,7 +11,7 @@
 
 1. **Optional prerequisite for Ahold GitHub registry hosted Component Library**
    If this project requires installation of component library that is hosted in Ahold GitHub registry, then a PAT token will be required to install it.
-   Please create a PAT token in GitHub, and make sure to assign it read: package permission.
+   Please create a PAT token in GitHub, and make sure to assign it `read:packages` permission.
    Then use the following guidelines:
       - In the home directory (of your computer), create a file named ``` .npmrc ```
       - Add the following content to the file:
