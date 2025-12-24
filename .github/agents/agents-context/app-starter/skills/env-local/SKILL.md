@@ -1,3 +1,8 @@
+---
+name: env-local
+description: Generates .env.local file for local development environment variables. Contains developer-specific configuration like API URLs, ports, and feature flags. Gitignored for security.
+---
+
 # Environment Local Skill
 
 ## Purpose
@@ -5,9 +10,6 @@ Generate .env.local file for local development environment configuration.
 
 ## Output
 Create the file: `.env.local`
-
-## Template
-See: `examples.md` in this directory for complete template and detailed examples.
 
 ## Notes
 - `.env.local` is used for local development environment variables

@@ -1,3 +1,8 @@
+---
+name: jest-config
+description: Generates jest.config.cjs for unit testing configuration. Configures Jest with Vue, TypeScript support, coverage thresholds, and test environment settings.
+---
+
 # Jest Config Skill
 
 ## Purpose

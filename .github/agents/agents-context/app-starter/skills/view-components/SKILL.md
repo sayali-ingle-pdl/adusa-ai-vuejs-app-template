@@ -1,3 +1,8 @@
+---
+name: view-components
+description: Generates initial view components with mandatory unit tests. Creates HomeView.vue, PageNotFoundView.vue, and their .spec.ts test files (4 files total).
+---
+
 # View Components Skill
 
 ## Purpose

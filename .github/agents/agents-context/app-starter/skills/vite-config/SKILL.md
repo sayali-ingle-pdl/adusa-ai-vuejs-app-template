@@ -1,3 +1,8 @@
+---
+name: vite-config
+description: Generates vite.config.ts for building and serving the Vue 3 application. Configures dev server, API proxy, build format, and plugins.
+---
+
 # Vite Config Skill
 
 ## Purpose

@@ -1,3 +1,8 @@
+---
+name: public
+description: Generates public/ directory with static assets including favicons, app icons, and site.webmanifest for Progressive Web App (PWA) support.
+---
+
 # Public Folder Skill
 
 ## Purpose

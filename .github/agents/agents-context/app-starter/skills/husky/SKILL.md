@@ -1,3 +1,8 @@
+---
+name: husky
+description: Generates Husky Git hooks configuration with pre-commit checks. Creates .husky/pre-commit file for running linting, testing, and formatting before commits.
+---
+
 # Husky Skill
 
 ## Purpose

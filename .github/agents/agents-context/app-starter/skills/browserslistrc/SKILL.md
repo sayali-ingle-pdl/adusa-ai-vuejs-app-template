@@ -1,3 +1,8 @@
+---
+name: browserslistrc
+description: Defines target browser versions for CSS autoprefixing and JavaScript transpilation. Generates .browserslistrc configuration file.
+---
+
 # Browserslist Skill
 
 ## Purpose

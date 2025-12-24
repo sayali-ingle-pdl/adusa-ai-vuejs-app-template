@@ -1,3 +1,8 @@
+---
+name: env-standalone
+description: Conditionally generates .env.standalone file for micro-frontend applications only. Enables running micro-frontends in standalone mode without single-spa launcher. Skipped for standalone applications.
+---
+
 # Environment Standalone Skill
 
 ## Purpose

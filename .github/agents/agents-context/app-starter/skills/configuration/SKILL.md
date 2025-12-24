@@ -1,3 +1,8 @@
+---
+name: configuration
+description: Reads config.json and prompts user for application parameters. Merges configuration with defaults for project generation.
+---
+
 # Configuration Management Skill
 
 ## Purpose
@@ -164,25 +169,6 @@ if (userConfig.include_component_library === undefined) {
   });
   userConfig.include_component_library = needsComponentLibrary;
   console.log(`✓ ${needsComponentLibrary ? 'Will include component library' : 'No component library'}\n`);
-}
-
-// Only ask for token if component library is needed
-if (userConfig.include_component_library && !userConfig.github_token) {
-  console.log('\n🔑 GitHub authentication required for component library:');
-  
-  userConfig.github_token = await promptUser('github_token', {
-    type: 'password',
-    message: 'GitHub Personal Access Token (read:packages permission):',
-    optional: false
-  });
-  
-  if (userConfig.github_token) {
-    console.log('✓ Token received (will be stored in .npmrc)\n');
-  }
-} else if (!userConfig.include_component_library) {
-  // No component library means no token needed
-  userConfig.component_library = null;
-  console.log('ℹ  Skipping GitHub token (no component library needed)\n');
 }
 ```
 

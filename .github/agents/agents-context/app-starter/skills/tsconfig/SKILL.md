@@ -1,3 +1,8 @@
+---
+name: tsconfig
+description: Generates tsconfig.json for TypeScript compilation configuration. Includes path aliases (@/ for src/), Jest types, and Vite client types.
+---
+
 # TypeScript Config Skill
 
 ## Purpose

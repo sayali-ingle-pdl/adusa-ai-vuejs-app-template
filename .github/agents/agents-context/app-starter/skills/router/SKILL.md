@@ -1,3 +1,8 @@
+---
+name: router
+description: Generates src/router/index.ts with Vue Router configuration, hash-based routing, and navigation guards for route protection.
+---
+
 # Router Skill
 
 ## Purpose

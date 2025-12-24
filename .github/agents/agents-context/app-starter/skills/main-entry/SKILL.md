@@ -1,3 +1,8 @@
+---
+name: main-entry
+description: Generates src/main.ts application entry point. Creates different versions based on app type - micro-frontend with single-spa lifecycle or standalone SPA initialization.
+---
+
 # Main Entry Skill
 
 ## Purpose

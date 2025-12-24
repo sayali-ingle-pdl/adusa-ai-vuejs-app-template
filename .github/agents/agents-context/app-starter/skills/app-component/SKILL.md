@@ -1,3 +1,8 @@
+---
+name: app-component
+description: Generates src/App.vue root component with unit test. Creates both App.vue and App.spec.ts files.
+---
+
 # App Component Skill
 
 ## Purpose
