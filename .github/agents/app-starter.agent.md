@@ -13,7 +13,7 @@ For complete execution flow, user questionnaire, and orchestration logic, see:
 **[`./agents-context/app-starter/.copilot-instructions.md`](./agents-context/app-starter/.copilot-instructions.md)**
 
 This includes:
-- Question flow preference (all-at-once, one-at-a-time, read-from-config-file)
+- Question flow preference (all-at-once, one-at-a-time)
 - All 12 required user input questions
 - Auto-configured and auto-derived parameters
 - Version management strategy
