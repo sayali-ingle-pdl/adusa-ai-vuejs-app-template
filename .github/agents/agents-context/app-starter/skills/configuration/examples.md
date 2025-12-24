@@ -58,13 +58,6 @@
 
 ### Optional Fields
 
-#### github_token
-- **Type**: string
-- **Min Length**: 40
-- **Description**: GitHub Personal Access Token for private packages (optional)
-- **Examples**: `"ghp_1234567890abcdefghijklmnopqrstuvwxyz1234"`
-- **Security**: Will be written to .npmrc (gitignored)
-
 #### node_version
 - **Type**: string
 - **Pattern**: `^v?[0-9]+\.[0-9]+\.[0-9]+$`
@@ -159,7 +152,7 @@
 - Uses Jest + Vuex (legacy stack)
 - Micro-frontend with single-spa
 - Includes component library
-- Creates .npmrc with GitHub token
+- Creates .npmrc
 
 ---
 

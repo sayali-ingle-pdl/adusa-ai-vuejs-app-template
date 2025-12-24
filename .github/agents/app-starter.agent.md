@@ -89,59 +89,57 @@ The skills should be executed in the following order to ensure dependencies are 
 3. Package JSON Skill
 4. NPM RC Skill (if component library is included)
 5. Git Ignore Skill
-6. **Run `npm install`** to install dependencies
+6. Component Library Skill (if include_component_library === true)
+7. **Run `npm install`** to install dependencies
 
 ### Phase 2: Build Configuration
-7. TypeScript Config Skill
-8. Vite Config Skill
-9. Environment Files Skill (env-local, env-standalone if micro-frontend)
-10. Index HTML Skill
-11. Public Folder Skill
+8. TypeScript Config Skill
+9. Vite Config Skill
+10. Environment Files Skill (env-local, env-standalone if micro-frontend)
+11. Index HTML Skill
+12. Public Folder Skill
 
 ### Phase 3: Code Quality
-12. ESLint Config Skill
-13. Browserlist Config Skill
-14. Lint Staged Config Skill
-15. Prettier Config Skill
-16. Prettier Ignore Skill
-17. Babel Config Skill (if using Jest)
-18. Jest Config Skill (if test_framework === jest)
-19. Vitest Config Skill (if test_framework === vitest)
-20. Stylelint Config Skill
-21. SonarQube Properties Skill
-22. Husky Skill - **IMPORTANT**: Create `.husky/pre-commit` file (do NOT rely on auto-generated default)
+13. ESLint Config Skill
+14. Browserlist Config Skill
+15. Lint Staged Config Skill
+16. Prettier Config Skill
+17. Prettier Ignore Skill
+18. Babel Config Skill (if using Jest)
+19. Jest Config Skill (if test_framework === jest)
+20. Vitest Config Skill (if test_framework === vitest)
+21. Stylelint Config Skill
+22. SonarQube Properties Skill
+23. Husky Skill - **IMPORTANT**: Create `.husky/pre-commit` file (do NOT rely on auto-generated default)
 
 ### Phase 4: Application Structure
-23. TypeScript Shims Skill
-24. Global Constants Skill
-25. Environment Constants Skill
-26. Theme Skill
-27. Router Skill
-28. Store Skill (Vuex or Pinia based on configuration)
-29. App Component Skill (creates App.vue + App.spec.ts)
+24. TypeScript Shims Skill
+25. Global Constants Skill
+26. Environment Constants Skill
+27. Theme Skill
+28. Router Skill
+29. Store Skill (Vuex or Pinia based on configuration)
+30. App Component Skill (creates App.vue + App.spec.ts)
 
 ### Phase 5: Views and Tests (CRITICAL - ALWAYS EXECUTE)
-30. **View Components Skill** - Generate initial view components:
+31. **View Components Skill** - Generate initial view components:
     - `src/views/Home/Home.vue`
     - `src/views/PageNotFoundView/PageNotFoundView.vue`
     - Templates based on `vue_api_pattern` (composition-api or options-api)
     
-31. **Testing Skill** - Generate test files for all components and views:
+32. **Testing Skill** - Generate test files for all components and views:
     - `src/views/Home/Home.spec.ts`
     - `src/views/PageNotFoundView/PageNotFoundView.spec.ts`
     - `src/App.spec.ts`
     - Templates based on `test_framework`, `vue_api_pattern`, and `state_management`
 
-32. Main Entry Skill (varies: single-spa lifecycle for micro-frontend, simple mount for standalone)
+33. Main Entry Skill (varies: single-spa lifecycle for micro-frontend, simple mount for standalone)
 
 ### Phase 6: Deployment
-33. Docker Skill
-34. Nginx Default Configuration Skill
-35. Nginx Sites Available Skill
-36. Entrypoint Skill
-
-### Phase 7: Component Library (Optional)
-37. Component Library Skill (if include_component_library === true)
+34. Docker Skill
+35. Nginx Default Configuration Skill
+36. Nginx Sites Available Skill
+37. Entrypoint Skill
 
 ### Phase 8: Verification
 - Verify directory structure exists:

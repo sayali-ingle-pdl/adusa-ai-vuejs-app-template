@@ -59,15 +59,7 @@ Ask the user the following questions to gather the necessary parameters:
     - **`no`**: Skip component library and GitHub token
       - Skip question 8 entirely
 
-8. **What is your GitHub Personal Access Token?** (for accessing @RoyalAholdDelhaize packages)
-    - **Only asked if user chose YES to component library (question 7)**
-    - This will be used as `github_token`
-    - Used in: .npmrc for authenticating with GitHub Package Registry
-    - Required permissions: `read:packages`
-    - Token will be inserted into .npmrc to enable component library installation
-    - **Security Note**: The token will be written to .npmrc which is gitignored. Never commit tokens to version control.
-
-9. **What Vue API pattern do you want to use?**
+8. **What Vue API pattern do you want to use?**
     - Options: `composition-api` or `options-api`
     - **`composition-api`**: Modern functional approach that organizes code by logical concerns using reactivity primitives like `ref()` and `reactive()`. Best for large applications requiring better code reusability and scalability through composables.
     - **`options-api`**: Traditional method that structures code into predefined options like `data`, `methods`, and `computed`. Familiar for developers coming from Vue 2.
@@ -75,7 +67,7 @@ Ask the user the following questions to gather the necessary parameters:
     - Used in: Component template generation, view file structure
     - **Default recommendation**: `composition-api` for new Vue 3 projects
 
-10. **What state management library do you want to use?**
+9. **What state management library do you want to use?**
     - Options: `pinia` or `vuex`
     - **`pinia`**: The recommended state management solution for Vue 3. Lightweight, intuitive API with built-in TypeScript support and great DevTools integration. Works seamlessly with Composition API.
     - **`vuex`**: The traditional Vue state management library. Still fully supported but considered legacy for new Vue 3 projects. Better suited for Options API or migrating from Vue 2.
@@ -83,7 +75,7 @@ Ask the user the following questions to gather the necessary parameters:
     - Used in: Store setup, store file generation, dependencies in package.json
     - **Default recommendation**: `pinia` for new Vue 3 projects
 
-11. **What testing framework do you want to use?**
+10. **What testing framework do you want to use?**
     - Options: `vitest` or `jest`
     - **`vitest`**: Modern testing framework built for Vite. Native ESM support, faster execution, better integration with Vite tooling, and includes UI mode for interactive testing.
     - **`jest`**: Mature and widely-used testing framework. Extensive ecosystem and documentation but requires additional configuration for ESM and Vite.
@@ -91,7 +83,7 @@ Ask the user the following questions to gather the necessary parameters:
     - Used in: Test configuration files, test dependencies in package.json, test file templates
     - **Default recommendation**: `vitest` for new Vue 3 + Vite projects
 
-12. **Do you want to use the latest package versions?**
+11. **Do you want to use the latest package versions?**
     - Options: `yes` or `no`
     - **`yes`**: Automatically fetch and use the latest stable versions from npm registry for all packages (Vue, Vite, TypeScript, etc.)
     - **`no`**: Use pinned/tested versions specified in the template configuration
