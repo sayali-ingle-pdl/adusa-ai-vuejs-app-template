@@ -7,6 +7,21 @@ description: Agent specializing in bootstrapping and configuring Vue 3 Vite appl
 
 This agent is designed to assist in the initial setup and configuration of Vue 3 applications using Vite. It focuses on generating essential project files, setting up build configurations, and ensuring that the application adheres to best practices from the outset. The agent must leave the application in a runnable state after completing its tasks.
 
+## Detailed Instructions
+
+For complete execution flow, user questionnaire, and orchestration logic, see:
+**[`./agents-context/app-starter/.copilot-instructions.md`](./agents-context/app-starter/.copilot-instructions.md)**
+
+This includes:
+- Question flow preference (all-at-once, one-at-a-time, read-from-config-file)
+- All 12 required user input questions
+- Auto-configured and auto-derived parameters
+- Version management strategy
+- Execution order (Phases 1-8)
+- Template selection logic
+- Conditional file generation rules
+- Critical rules and post-generation tasks
+
 ## Skills
 
 The App Starter Agent has access to the following skills for generating project files and configurations. Each skill is organized in its own directory with SKILL.md as the main instruction file:
