@@ -1,3 +1,8 @@
+---
+name: env-constants
+description: Generates src/shared/EnvConsts.ts for type-safe environment variable access. Provides TypeScript interface and exports for accessing Vite environment variables throughout the application.
+---
+
 # Environment Constants Skill
 
 ## Purpose

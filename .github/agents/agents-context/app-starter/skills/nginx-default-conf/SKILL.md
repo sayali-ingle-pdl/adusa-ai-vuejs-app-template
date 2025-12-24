@@ -1,3 +1,8 @@
+---
+name: nginx-default-conf
+description: Generates nginx.default.conf for nginx conf.d directory configuration. Serves static files from /usr/share/nginx/html.
+---
+
 # Nginx Default Conf Skill
 
 ## Purpose

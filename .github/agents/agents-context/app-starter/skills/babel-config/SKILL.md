@@ -1,3 +1,8 @@
+---
+name: babel-config
+description: Generates Babel configuration for JavaScript transpilation in tests. Creates babel.config.js file.
+---
+
 # Babel Config Skill
 
 ## Purpose

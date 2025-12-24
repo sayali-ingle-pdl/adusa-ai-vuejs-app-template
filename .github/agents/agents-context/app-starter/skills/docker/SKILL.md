@@ -1,3 +1,8 @@
+---
+name: docker
+description: Generates Dockerfile for application containerization and deployment. Defines multi-stage build process with Node.js build stage and nginx serving stage for production deployment.
+---
+
 # Docker Skill
 
 ## Purpose

@@ -1,3 +1,8 @@
+---
+name: configuration
+description: Reads config.json and prompts user for application parameters. Merges configuration with defaults for project generation.
+---
+
 # Configuration Management Skill
 
 ## Purpose

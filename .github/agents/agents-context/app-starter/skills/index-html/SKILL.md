@@ -1,3 +1,8 @@
+---
+name: index-html
+description: Generates index.html as the application entry point. Includes meta tags, favicon links, and root div for Vue app mounting.
+---
+
 # Index HTML Skill
 
 ## Purpose

@@ -1,3 +1,8 @@
+---
+name: typescript-shims
+description: Generates TypeScript declaration files (shims-vue.d.ts, shims-svg.d.ts) to enable type-safe imports of Vue components and SVG files.
+---
+
 # TypeScript Shims Skill
 
 ## Purpose

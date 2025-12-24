@@ -1,3 +1,8 @@
+---
+name: lintstagedrc
+description: Generates .lintstagedrc configuration to automatically fix and format staged files before commit. Runs ESLint, Stylelint, and Prettier on staged files.
+---
+
 # Lint-Staged Configuration Skill
 
 ## Purpose

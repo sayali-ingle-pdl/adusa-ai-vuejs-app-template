@@ -1,3 +1,8 @@
+---
+name: eslint-config
+description: Generates ESLint 9+ configuration using flat config format. Creates eslint.config.cjs with Vue and TypeScript linting rules for code quality enforcement.
+---
+
 # ESLint Config Skill
 
 ## Purpose

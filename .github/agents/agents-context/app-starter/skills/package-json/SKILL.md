@@ -1,3 +1,8 @@
+---
+name: package-json
+description: Generates package.json with all necessary dependencies, dev dependencies, and scripts. Fetches latest package versions from npm registry.
+---
+
 # Package JSON Skill
 
 ## Purpose

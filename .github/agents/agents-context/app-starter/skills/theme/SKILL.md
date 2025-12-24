@@ -1,3 +1,8 @@
+---
+name: theme
+description: Generates SCSS theme files in src/theme/ including vars.scss, shadow.scss, and index.scss with sample variables and mixins for styling.
+---
+
 # Theme Skill
 
 ## Purpose

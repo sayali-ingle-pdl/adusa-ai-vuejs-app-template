@@ -1,3 +1,8 @@
+---
+name: gitignore
+description: Generates .gitignore file for Git version control exclusions. Defines files and directories to exclude from version control like node_modules, build artifacts, and local environment files.
+---
+
 # Git Ignore Skill
 
 ## Purpose
@@ -5,9 +10,6 @@ Generate the `.gitignore` file for version control exclusions.
 
 ## Output
 Create the file: `.gitignore`
-
-## Template
-See: `examples.md` in this directory for complete template and detailed examples.
 
 ## Notes
 - Excludes macOS system files (.DS_Store)

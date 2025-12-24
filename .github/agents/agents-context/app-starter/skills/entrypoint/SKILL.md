@@ -1,3 +1,8 @@
+---
+name: entrypoint
+description: Generates entrypoint.sh script for Docker container runtime environment variable injection. Replaces placeholder values in built assets with actual environment variables at container startup.
+---
+
 # Entrypoint Script Skill
 
 ## Purpose

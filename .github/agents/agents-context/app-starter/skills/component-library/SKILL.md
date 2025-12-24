@@ -1,3 +1,8 @@
+---
+name: component-library
+description: Conditionally installs GitHub Packages component library. Adds to package.json and triggers npmrc generation when requested.
+---
+
 # Component Library Installation Skill
 
 ## Purpose

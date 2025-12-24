@@ -1,3 +1,8 @@
+---
+name: npmrc
+description: Conditionally generates .npmrc for GitHub Packages registry configuration. Maps organization scope to registry endpoint when component library is requested. Token stored in ~/.npmrc only.
+---
+
 # NPM RC Skill
 
 ## Purpose
