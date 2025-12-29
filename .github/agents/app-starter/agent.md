@@ -10,10 +10,10 @@ This agent is designed to assist in the initial setup and configuration of Vue 3
 ## Detailed Instructions
 
 For complete execution flow, user questionnaire, and orchestration logic, see:
-**[`./agents-context/app-starter/.copilot-instructions.md`](./agents-context/app-starter/.copilot-instructions.md)**
+**[`./agents-context/.copilot-instructions.md`](./agents-context/.copilot-instructions.md)**
 
 This includes:
-- Question flow preference (all-at-once, one-at-a-time)
+- Question flow preference (all-at-once, one-at-a-time, read-from-config-file)
 - All 12 required user input questions
 - Auto-configured and auto-derived parameters
 - Version management strategy
@@ -27,41 +27,41 @@ This includes:
 The App Starter Agent has access to the following skills for generating project files and configurations. Each skill is organized in its own directory with SKILL.md as the main instruction file:
 
 ### Package Management Skills
-1. **Package JSON Skill** (`./agents-context/app-starter/skills/package-json/`) - Generates package.json with dependencies and scripts
-2. **NPM RC Skill** (`./agents-context/app-starter/skills/npmrc/`) - Generates .npmrc for package registry configuration
+1. **Package JSON Skill** (`./agents-context/skills/package-json/`) - Generates package.json with dependencies and scripts
+2. **NPM RC Skill** (`./agents-context/skills/npmrc/`) - Generates .npmrc for package registry configuration
 
 ### Build and Development Skills
-3. **Vite Config Skill** (`./agents-context/app-starter/skills/vite-config/`) - Generates Vite configuration for build and dev server
-4. **TypeScript Config Skill** (`./agents-context/app-starter/skills/tsconfig/`) - Generates TypeScript compiler configuration
-5. **Environment Files Skill** (`./agents-context/app-starter/skills/env-files/`) - Generates .env files for environment variables
+3. **Vite Config Skill** (`./agents-context/skills/vite-config/`) - Generates Vite configuration for build and dev server
+4. **TypeScript Config Skill** (`./agents-context/skills/tsconfig/`) - Generates TypeScript compiler configuration
+5. **Environment Files Skill** (`./agents-context/skills/env-files/`) - Generates .env files for environment variables
 
 ### Code Quality Skills
-6. **ESLint Config Skill** (`./agents-context/app-starter/skills/eslint-config/`) - Generates ESLint configuration for code linting
-7. **Prettier Config Skill** (`./agents-context/app-starter/skills/prettier-config/`) - Generates Prettier configuration for code formatting
-8. **Git Ignore Skill** (`./agents-context/app-starter/skills/gitignore/`) - Generates .gitignore file for version control
+6. **ESLint Config Skill** (`./agents-context/skills/eslint-config/`) - Generates ESLint configuration for code linting
+7. **Prettier Config Skill** (`./agents-context/skills/prettier-config/`) - Generates Prettier configuration for code formatting
+8. **Git Ignore Skill** (`./agents-context/skills/gitignore/`) - Generates .gitignore file for version control
 
 ### Testing Skills
-9. **Jest Config Skill** (`./agents-context/app-starter/skills/jest-config/`) - Generates Jest configuration for unit testing
-10. **Babel Config Skill** (`./agents-context/app-starter/skills/babel-config/`) - Generates Babel configuration for test transpilation
+9. **Jest Config Skill** (`./agents-context/skills/jest-config/`) - Generates Jest configuration for unit testing
+10. **Babel Config Skill** (`./agents-context/skills/babel-config/`) - Generates Babel configuration for test transpilation
 
 ### Application Structure Skills
-11. **Main Entry Skill** (`./agents-context/app-starter/skills/main-entry/`) - Generates main.ts with single-spa lifecycle
-12. **App Component Skill** (`./agents-context/app-starter/skills/app-component/`) - Generates root App.vue component
-13. **Router Skill** (`./agents-context/app-starter/skills/router/`) - Generates Vue Router configuration
-14. **Store Skill** (`./agents-context/app-starter/skills/store/`) - Generates Vuex store configuration
-15. **Environment Constants Skill** (`./agents-context/app-starter/skills/env-constants/`) - Generates EnvConsts.ts for environment variables
-16. **Global Constants Skill** (`./agents-context/app-starter/skills/global-constants/`) - Generates global constants file
-17. **TypeScript Shims Skill** (`./agents-context/app-starter/skills/typescript-shims/`) - Generates TypeScript declaration files for Vue and SVG
-18. **Theme Skill** (`./agents-context/app-starter/skills/theme/`) - Generates SCSS theme files and variables
-19. **View Components Skill** (`./agents-context/app-starter/skills/view-components/`) - Generates initial view components
+11. **Main Entry Skill** (`./agents-context/skills/main-entry/`) - Generates main.ts with single-spa lifecycle
+12. **App Component Skill** (`./agents-context/skills/app-component/`) - Generates root App.vue component
+13. **Router Skill** (`./agents-context/skills/router/`) - Generates Vue Router configuration
+14. **Store Skill** (`./agents-context/skills/store/`) - Generates Vuex store configuration
+15. **Environment Constants Skill** (`./agents-context/skills/env-constants/`) - Generates EnvConsts.ts for environment variables
+16. **Global Constants Skill** (`./agents-context/skills/global-constants/`) - Generates global constants file
+17. **TypeScript Shims Skill** (`./agents-context/skills/typescript-shims/`) - Generates TypeScript declaration files for Vue and SVG
+18. **Theme Skill** (`./agents-context/skills/theme/`) - Generates SCSS theme files and variables
+19. **View Components Skill** (`./agents-context/skills/view-components/`) - Generates initial view components
 
 ### Docker and Deployment Skills
-20. **Docker Skill** (`./agents-context/app-starter/skills/docker/`) - Generates Dockerfile and nginx configuration
-21. **Husky Skill** (`./agents-context/app-starter/skills/husky/`) - Generates Git hooks configuration
+20. **Docker Skill** (`./agents-context/skills/docker/`) - Generates Dockerfile and nginx configuration
+21. **Husky Skill** (`./agents-context/skills/husky/`) - Generates Git hooks configuration
 
 ### HTML and Static Assets Skills
-22. **Index HTML Skill** (`./agents-context/app-starter/skills/index-html/`) - Generates index.html entry point
-23. **Public Folder Skill** (`./agents-context/app-starter/skills/public/`) - Generates public/ directory with favicons, app icons, and web manifest
+22. **Index HTML Skill** (`./agents-context/skills/index-html/`) - Generates index.html entry point
+23. **Public Folder Skill** (`./agents-context/skills/public/`) - Generates public/ directory with favicons, app icons, and web manifest
 
 ## Usage
 

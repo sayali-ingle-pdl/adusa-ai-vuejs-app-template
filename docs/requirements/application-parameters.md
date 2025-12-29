@@ -2,7 +2,7 @@
 
 This document describes the application-specific parameters used by the app-starter agent when generating Vue 3 Vite applications.
 
-**Note**: For the complete questionnaire and configuration flow, see [`.github/agents/agents-context/app-starter/.copilot-instructions.md`](../../.github/agents/agents-context/app-starter/.copilot-instructions.md).
+**Note**: For the complete questionnaire and configuration flow, see [`.github/agents/app-starter/agents-context/.copilot-instructions.md`](../../.github/agents/app-starter/agents-context/.copilot-instructions.md).
 
 ## Parameter Summary
 
