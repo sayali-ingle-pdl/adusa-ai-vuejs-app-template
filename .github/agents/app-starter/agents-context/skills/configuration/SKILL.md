@@ -240,7 +240,6 @@ if (!configExists || missingFields.length > 0) {
       enable_datadog: userConfig.enable_datadog,
       component_library: userConfig.component_library,
       component_library_version: userConfig.component_library_version
-      // NEVER save github_token for security
     };
     
     // Write to config.json

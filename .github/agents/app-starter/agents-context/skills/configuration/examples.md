@@ -142,7 +142,6 @@
   "application_type": "micro-frontend",
   "test_framework": "jest",
   "state_management": "vuex",
-  "github_token": "ghp_YOUR_TOKEN_HERE",
   "component_library": "@royalaholddelhaize/pdl-spectrum-component-library-web",
   "component_library_version": "^1.0.3"
 }
@@ -201,7 +200,6 @@
 ? State management:
   ❯ pinia
     vuex
-? GitHub token (optional, for component library): [skip]
 ? Save this configuration to config.json for future use? Yes
 ```
 
@@ -210,7 +208,6 @@
 **Agent then saves**:
 ```
 ✓ Configuration saved to config.json
-⚠️  Note: GitHub token (if provided) was NOT saved for security
    You can manually add it to config.json if needed (it will be gitignored)
 ✓ Added config.json to .gitignore
 ```
@@ -302,7 +299,6 @@
   "enable_datadog": true,
   "component_library": "@custom/component-lib",
   "component_library_version": "^2.5.0",
-  "github_token": "ghp_custom_token"
 }
 ```
 
@@ -462,4 +458,4 @@ echo "config.json" >> .gitignore
 - None (all config files are user-specific or archived)
 
 **Never commit**:
-- `config.json` (may contain github_token)
+- `config.json`
