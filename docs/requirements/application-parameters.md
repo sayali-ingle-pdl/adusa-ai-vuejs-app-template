@@ -15,11 +15,10 @@ The agent collects the following parameters from the user:
 5. `default_port` - Development server port
 6. `application_type` - `micro-frontend` or `standalone`
 7. `include_component_library` - Whether to include component library
-8. `github_token` - GitHub PAT (only if component library is included)
-9. `vue_api_pattern` - `composition-api` or `options-api`
-10. `state_management` - `pinia` or `vuex`
-11. `test_framework` - `vitest` or `jest`
-12. `use_latest_versions` - `yes` or `no`
+8. `vue_api_pattern` - `composition-api` or `options-api`
+9. `state_management` - `pinia` or `vuex`
+10. `test_framework` - `vitest` or `jest`
+11. `use_latest_versions` - `yes` or `no`
 
 ### Auto-Configured Parameters
 

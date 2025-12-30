@@ -172,7 +172,7 @@ If `test_framework === "vitest"`:
 ```
 
 ### Component Library
-If `component_library` is specified and `github_token` provided:
+If `component_library` is specified:
 ```json
 {
   "dependencies": {

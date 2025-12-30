@@ -6,9 +6,9 @@ This directory contains all GitHub Copilot agents for the Vue 3 Vite application
 
 ```
 .github/agents/
-├── app-starter/              # App bootstrapping agent
-│   ├── agent.md              # Agent definition and overview
-│   └── agents-context/       # Detailed context and skills
+├── app-starter.agent.md      # @app-starter agent definition
+├── app-starter/              # App-starter context directory
+│   └── agents-context/       
 │       ├── .copilot-instructions.md  # Complete execution instructions
 │       └── skills/           # Individual file generation skills
 │           ├── package-json/
@@ -26,7 +26,7 @@ This directory contains all GitHub Copilot agents for the Vue 3 Vite application
 ### @app-starter
 **Purpose**: Bootstrap complete Vue 3 Vite applications from scratch
 
-**Location**: `app-starter/`
+**Location**: `app-starter.agent.md` (context in `app-starter/agents-context/`)
 
 **Usage**: `@app-starter generate a new Vue 3 application`
 
@@ -40,7 +40,7 @@ This directory contains all GitHub Copilot agents for the Vue 3 Vite application
 - Validates and verifies the generated application
 
 **Documentation**:
-- Agent overview: `app-starter/agent.md`
+- Agent overview: `app-starter.agent.md`
 - Detailed instructions: `app-starter/agents-context/.copilot-instructions.md`
 - Skills documentation: `app-starter/agents-context/skills/*/SKILL.md`
 
@@ -56,7 +56,7 @@ mkdir -p .github/agents/{agent-name}/agents-context/skills
 
 ### 2. Create Agent Definition
 
-Create `{agent-name}/agent.md`:
+Create `{agent-name}.agent.md` in `.github/agents/`:
 
 ```markdown
 ---
@@ -68,7 +68,7 @@ description: Brief description of what this agent does
 
 ## Detailed Instructions
 
-See `./agents-context/.copilot-instructions.md` for complete workflow.
+See `./{agent-name}/agents-context/.copilot-instructions.md` for complete workflow.
 
 ## Skills
 
@@ -157,6 +157,14 @@ Before committing new agents:
 
 ### @feature-builder
 Generate features/components in existing applications
+
+**Structure**:
+```
+.github/agents/
+├── feature-builder.agent.md
+└── feature-builder/
+    └── agents-context/
+```
 - Component generator
 - View generator
 - Service layer generator
