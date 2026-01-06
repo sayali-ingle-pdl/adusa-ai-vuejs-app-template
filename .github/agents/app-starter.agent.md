@@ -21,10 +21,10 @@ When invoked, this agent will:
 [`./app-starter/agents-context/.copilot-instructions.md`](./app-starter/agents-context/.copilot-instructions.md)
 
 The detailed instructions include:
-- Complete user questionnaire (12 configuration questions)
+- Complete user questionnaire (11 configuration questions)
 - Question flow strategies (all-at-once vs one-at-a-time)
 - Version management and dependency resolution
-- 8-phase execution order with skill dependencies
+- 7-phase execution order with skill dependencies
 - Template selection logic for different configurations
 - Conditional file generation rules
 - Validation and verification procedures
@@ -55,6 +55,7 @@ The App Starter Agent uses specialized skills to generate different parts of the
 
 ### Testing
 - **jest-config** - Jest testing framework setup
+- **vitest-config** - Vitest testing framework setup
 - **testing** - Test file generation for components/views
 
 ### Application Structure

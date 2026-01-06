@@ -137,8 +137,9 @@ if (userConfig.include_component_library === 'yes') {
   if (!userConfig.component_library_version) {
     const { execSync } = require('child_process');
     try {
+      // Note: Uses npm show without --registry flag to respect ~/.npmrc authentication
       const latestVersion = execSync(
-        'npm view @RoyalAholdDelhaize/pdl-spectrum-component-library-web version --registry=https://npm.pkg.github.com',
+        'npm show @RoyalAholdDelhaize/pdl-spectrum-component-library-web version',
         { encoding: 'utf-8' }
       ).trim();
       userConfig.component_library_version = `^${latestVersion}`;
