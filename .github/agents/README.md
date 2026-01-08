@@ -6,10 +6,9 @@ This directory contains all GitHub Copilot agents for the Vue 3 Vite application
 
 ```
 .github/agents/
-├── app-starter.agent.md      # @app-starter agent definition
+├── app-starter.agent.md      # @app-starter agent definition (complete instructions)
 ├── app-starter/              # App-starter context directory
 │   └── agents-context/       
-│       ├── .copilot-instructions.md  # Complete execution instructions
 │       └── skills/           # Individual file generation skills
 │           ├── package-json/
 │           ├── vite-config/
@@ -40,8 +39,7 @@ This directory contains all GitHub Copilot agents for the Vue 3 Vite application
 - Validates and verifies the generated application
 
 **Documentation**:
-- Agent overview: `app-starter.agent.md`
-- Detailed instructions: `app-starter/agents-context/.copilot-instructions.md`
+- Complete instructions: `app-starter.agent.md`
 - Skills documentation: `app-starter/agents-context/skills/*/SKILL.md`
 
 ## Adding New Agents
