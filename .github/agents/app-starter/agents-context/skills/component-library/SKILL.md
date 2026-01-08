@@ -6,7 +6,9 @@ description: Conditionally installs GitHub Packages component library at latest 
 # Component Library Installation Skill
 
 ## Purpose
-Install and configure the latest version of the component library when user requests it.
+Add and configure the component library dependency in package.json when user requests it.
+
+**Execution Context**: This skill runs as a separate step (Phase 1, Step 4) after package.json is generated.
 
 ## ⚠️ CONDITIONAL SKILL - READ CAREFULLY
 
@@ -45,7 +47,7 @@ npm install @RoyalAholdDelhaize/pdl-spectrum-component-library-web
 npm automatically creates the alias format in package.json.
 
 ## Key Rule
-**Component library is installed when**: `include_component_library: yes`
+**Component library dependency is added to package.json when**: `include_component_library: yes`
 
 **If fetching latest version fails**:
 - Skip installation
@@ -60,15 +62,25 @@ npm automatically creates the alias format in package.json.
 ```javascript
 // ONLY execute if user requested component library
 if (userConfig.include_component_library !== 'yes') {
-  console.log('⏭️  Skipping component library installation - not requested');
+  console.log('⏭️  Skipping component library - not requested');
   return; // Exit this skill
 }
 ```
 
-### Step 2: Fetch Latest Version and Add to package.json
+### Step 2: Read Existing package.json
 
 ```javascript
-// In package.json generation
+const fs = require('fs');
+const path = require('path');
+
+// Read the generated package.json
+const packageJsonPath = path.join(process.cwd(), 'package.json');
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+```
+
+### Step 3: Fetch Latest Version and Add to Dependencies
+
+```javascript
 if (userConfig.include_component_library === 'yes') {
   const { execSync } = require('child_process');
   
@@ -88,7 +100,11 @@ if (userConfig.include_component_library === 'yes') {
     const aliasKey = '@royalaholddelhaize/pdl-spectrum-component-library-web';
     const aliasValue = `npm:@RoyalAholdDelhaize/pdl-spectrum-component-library-web@${userConfig.component_library_version}`;
     
-    dependencies[aliasKey] = aliasValue;
+    // Add to package.json dependencies
+    packageJson.dependencies[aliasKey] = aliasValue;
+    
+    // Write updated package.json
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
     
     console.log(`✓ Component library configured: ${aliasKey} → ${aliasValue}`);
     

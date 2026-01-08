@@ -192,13 +192,14 @@ The skills should be executed in the following order to ensure dependencies are 
 ### Phase 1: Package Management (Pre-Install)
 1. **Configuration Skill** - Load and validate user configuration (interactive prompts or config.json)
 2. **Conditional Generation Skill** - Determine which files to generate based on application type
-3. **Package JSON Skill** - Generate package.json with all dependencies
-4. **NPM RC Skill** - Generate .npmrc (if component library is included)
-5. **Git Ignore Skill** - Generate .gitignore
-6. **Run `npm install`** - Install all dependencies before generating config files
-7. **Component Library Skill** - Add component library integration (if include_component_library === true)
-   - If component library is included, this may modify package.json with additional dependencies
-   - **Run `npm install` again** if component library added new dependencies
+3. **Package JSON Skill** - Generate package.json with base dependencies
+4. **Component Library Skill** - Add component library to package.json (if `include_component_library: yes`)
+   - Fetch latest version from npm registry
+   - Add to package.json dependencies using npm alias format
+   - If fetch fails (missing token), skip and inform user with setup instructions
+5. **NPM RC Skill** - Generate .npmrc (if component library is included)
+6. **Git Ignore Skill** - Generate .gitignore
+7. **Run `npm install`** - Install all dependencies before generating config files
 
 ### Phase 2: Build Configuration (Post-Install)
 8. **TypeScript Config Skill** - Generate tsconfig.json and tsconfig.node.json
@@ -339,9 +340,9 @@ The App Starter Agent uses specialized skills to generate different parts of the
 ### Configuration & Dependencies
 - **configuration** - User input validation and configuration loading
 - **conditional-generation** - Determine which files to generate based on application type
-- **package-json** - package.json with dependencies and scripts
+- **package-json** - package.json with base dependencies and scripts
+- **component-library** - Add component library dependency to package.json (conditional)
 - **npmrc** - npm registry configuration
-- **component-library** - Optional component library integration
 
 ### Build & Development
 - **vite-config** - Vite build and dev server configuration
