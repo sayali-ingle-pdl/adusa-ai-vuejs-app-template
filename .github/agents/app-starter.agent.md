@@ -157,6 +157,59 @@ The following parameters should be automatically derived from the user's inputs:
 
 **DO NOT hardcode versions** in skills/examples. Use placeholders: `{{vue_version}}`, `{{vite_version}}`, etc.
 
+## Technology Standards & Deprecation Avoidance
+
+**CRITICAL**: The agent must generate code using current best practices and avoid deprecated syntax/patterns.
+
+### Pre-Generation Research
+
+Before generating any code, the agent MUST:
+
+1. **Verify Current Standards**:
+   - Check official documentation for current recommended patterns
+   - Identify deprecated features in the technology stack (Sass, Vue, Vite, TypeScript, ESLint, etc.)
+   - Verify that skill examples use current, non-deprecated syntax
+   - If skill documentation contains outdated patterns, use official docs as source of truth
+
+2. **Identify Deprecated Patterns**:
+   - Review build output and console warnings for deprecation messages
+   - Check official documentation for "deprecated" or "legacy" features
+   - Verify generated code uses current recommended patterns
+   - When warnings appear during build/lint, treat them as errors to fix
+
+3. **Skill Template Validation**:
+   - Review skill SKILL.md and examples before code generation
+   - If examples show deprecated patterns, research current approach
+   - Verify syntax matches official documentation, not just common patterns
+   - When in doubt, consult official documentation over skill templates
+
+### Post-Generation Validation
+
+After generating code, the agent MUST:
+
+1. **Verify Build Warnings**:
+   - Run build and check for deprecation warnings in output
+   - Run lint and check for deprecation warnings
+   - If any deprecation warnings appear, research and fix the underlying issue
+   - Use official documentation to find current recommended patterns
+
+2. **Validate Against Official Standards**:
+   - Compare generated code patterns against official documentation
+   - Verify configuration files follow current best practices
+   - Check that syntax matches recommended patterns from official sources
+   - Document any unavoidable deprecations with explanations
+
+### Resolution Priority
+
+When conflicts arise between skill templates and current standards:
+
+1. **Official documentation** (highest priority)
+2. **Current best practices** from ecosystem
+3. **Skill SKILL.md instructions**
+4. **Skill example files** (lowest priority)
+
+**Never blindly copy patterns** from examples if they conflict with current deprecation warnings or official recommendations.
+
 ## Pre-Execution Validations
 
 Before beginning code generation, the agent MUST:
@@ -177,6 +230,7 @@ Before beginning code generation, the agent MUST:
    - Confirm all required skill directories exist in `skills/`
    - Review skill templates and examples to understand implementation patterns
    - If component library is requested, verify component library skill is available
+   - **Check for deprecated patterns in skill examples** (see Technology Standards above)
 
 4. **Clarify Ambiguities**:
    - If user request is unclear, ask for clarification before proceeding
@@ -264,10 +318,13 @@ The skills should be executed in the following order to ensure dependencies are 
   - `src/views/PageNotFoundView/PageNotFoundView.vue` ✓
   - `src/views/PageNotFoundView/PageNotFoundView.spec.ts` ✓
   - `src/App.spec.ts` ✓
+- **Run deprecation scan** (see Technology Standards section):
+  - Run build and verify no deprecation warnings in output
+  - Run lint and verify no deprecation warnings
 - Run `npm run lint` to verify linting setup
 - Run `npx stylelint src/**/*.vue src/**/*.scss` to verify stylelint setup
 - Run `npm run test` to verify test setup (tests MUST pass)
-- Run `npm run build` to verify build configuration
+- Run `npm run build` to verify build configuration and check for deprecation warnings
 
 ## Template Selection Logic
 
@@ -336,9 +393,14 @@ After all skills have been executed, the agent should:
    - Check `src/views/PageNotFoundView/PageNotFoundView.vue` exists
    - Check `src/views/PageNotFoundView/PageNotFoundView.spec.ts` exists
    - Check `src/App.spec.ts` exists
-4. Ensure that the application can be started with `npm run serve`
-5. Run `npm run test` to verify all tests pass
-6. Provide a summary of the generated structure and next steps for the developer
+4. **Scan for deprecated patterns** (see Technology Standards section):
+   - Run build and verify no deprecation warnings in console output
+   - Run lint and verify no deprecation warnings
+   - If warnings appear, fix using official documentation guidance
+   - Verify all patterns follow current standards
+5. Ensure that the application can be started with `npm run serve`
+6. Run `npm run test` to verify all tests pass
+7. Provide a summary of the generated structure and next steps for the developer
 
 ## Available Skills
 
