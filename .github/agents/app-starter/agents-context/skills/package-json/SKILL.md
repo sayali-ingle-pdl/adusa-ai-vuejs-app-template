@@ -153,6 +153,8 @@ Use this configuration to determine which versions to use:
     "vite-svg-loader": "latest",
     "vitest": "latest",
     "@vitest/ui": "latest",
+    "@vitest/coverage-v8": "latest",
+    "jsdom": "latest",
     "jest": "latest",
     "@vue/test-utils": "latest",
     "@vue/vue3-jest": "latest",

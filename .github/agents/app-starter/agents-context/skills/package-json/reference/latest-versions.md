@@ -166,10 +166,23 @@ If `test_framework === "vitest"`:
 {
   "devDependencies": {
     "vitest": "{{vitest_version}}",
-    "@vitest/ui": "{{vitest_ui_version}}"
+    "@vitest/ui": "{{vitest_ui_version}}",
+    "@vitest/coverage-v8": "{{vitest_coverage_v8_version}}",
+    "jsdom": "{{jsdom_version}}"
   }
 }
 ```
+
+**CRITICAL VITEST DEPENDENCIES**:
+- `vitest` - The test framework itself
+- `@vitest/ui` - Optional UI for test visualization
+- `@vitest/coverage-v8` - **REQUIRED** Coverage provider (used in vitest.config.ts)
+- `jsdom` - **REQUIRED** DOM environment for Vue component testing (used in vitest.config.ts)
+
+**Why these are required**:
+- Without `jsdom`: Tests will fail with "jsdom environment not found" error
+- Without `@vitest/coverage-v8`: Coverage reports will fail to generate
+- These packages are referenced in `vitest.config.ts` configuration
 
 ### Component Library
 If `component_library` is specified:

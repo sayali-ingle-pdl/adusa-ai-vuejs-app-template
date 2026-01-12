@@ -217,6 +217,13 @@ The skills should be executed in the following order to ensure dependencies are 
 18. **Babel Config Skill** - Generate babel.config.js (if using Jest)
 19. **Jest Config Skill** - Generate jest.config.js (if test_framework === jest)
 20. **Vitest Config Skill** - Generate vitest.config.ts (if test_framework === vitest)
+    - ⚠️ **CRITICAL PRE-REQUISITE**: Verify package.json includes ALL required Vitest dependencies:
+      - `vitest` (test framework)
+      - `@vitest/coverage-v8` (coverage provider - REQUIRED)
+      - `jsdom` (DOM environment - REQUIRED for Vue testing)
+      - `@vitest/ui` (optional UI)
+    - ⚠️ **If any missing**: Go back to package-json skill, add them, re-run npm install
+    - **Why**: vitest.config.ts references these packages; tests will fail without them
 21. **Stylelint Config Skill** - Generate .stylelintrc.json
 22. **SonarQube Properties Skill** - Generate sonar-project.properties
 23. **Husky Skill** - Set up Git hooks
