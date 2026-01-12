@@ -31,6 +31,7 @@ Ask the user or read from `copilot-instructions.md` and `docs/requirements/appli
 
 **Always use latest versions from npm**:
 - Fetch from npm: `npm view <package> version`
+- **Exception**: Component library packages use `npm show` (see component-library skill)
 - Apply caret prefix: `3.5.13` → `^3.5.13`
 - Use template: `reference/latest-versions.md`
 - Use recommended tools: Vitest + Pinia
@@ -80,6 +81,7 @@ Use: `reference/latest-versions.md` (fetches latest versions from npm)
 2. **Resolve "latest" entries**:
    - For all packages marked as `"latest"` in the configuration
    - Fetch current version from npm: `npm view <package> version`
+   - **Exception**: Component library packages use `npm show` instead of `npm view`
    - Example: `"vue": "latest"` → `npm view vue version` → `"vue": "^3.5.13"`
 
 3. **Apply resolved versions**:
@@ -199,6 +201,7 @@ Use this configuration to determine which versions to use:
 
 **Version Strategies**:
 - `"latest"` - Fetch current version from npm registry (e.g., `npm view vue version`)
+- **Note**: Component library packages use `npm show` instead of `npm view`
 - `"^6.3.5"` - Pin to specific version with caret (allows minor/patch updates)
 - `"~6.3.5"` - Pin with tilde (allows patch updates only)
 - `"6.3.5"` - Exact version (no updates)

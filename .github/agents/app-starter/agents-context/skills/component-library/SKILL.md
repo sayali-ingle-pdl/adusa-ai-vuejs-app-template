@@ -57,6 +57,10 @@ npm automatically creates the alias format in package.json.
 
 ## Implementation Steps
 
+**⚠️ CRITICAL**: Component library packages use `npm show`, NOT `npm view`
+- Reason: GitHub Packages authentication works best with `npm show`
+- All other packages use `npm view` (see package-json skill)
+
 ### Step 1: Conditional Check
 
 ```javascript
@@ -86,6 +90,8 @@ if (userConfig.include_component_library === 'yes') {
   
   try {
     // Fetch latest version from npm registry
+    // IMPORTANT: Component library packages MUST use 'npm show', not 'npm view'
+    // This is the standard for GitHub Packages authentication
     // Note: Uses npm show without --registry flag to respect ~/.npmrc authentication
     const latestVersion = execSync(
       'npm show @RoyalAholdDelhaize/pdl-spectrum-component-library-web version',

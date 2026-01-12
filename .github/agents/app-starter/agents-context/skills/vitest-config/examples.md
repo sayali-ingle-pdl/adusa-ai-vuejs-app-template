@@ -245,7 +245,7 @@ import { myService } from '@/services/myService';
 
 ---
 
-## Common Configuration Patternsalse)
+## Common Configuration Patterns
 
 ```typescript
 import { describe, it, expect } from 'vitest';

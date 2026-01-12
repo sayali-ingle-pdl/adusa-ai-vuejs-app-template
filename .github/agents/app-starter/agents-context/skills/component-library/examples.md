@@ -72,7 +72,8 @@ The component library uses npm alias format:
 - Project generation continues successfully
 - Application still fully functional without component library
 
-**User Action Required**: 
+---
+
 ## Example 3: Component Library Not Requested
 
 **Scenario**: User chooses not to include component library
@@ -100,19 +101,3 @@ The component library uses npm alias format:
 - Component library NOT added to package.json dependencies
 - No project .npmrc generated
 - Standard project structure without component library integration
-
-**Scenario**: User chooses not to include component library
-
-**Configuration**:
-```json
-{
-  "include_component_library": "no"
-}
-```
-
-**Console Output**:
-```
-⏭️  Skipping component library installation - not requested
-```
-
-**Result**: Component library NOT added to dependencies
