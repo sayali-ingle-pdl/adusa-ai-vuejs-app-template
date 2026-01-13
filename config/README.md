@@ -159,5 +159,5 @@ ajv validate -s config/app-config.schema.json -d config/app-config.json
 ## Related Documentation
 
 - [Application Parameters](../docs/requirements/application-parameters.md) - Detailed parameter reference
-- [App Starter Agent](.github/agents/app-starter.agent.md) - Agent documentation
-- [Agent Instructions](.github/agents/app-starter/agents-context/.copilot-instructions.md) - Complete workflow
+- [App Starter Agent](../.github/agents/app-starter.agent.md) - Agent documentation
+- [Agent Instructions](../.github/agents/app-starter/agents-context/.copilot-instructions.md) - Complete workflow
