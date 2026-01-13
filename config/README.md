@@ -35,7 +35,7 @@ This directory contains configuration files for the `@app-starter` agent.
 
 - **`app-config.example.json`** - Template with all available options and help text (committed to repo)
 - **`app-config.schema.json`** - JSON schema for validation and IDE autocomplete
-- **`app-config.json`** - Your actual configuration (gitignored, not committed)
+- **`app-config.json`** - Your actual configuration (typically not committed; add `config/app-config.json` to your `.gitignore` to keep it local)
 
 ## Configuration Parameters
 

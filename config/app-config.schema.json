@@ -85,5 +85,10 @@
       "examples": ["yes", "no"]
     }
   },
+  "patternProperties": {
+    "^_": {
+      "description": "Properties starting with underscore are allowed for comments and help text"
+    }
+  },
   "additionalProperties": false
 }
