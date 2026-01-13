@@ -1,12 +1,14 @@
 ---
 name: component-library
-description: Conditionally installs GitHub Packages component library. Adds to package.json and triggers npmrc generation when requested.
+description: Conditionally installs GitHub Packages component library at latest version. Adds to package.json when user requests it.
 ---
 
 # Component Library Installation Skill
 
 ## Purpose
-Conditionally install and configure the component library based on user request and home directory GitHub token availability.
+Add and configure the component library dependency in package.json when user requests it.
+
+**Execution Context**: This skill runs as a separate step (Phase 1, Step 4) after package.json is generated.
 
 ## ⚠️ CONDITIONAL SKILL - READ CAREFULLY
 
@@ -14,28 +16,13 @@ Conditionally install and configure the component library based on user request 
 
 **If `include_component_library: no`**: 
 - **SKIP this skill entirely**
-- Do not validate token
-- Do not add to package.json
 - Move to next skill
-
-## 🚨 MANDATORY REQUIREMENTS
-
-**Prerequisites for component library installation**:
-1. User answered `yes` to component library question
-2. GitHub authentication token exists in `~/.npmrc` (home directory)
-
-**Do not ask user for token:** Never ask user to provide token.
-
-**If token missing**: Inform user with setup instructions, offer to skip installation
-
-## When to Use
-Execute this skill during package.json generation (after user confirms component library installation).
 
 ## Input Parameters
 From configuration:
 - `include_component_library` - Boolean flag (`yes` or `no`)
 - `component_library` - Name of the component library package (default: `@RoyalAholdDelhaize/pdl-spectrum-component-library-web`)
-- `component_library_version` - Version of the component library (fetch latest if not specified)
+- `component_library_version` - Always fetch latest version from npm registry
 
 ## Package.json Format
 
@@ -59,199 +46,90 @@ npm install @RoyalAholdDelhaize/pdl-spectrum-component-library-web
 ```
 npm automatically creates the alias format in package.json.
 
-## 🔍 BEFORE GENERATING - CRITICAL CHECKS
-
-Perform these checks in order:
-
-1. **Conditional Check**: Verify `include_component_library: yes`
-   - If `no` → Exit this skill immediately
-   - If `yes` → Continue to step 2
-
-2. **Home Directory Token Validation**: Check if `~/.npmrc` exists
-   - **Safe check**: `test -f ~/.npmrc && echo "exists" || echo "missing"`
-   - **DO NOT read token contents** (security risk)
-   - If exists → Assume token configured, continue
-   - If missing → Show setup instructions, offer to skip
-
-3. **User Decision if Token Missing**:
-   - Display: "⚠️ GitHub token not found in ~/.npmrc"
-   - Display: "📖 Setup instructions: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token"
-   - Ask: "Would you like to skip component library installation? (yes/no)"
-   - If yes → Set `include_component_library: no`, skip installation
-   - If no → Assume user will configure token, continue with warning
-
 ## Key Rule
-**Component library is ONLY installed when**:
-- `include_component_library: yes` AND
-- `~/.npmrc` file exists (or user chooses to continue despite warning)
+**Component library dependency is added to package.json when**: `include_component_library: yes`
+
+**If fetching latest version fails**:
+- Skip installation
+- Inform user that GitHub token is missing
+- Provide setup instructions
+- Continue with project generation
 
 ## Implementation Steps
+
+**⚠️ CRITICAL**: Component library packages use `npm show`, NOT `npm view`
+- Reason: GitHub Packages authentication works best with `npm show`
+- All other packages use `npm view` (see package-json skill)
 
 ### Step 1: Conditional Check
 
 ```javascript
 // ONLY execute if user requested component library
 if (userConfig.include_component_library !== 'yes') {
-  console.log('⏭️  Skipping component library installation - not requested');
+  console.log('⏭️  Skipping component library - not requested');
   return; // Exit this skill
 }
 ```
 
-### Step 2: Validate Home Directory Token
+### Step 2: Read Existing package.json
 
 ```javascript
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
 
-// Check if ~/.npmrc exists (DO NOT read contents for security)
-const homeNpmrc = path.join(os.homedir(), '.npmrc');
-const tokenExists = fs.existsSync(homeNpmrc);
+// Read the generated package.json
+const packageJsonPath = path.join(process.cwd(), 'package.json');
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+```
 
-if (!tokenExists) {
-  console.log('⚠️  GitHub token not found in ~/.npmrc');
-  console.log('📖 Setup instructions: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token');
+### Step 3: Fetch Latest Version and Add to Dependencies
+
+```javascript
+if (userConfig.include_component_library === 'yes') {
+  const { execSync } = require('child_process');
   
-  // Prompt user to skip or continue
-  // Implementation: Use readline, inquirer, or prompts library for user interaction
-  const skipInstallation = await askUser('Would you like to skip component library installation? (yes/no): ');
-  
-  if (skipInstallation.toLowerCase() === 'yes') {
-    console.log('✓ Skipping component library installation');
+  try {
+    // Fetch latest version from npm registry
+    // IMPORTANT: Component library packages MUST use 'npm show', not 'npm view'
+    // This is the standard for GitHub Packages authentication
+    // Note: Uses npm show without --registry flag to respect ~/.npmrc authentication
+    const latestVersion = execSync(
+      'npm show @RoyalAholdDelhaize/pdl-spectrum-component-library-web version',
+      { encoding: 'utf-8' }
+    ).trim();
+    
+    userConfig.component_library_version = `^${latestVersion}`;
+    
+    // Add to dependencies using npm alias format
+    // Key: lowercase scope (npm convention)
+    // Value: npm:{original case package}@{version}
+    const aliasKey = '@royalaholddelhaize/pdl-spectrum-component-library-web';
+    const aliasValue = `npm:@RoyalAholdDelhaize/pdl-spectrum-component-library-web@${userConfig.component_library_version}`;
+    
+    // Add to package.json dependencies
+    packageJson.dependencies[aliasKey] = aliasValue;
+    
+    // Write updated package.json
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+    
+    console.log(`✓ Component library configured: ${aliasKey} → ${aliasValue}`);
+    
+  } catch (error) {
+    // If fetching version fails, inform user and skip installation
+    console.log('\n⚠️  GitHub token is missing. Skipping component library installation.');
+    console.log('📖 To install the component library later, configure a GitHub token:');
+    console.log('   https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token\n');
+    
+    // Skip installation - do not add to dependencies
     userConfig.include_component_library = 'no';
-    return; // Exit this skill
-  } else {
-    console.log('⚠️  Continuing with installation. Please configure token before running npm install.');
-  }
-} else {
-  console.log('✓ GitHub authentication configured in ~/.npmrc');
-}
-```
-
-### Step 3: Add Component Library to package.json
-
-```javascript
-// In package.json generation
-if (userConfig.include_component_library === 'yes') {
-  // Fetch latest version if not specified
-  if (!userConfig.component_library_version) {
-    const { execSync } = require('child_process');
-    try {
-      // Note: Uses npm show without --registry flag to respect ~/.npmrc authentication
-      const latestVersion = execSync(
-        'npm show @RoyalAholdDelhaize/pdl-spectrum-component-library-web version',
-        { encoding: 'utf-8' }
-      ).trim();
-      userConfig.component_library_version = `^${latestVersion}`;
-    } catch (error) {
-      console.log('⚠️  Could not fetch latest version, using default');
-      userConfig.component_library_version = '^1.0.0';
-    }
-  }
-  
-  // Add to dependencies using npm alias format
-  // Key: lowercase scope (npm convention)
-  // Value: npm:{original case package}@{version}
-  const aliasKey = '@royalaholddelhaize/pdl-spectrum-component-library-web';
-  const aliasValue = `npm:@RoyalAholdDelhaize/pdl-spectrum-component-library-web@${userConfig.component_library_version}`;
-  
-  dependencies[aliasKey] = aliasValue;
-  
-  console.log(`✓ Component library configured: ${aliasKey} → ${aliasValue}`);
-}
-```
-
-### Step 4: Trigger npmrc Skill
-
-```javascript
-// The npmrc skill will handle .npmrc generation
-// Project .npmrc will contain ONLY registry mapping (no token)
-// Token remains in ~/.npmrc (home directory)
-
-if (userConfig.include_component_library === 'yes') {
-  // Trigger npmrc skill to generate project .npmrc
-  console.log('✓ Project .npmrc will be generated by npmrc skill');
-  console.log('ℹ️  Authentication uses token from ~/.npmrc\n');
-}
-```
-
-## Decision Tree
-
-### Case 1: Component Library Requested + Token Exists ✅
-```javascript
-{ include_component_library: "yes" }
-// AND ~/.npmrc file exists
-```
-**Action**: Install component library, generate project .npmrc (registry only)
-
-### Case 2: Component Library Requested + Token Missing ⚠️
-```javascript
-{ include_component_library: "yes" }
-// BUT ~/.npmrc file missing
-```
-**Action**: Show warning with setup docs, prompt user to skip or continue
-
-### Case 3: Component Library Not Requested ✅
-```javascript
-{ include_component_library: "no" }
-```
-**Action**: Skip skill entirely, no validation needed
-
-## Output
-Component library added to `package.json` dependencies using npm alias format:
-```json
-{
-  "dependencies": {
-    "@royalaholddelhaize/pdl-spectrum-component-library-web": "npm:@RoyalAholdDelhaize/pdl-spectrum-component-library-web@^{latest_version}"
+    return;
   }
 }
 ```
-- **Store token in `~/.npmrc` ONLY** (home directory, never in project)
-- **Project `.npmrc`** contains registry mapping only (safe to commit)
-- **Never commit tokens** to version control
-
-### Token Configuration
-```bash
-# ~/.npmrc (home directory - secure)
-//npm.pkg.github.com/:_authToken=ghp_your_token_here
-
-# Project .npmrc (safe to commit)
-@RoyalAholdDelhaize:registry=https://npm.pkg.github.com
-```
-
-### Token Permissions
-- Minimum required scope: `read:packages`
-- Set expiration date for tokens
-- Use fine-grained tokens when possible
-- Create at: https://github.com/settings/tokens
-
-### File Permissions
-```bash
-# Ensure ~/.npmrc is not world-readable
-chmod 600 ~/.npmrc
-```
-
-## Postconditions
-When this skill completes successfully, the component library is added to `package.json` dependencies.
-
-## Integration with Other Skills
-
-### Affects package-json Skill
-The `include_component_library` flag is used by the package-json skill to determine whether to include the component library in dependencies.
-
-### Affects npmrc Skill
-The `include_component_library` flag triggers npmrc skill to generate project `.npmrc` with registry configuration (no embedded token).
-
-## Related Skills
-- **configuration**: Gathers `include_component_library` flag from user prompts
-- **package-json**: Uses `include_component_library` flag to add dependencies
-- **npmrc**: Creates project `.npmrc` with registry mapping (token in `~/.npmrc`)
 
 ## Validation Checklist
 
 - [ ] Verify `include_component_library` flag checked before execution
-- [ ] Verify `~/.npmrc` existence validated (not contents)
-- [ ] Verify user informed if token missing
-- [ ] Verify component library added to package.json when conditions met
-- [ ] Verify npmrc skill triggered to generate project `.npmrc`
-- [ ] Verify no token embedded in project files
+- [ ] Verify latest version fetched successfully before adding to package.json
+- [ ] Verify user informed with setup instructions if fetch fails
+- [ ] Verify component library added to package.json only when fetch succeeds

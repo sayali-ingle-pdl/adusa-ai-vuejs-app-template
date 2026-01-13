@@ -192,51 +192,6 @@ transformIgnorePatterns: [
 
 ---
 
-## ESM Package Detection Guide
-
-### Step 1: Identify ESM Packages
-```bash
-# Check your package.json dependencies
-npm list --depth=0
-
-# For each suspicious package, check if it's ESM-only
-npm view <package-name> type
-npm view <package-name> exports
-```
-
-### Step 2: Common ESM Packages (Verify Current Status)
-
-**Definitely ESM** (as of 2025):
-- `node-fetch@3+` (ESM-only)
-- `chalk@5+` (ESM-only)
-- `got@12+` (ESM-only)
-
-**Hybrid (both CJS and ESM)**:
-- `axios` (has ESM exports, needs transformation)
-- `lodash-es` (ESM variant of lodash)
-- `date-fns` (ESM version available)
-
-### Step 3: Update transformIgnorePatterns
-
-**Single ESM package**:
-```javascript
-transformIgnorePatterns: ['node_modules/(?!axios)']
-```
-
-**Multiple ESM packages**:
-```javascript
-transformIgnorePatterns: [
-  'node_modules/(?!(axios|lodash-es|uuid)/)'
-]
-```
-
-**All node_modules transformed** (slow, not recommended):
-```javascript
-transformIgnorePatterns: []
-```
-
----
-
 ## Coverage Provider Comparison
 
 ### V8 Coverage (`coverageProvider: 'v8'`)
@@ -319,78 +274,11 @@ npx jest --showConfig
 
 ---
 
-## Alternative Formats (If .cjs Deprecated)
-
-### jest.config.js (JavaScript)
-
-```javascript
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'jsdom',
-  // ... rest of config
-};
-```
-
-### jest.config.mjs (ES Module)
-
-```javascript
-export default {
-  preset: 'ts-jest',
-  testEnvironment: 'jsdom',
-  // ... rest of config
-};
-```
-
-### package.json Field
-
-```json
-{
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "jsdom"
-  }
-}
-```
-
----
-
 ## Migration to Vitest (Recommended)
 
-### Why Migrate to Vitest?
+**Why**: Vitest is the official recommendation for Vue 3 projects (better performance, native ESM, maintained by Vue team)
 
-1. **Official Vue 3 Support**: Maintained by Vue team
-2. **Better Performance**: Faster test execution with Vite
-3. **Native ESM**: No transformation issues
-4. **Better DX**: Hot module reload for tests
-5. **Vue-Specific Features**: Better Vue component testing
-
-### Migration Steps
-
-1. **Remove Jest dependencies**:
-```bash
-npm uninstall jest @vue/vue3-jest ts-jest @types/jest babel-jest
-```
-
-2. **Install Vitest**:
-```bash
-npm install -D vitest @vitest/ui jsdom
-```
-
-3. **Create vitest.config.ts**:
-```typescript
-import { defineConfig } from 'vitest/config';
-import vue from '@vitejs/plugin-vue';
-
-export default defineConfig({
-  plugins: [vue()],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-  },
-});
-```
-
-4. **Update test files**: Minimal changes needed, mostly imports
+**Consider migrating** if `@vue/vue3-jest` is unmaintained (check npm publish date)
 
 ---
 
