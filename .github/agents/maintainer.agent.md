@@ -31,7 +31,7 @@ Proposes changes and asks for approval before updating files.
 ## What Gets Audited
 
 ### 1. Package Versions
-- **Location**: `.github/agents/app-starter/agents-context/skills/*/versions.json`
+- **Location**: `.github/agents/app-starter/agents-context/skills/package-json/SKILL.md` (Version Configuration section)
 - **Checks**:
   - Compare current versions against npm registry latest
   - Identify packages not published in >1 year (potentially unmaintained)
@@ -245,9 +245,9 @@ After applying updates, the agent will:
 
 ## File Locations to Audit
 
-### Package Version Files
+### Package Version Configuration
 ```
-.github/agents/app-starter/agents-context/skills/package-json/versions.json
+.github/agents/app-starter/agents-context/skills/package-json/SKILL.md (Version Configuration section, lines ~120-209)
 ```
 
 ### Example Files (All Skills)
@@ -387,7 +387,7 @@ For approved changes, update files and validate.
 ⏭️ Skipped 1 package (major version - requires review)
 
 **Files Modified**:
-- .github/agents/app-starter/agents-context/skills/package-json/versions.json
+- .github/agents/app-starter/agents-context/skills/package-json/SKILL.md
 
 ### API Deprecations
 ✅ Updated SCSS patterns in 2 files
@@ -438,7 +438,8 @@ grep -E '^\[.*\]\(.*\)$' README.md | wc -l
 ```
 
 **No Breaking Changes**:
-- Confirm all required fields still present
+- Confirm all required fields still present in Version Configuration JSON block
+- Validate JSON syntax within SKILL.md
 - Validate against app-config.schema.json
 - Check skill execution order unchanged
 

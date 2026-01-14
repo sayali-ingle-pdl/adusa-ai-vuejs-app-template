@@ -51,6 +51,9 @@ function checkInternalLinks(filePath, content) {
 ```
 
 **External Links**:
+
+> **Note**: Requires Node.js 18+ for native `fetch()` API. For older versions, use a library like `node-fetch` or `axios`.
+
 ```javascript
 async function checkExternalLinks(filePath, content) {
   const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
@@ -60,6 +63,7 @@ async function checkExternalLinks(filePath, content) {
     const [, text, url] = match;
     
     try {
+      // Native fetch (Node 18+)
       const response = await fetch(url, { method: 'HEAD', timeout: 5000 });
       
       if (response.status >= 400) {
@@ -86,6 +90,11 @@ async function checkExternalLinks(filePath, content) {
   
   return findings;
 }
+
+// Alternative for Node.js < 18:
+// import fetch from 'node-fetch';
+// Or use axios:
+// const response = await axios.head(url, { timeout: 5000 });
 ```
 
 ### 2. Package References

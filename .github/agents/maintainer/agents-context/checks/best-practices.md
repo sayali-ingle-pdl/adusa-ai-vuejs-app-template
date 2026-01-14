@@ -25,7 +25,7 @@ const COMPOSITION_PATTERNS = {
   'ref-reactive-usage': {
     check: (code) => {
       // Prefer ref for primitives, reactive for objects
-      const unnecessaryReactive = /reactive\(\s*['"`]\w+['"`]\s*\)/;
+      const unnecessaryReactive = /reactive\(\s*['"]\w+['"]\s*\)/;
       return unnecessaryReactive.test(code);
     },
     message: 'Use ref() for primitives, reactive() for objects',

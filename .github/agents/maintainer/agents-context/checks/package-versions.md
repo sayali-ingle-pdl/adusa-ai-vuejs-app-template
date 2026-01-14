@@ -4,17 +4,20 @@
 Identify outdated package versions in the template by comparing against npm registry.
 
 ## Target Files
-- `.github/agents/app-starter/agents-context/skills/package-json/versions.json`
+- `.github/agents/app-starter/agents-context/skills/package-json/SKILL.md` (Version Configuration section)
+- `.github/agents/app-starter/agents-context/skills/package-json/reference/latest-versions.md` (Template reference)
 
 ## Check Process
 
-### Step 1: Read versions.json
+### Step 1: Read Version Configuration
 ```bash
-cat .github/agents/app-starter/agents-context/skills/package-json/versions.json
+cat .github/agents/app-starter/agents-context/skills/package-json/SKILL.md
 ```
 
+Extract the "Version Configuration (versions.json)" section (lines ~120-209).
+
 ### Step 2: Extract Packages
-Parse JSON and extract all package names and current versions.
+Parse the JSON configuration block and extract all package names and current versions.
 
 **Expected structure**:
 ```json
@@ -167,45 +170,54 @@ interface PackageVersionReport {
 
 When user approves package version updates:
 
-### Step 1: Backup Current versions.json
+### Step 1: Backup Current SKILL.md
 ```bash
-cp versions.json versions.json.backup
+cp .github/agents/app-starter/agents-context/skills/package-json/SKILL.md SKILL.md.backup
 ```
 
 ### Step 2: Update Versions
-For each approved package:
+For each approved package, update the version configuration JSON block in SKILL.md:
 ```javascript
-// Read current versions.json
-const versions = JSON.parse(fs.readFileSync('versions.json'));
+// Read current SKILL.md and extract JSON block
+const skillContent = fs.readFileSync('SKILL.md', 'utf-8');
+const jsonMatch = skillContent.match(/## Version Configuration.*?```json\n([\s\S]*?)\n```/);
 
-// Update version
-versions.core.vue = '^3.6.2';
+// Parse and update JSON
+const versions = JSON.parse(jsonMatch[1]);
+versions.core.vue = 'latest'; // Keep as 'latest' or pin if needed
 
-// Write back
-fs.writeFileSync('versions.json', JSON.stringify(versions, null, 2));
+// Replace in SKILL.md
+const updatedJson = JSON.stringify(versions, null, 2);
+const updatedContent = skillContent.replace(jsonMatch[1], updatedJson);
+fs.writeFileSync('SKILL.md', updatedContent);
 ```
 
-### Step 3: Validate JSON
+### Step 3: Validate JSON Block
 ```bash
-cat versions.json | jq . > /dev/null
+# Extract and validate the JSON block from SKILL.md
+grep -A 100 '## Version Configuration' SKILL.md | grep -A 95 '```json' | tail -n +2 | head -n -1 | jq . > /dev/null
 ```
 If validation fails, restore from backup.
 
-### Step 4: Update Examples (if needed)
-Check if any example files use hardcoded versions (they shouldn't, but verify):
+### Step 4: Update Reference Files (if needed)
+Check if `latest-versions.md` references need updating:
 ```bash
-grep -r "vue@3.5.13" .github/agents/app-starter/agents-context/skills/
+grep -r "\{\{vue_version\}\}" .github/agents/app-starter/agents-context/skills/package-json/reference/
 ```
+
+Note: Reference files use placeholders, not hardcoded versions.
 
 ### Step 5: Report Changes
 ```
 ✅ Updated Package Versions
 
-Modified: versions.json
-  - vue: ^3.5.13 → ^3.6.2
-  - vitest: ^2.1.8 → ^2.2.0
+Modified: .github/agents/app-starter/agents-context/skills/package-json/SKILL.md
+  - vue: latest (now resolves to ^3.6.2)
+  - vitest: latest (now resolves to ^2.2.0)
 
-Validation: ✅ JSON valid
+Note: Versions remain as 'latest' to auto-fetch newest at generation time.
+
+Validation: ✅ JSON block valid
 ```
 
 ## Special Cases
@@ -283,7 +295,7 @@ Action: Review if this package is still needed
 ```
 ⚠️ Cannot parse version for: package-name
 Current value: "invalid-version"
-Action: Manually review versions.json
+Action: Manually review SKILL.md Version Configuration section
 ```
 
 ## Testing
