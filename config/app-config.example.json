@@ -1,0 +1,37 @@
+{
+  "$schema": "./app-config.schema.json",
+  "_comment": "Copy this file to app-config.json and fill in your values before running @app-starter agent",
+  
+  "application_name": "my-app-name",
+  "_application_name_help": "Application name in kebab-case (e.g., 'omni-inventory-manager-web')",
+  
+  "project_scope": "@my-organization",
+  "_project_scope_help": "NPM scope/organization (e.g., '@royalaholddelhaize')",
+  
+  "router_base_path": "/my-app/",
+  "_router_base_path_help": "Base path for Vue Router (e.g., '/omni-inventory-manager/' or '/' for standalone apps)",
+  
+  "api_base_path": "/api/my-service",
+  "_api_base_path_help": "Base API path for backend proxying (e.g., '/api/inventory')",
+  
+  "default_port": 3000,
+  "_default_port_help": "Development server port (e.g., 3000, 8080). Must be unique if running multiple apps.",
+  
+  "application_type": "micro-frontend",
+  "_application_type_help": "Choose 'micro-frontend' (single-spa) or 'standalone' (independent app)",
+  
+  "include_component_library": "yes",
+  "_include_component_library_help": "Include @RoyalAholdDelhaize/pdl-spectrum-component-library-web? ('yes' or 'no'). Requires GitHub token if 'yes'.",
+  
+  "vue_api_pattern": "composition-api",
+  "_vue_api_pattern_help": "Vue API style: 'composition-api' (recommended for Vue 3) or 'options-api' (Vue 2 style)",
+  
+  "state_management": "pinia",
+  "_state_management_help": "State management library: 'pinia' (recommended for Vue 3) or 'vuex' (legacy)",
+  
+  "test_framework": "vitest",
+  "_test_framework_help": "Testing framework: 'vitest' (recommended for Vite) or 'jest' (legacy)",
+  
+  "use_latest_versions": "yes",
+  "_use_latest_versions_help": "Fetch latest package versions from npm? ('yes' for latest, 'no' for pinned versions from versions.json)"
+}

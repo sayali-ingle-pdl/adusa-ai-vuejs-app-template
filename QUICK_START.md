@@ -33,12 +33,29 @@
    rm -rf .git
    ```
 
-4. **Update application parameters** in `docs/requirements/application-parameters.md`:
-   ```markdown
-   - application_name: `your-app-name`
-   - default_port: `8090`
-   (etc.)
+4. **Create your configuration file**:
+   ```bash
+   cp config/app-config.example.json config/app-config.json
    ```
+
+5. **Edit `config/app-config.json`** with your application details:
+   ```json
+   {
+     "application_name": "your-app-name",
+     "project_scope": "@your-organization",
+     "router_base_path": "/your-app/",
+     "api_base_path": "/api/your-service",
+     "default_port": 3000,
+     "application_type": "micro-frontend",
+     "include_component_library": "yes",
+     "vue_api_pattern": "composition-api",
+     "state_management": "pinia",
+     "test_framework": "vitest",
+     "use_latest_versions": "yes"
+   }
+   ```
+   
+   See `config/README.md` for detailed parameter documentation.
 
 ### Step 2: Generate Project Structure
 

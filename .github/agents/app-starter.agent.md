@@ -5,98 +5,34 @@ description: Agent specializing in bootstrapping and configuring Vue 3 Vite appl
 
 # App Starter Agent
 
-This agent is designed to assist in the initial setup and configuration of Vue 3 applications using Vite. It focuses on generating essential project files, setting up build configurations, and ensuring that the application adheres to best practices from the outset. The agent must leave the application in a runnable state after completing its tasks.
+This agent generates Vue 3 Vite applications by reading configuration from `config/app-config.json`, executing skills in sequence to create all project files, and ensuring the application is runnable.
 
-## How This Agent Works
+## Configuration File
 
-When invoked, this agent will:
-1. **Gather Requirements** - Prompt for application configuration (name, type, preferences)
-2. **Follow the Execution Order** - Execute skills in a defined sequence to generate files
-3. **Verify & Test** - Ensure the application builds, lints, and tests pass
+This agent reads configuration from **`config/app-config.json`**.
 
-## Question Flow Preference
+**If `config/app-config.json` is missing:**
+- Inform the user: "Configuration file not found. Please see QUICK_START.md for setup instructions."
+- Direct them to `config/README.md` for detailed parameter documentation
+- Do not proceed until the configuration file exists
 
-**FIRST QUESTION - ALWAYS ASK THIS:**
+## Required Configuration Parameters
 
-**How would you like to provide the application configuration?**
-- Options: `all-at-once` or `one-at-a-time`
-- **`all-at-once`**: Display all questions together in a single list for the user to answer
-- **`one-at-a-time`**: Interactive conversational flow where each question is asked individually after receiving the previous answer
+The agent reads 11 required parameters from `config/app-config.json`:
 
-Based on the user's choice:
-- If **`all-at-once`**: Present questions 1-11 in a formatted list and wait for all answers
-- If **`one-at-a-time`**: Ask questions 1-11 sequentially, waiting for each answer before proceeding
+1. `application_name` - Application name (kebab-case)
+2. `project_scope` - NPM scope/organization  
+3. `router_base_path` - Vue Router base path
+4. `api_base_path` - Backend API proxy path
+5. `default_port` - Development server port
+6. `application_type` - `"micro-frontend"` or `"standalone"`
+7. `include_component_library` - `"yes"` or `"no"`
+8. `vue_api_pattern` - `"composition-api"` or `"options-api"`
+9. `state_management` - `"pinia"` or `"vuex"`
+10. `test_framework` - `"vitest"` or `"jest"`
+11. `use_latest_versions` - `"yes"` or `"no"`
 
-## Required User Input
-
-Ask the user the following questions to gather the necessary parameters:
-
-1. **What is the name of your application?** (in kebab-case, e.g., `omni-inventory-manager-web`)
-   - This will be used as `application_name`
-   - Used in: package.json name, vite.config.ts, README.md, index.html title
-
-2. **What is your NPM scope/organization?** (e.g., `@pdl-fulfillment-omni`)
-   - This will be used as `project_scope`
-   - Used in: package.json name field
-   - Format: `@{scope}/{application_name}`
-
-3. **What base path should the router use?** (e.g., `/omni-inventory-manager`)
-   - This will be used as `router_base_path`
-   - Default format: `/` plus the application name without the `-web` suffix
-   - Used in: Vue Router configuration
-
-4. **What is the base API path for backend service proxying?** (e.g., `/omni-access-manager`, `/api`)
-   - This will be used as `api_base_path`
-   - Used in: Vite dev server proxy configuration, axios base URL
-
-5. **What port should the development server use?** (e.g., `8089`)
-   - This will be used as `default_port`
-   - Used in: vite.config.ts server.port, README.md documentation, package.json scripts
-
-6. **What type of application are you building?** 
-   - Options: `micro-frontend` or `standalone`
-   - **`micro-frontend`**: Your application will be part of a single-spa micro frontend architecture, where multiple applications can be composed together. This uses the SystemJS module format for dynamic loading and integration.
-   - **`standalone`**: Your application will run independently as a traditional single-page application (SPA). This uses ES module format optimized for modern browsers.
-   - This will be used as `application_type`
-   - Internally maps to: `micro-frontend` → `vite_build_format: "system"`, `standalone` → `vite_build_format: "es"`
-   - Used in: vite.config.ts build.lib.formats
-
-7. **Do you want to include a component library?** (default: no)
-    - Options: `yes` or `no`
-    - This will be used as `include_component_library`
-
-8. **What Vue API pattern do you want to use?**
-    - Options: `composition-api` or `options-api`
-    - **`composition-api`**: Modern functional approach that organizes code by logical concerns using reactivity primitives like `ref()` and `reactive()`. Best for large applications requiring better code reusability and scalability through composables.
-    - **`options-api`**: Traditional method that structures code into predefined options like `data`, `methods`, and `computed`. Familiar for developers coming from Vue 2.
-    - This will be used as `vue_api_pattern`
-    - Used in: Component template generation, view file structure
-    - **Default recommendation**: `composition-api` for new Vue 3 projects
-
-9. **What state management library do you want to use?**
-    - Options: `pinia` or `vuex`
-    - **`pinia`**: The recommended state management solution for Vue 3. Lightweight, intuitive API with built-in TypeScript support and great DevTools integration. Works seamlessly with Composition API.
-    - **`vuex`**: The traditional Vue state management library. Still fully supported but considered legacy for new Vue 3 projects. Better suited for Options API or migrating from Vue 2.
-    - This will be used as `state_management`
-    - Used in: Store setup, store file generation, dependencies in package.json
-    - **Default recommendation**: `pinia` for new Vue 3 projects
-
-10. **What testing framework do you want to use?**
-    - Options: `vitest` or `jest`
-    - **`vitest`**: Modern testing framework built for Vite. Native ESM support, faster execution, better integration with Vite tooling, and includes UI mode for interactive testing.
-    - **`jest`**: Mature and widely-used testing framework. Extensive ecosystem and documentation but requires additional configuration for ESM and Vite.
-    - This will be used as `test_framework`
-    - Used in: Test configuration files, test dependencies in package.json, test file templates
-    - **Default recommendation**: `vitest` for new Vue 3 + Vite projects
-
-11. **Do you want to use the latest package versions?**
-    - Options: `yes` or `no`
-    - **`yes`**: Automatically fetch and use the latest stable versions from npm registry for all packages (Vue, Vite, TypeScript, etc.)
-    - **`no`**: Use pinned/tested versions specified in the template configuration
-    - This will be used as `use_latest_versions`
-    - Used in: package.json version resolution
-    - **Default recommendation**: `yes` for new projects, `no` for production stability
-    - **Note**: If `yes`, the generator will run `npm view <package> version` for each package and apply caret ranges
+**For detailed parameter documentation and validation rules**, see `config/README.md` and `config/app-config.schema.json`.
 
 ## Auto-Configured Parameters
 
