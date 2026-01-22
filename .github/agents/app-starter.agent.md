@@ -164,7 +164,11 @@ Before beginning code generation, the agent MUST:
 
 3. **Verify Skill Availability**:
    - Confirm all required skill directories exist in `skills/`
+   - **For each skill to be executed, read SKILL.md file**
+   - **If examples.md exists in the skill directory, read it for template patterns**
    - Review skill templates and examples to understand implementation patterns
+   - Note the exact file paths specified in "Output" sections
+   - Note any placeholders and conditional logic in templates
    - If component library is requested, verify component library skill is available
    - **Check for deprecated patterns in skill examples** (see Technology Standards above)
 
@@ -243,8 +247,8 @@ The skills should be executed in the following order to ensure dependencies are 
 
 ### Phase 6: Deployment
 34. **Docker Skill**
-35. **Nginx Default Configuration Skill**
-36. **Nginx Sites Available Skill**
+35. **Nginx Default Configuration Skill** - Generate `nginx.default.conf` in project root
+36. **Nginx Sites Available Skill** - Generate `nginx-sites-available-default` in project root
 37. **Entrypoint Skill**
 
 ### Phase 7: Verification
@@ -316,6 +320,43 @@ Based on `application_type`:
 
 **WHY**: The testing skill documentation explicitly states:
 > "Test files MUST be generated alongside UI components, views, stores, directives, and utilities."
+
+### MANDATORY: Follow SKILL File Path Specifications
+
+**RULE 4**: ALWAYS read and follow the "Output" section in each SKILL.md file
+- Each SKILL.md has an "Output" section specifying the exact file path
+- Create files EXACTLY at the specified path - do not reorganize or create subdirectories
+- Example: If SKILL says `nginx.default.conf` (in project root), create it there, NOT in `nginx/` subdirectory
+
+**RULE 5**: Before creating ANY file from a skill, verify the path specification
+- Open the SKILL.md file
+- Read the "Output" section
+- Use the EXACT path specified
+- Do not apply "common patterns" or "best practices" that contradict the SKILL specification
+
+**WHY**: SKILL files are the authoritative source for file generation. They specify exact paths because other files (like Dockerfile) reference those exact locations.
+
+### MANDATORY: Use SKILL Templates and Examples
+
+**RULE 6**: ALWAYS read the examples.md file when present in skill directory
+- Each skill MUST have a SKILL.md file
+- Some skills also have an `examples.md` file with exact templates
+- **Check if examples.md exists** before attempting to read it
+- When examples.md exists: Copy the template structure EXACTLY, only replacing placeholders
+- When examples.md does NOT exist: Follow the template/pattern described in SKILL.md
+- Do NOT generate files based on "common patterns" or general knowledge - use SKILL documentation
+
+**RULE 7**: For files with conditional logic, read SKILL.md for placeholder replacement rules
+- Skills use placeholders like `{{COMPONENT_LIBRARY_AUTH}}` for conditional sections
+- SKILL.md specifies what to replace each placeholder with based on configuration
+- Never omit or modify template sections unless explicitly told by the SKILL
+
+**Examples of following templates**:
+- Dockerfile: Use the EXACT base image, port, user, and build steps from examples.md
+- nginx configs: Use the EXACT server blocks and locations from examples.md
+- entrypoint.sh: Use the EXACT script structure from examples.md
+
+**WHY**: Templates contain production-tested configurations, security settings, and integration points. Deviating from templates breaks deployments and integration with other components.
 
 ## Post-Generation Tasks
 
