@@ -72,10 +72,10 @@ STOPSIGNAL SIGTERM
 
 **Content**:
 ```dockerfile
-RUN --mount=type=secret,id=vue_app_access_token \
-export VUE_APP_ACCESS_TOKEN=$(cat /run/secrets/vue_app_access_token) && \
+RUN --mount=type=secret,id=vite_access_token \
+export VITE_ACCESS_TOKEN=$(cat /run/secrets/vite_access_token) && \
 echo "@RoyalAholdDelhaize:registry=https://npm.pkg.github.com" > .npmrc && \
-echo "//npm.pkg.github.com/:_authToken=${VUE_APP_ACCESS_TOKEN}" >> .npmrc
+echo "//npm.pkg.github.com/:_authToken=${VITE_ACCESS_TOKEN}" >> .npmrc
 ```
 
 **Omit when**: `include_component_library: "no"`

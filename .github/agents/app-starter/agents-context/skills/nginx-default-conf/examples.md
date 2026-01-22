@@ -49,19 +49,19 @@ add_header Cache-Control "public";
 ```nginx
 add_header Access-Control-Allow-Origin *;
 ```
-- Allows cross-origin requests (required for single-spa micro-frontends)
-- Enables micro-frontend architecture where apps are loaded from different origins
+- **Always sent by server** regardless of application type
+- Allows cross-origin requests from any origin (wildcard `*`)
 
-**When CORS is included:**
-- Always included in the generated configuration (regardless of `application_type`)
-- **Micro-frontend apps**: Required for single-spa to load the app from launcher
-- **Standalone apps**: Included but not utilized (harmless, no security risk for public assets)
+**When CORS matters:**
+- **Micro-frontend apps**: Required for single-spa launcher to load the app from different origins
+- **Standalone apps**: Headers are sent but typically not needed unless the app is accessed from different origins (e.g., embedded in another domain, accessed via CDN)
 
-**Note:** CORS with wildcard (`*`) is appropriate for:
+**CORS with wildcard (`*`) is appropriate for:**
 - ✅ Micro-frontend architectures (multiple apps, different domains)
 - ✅ Public static assets (JavaScript bundles, CSS, images)
 - ✅ Development environments
-- For production standalone apps requiring CORS restrictions, manually update this configuration after generation
+
+**Note:** For production standalone apps requiring stricter CORS policies (e.g., restricting to specific origins), manually update this configuration after generation to specify allowed origins instead of `*`.
 
 ### Error Handling
 ```nginx
