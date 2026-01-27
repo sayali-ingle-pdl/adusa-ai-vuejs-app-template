@@ -66,91 +66,16 @@ Use the app-starter agent to generate the complete project:
    ```
    @app-starter generate a new Vue 3 application
    ```
-3. The agent will prompt you for required application parameters:
-   - Application name (kebab-case)
-   - NPM scope/organization
-   - Router base path
-   - API base path for proxying
-   - Development server port
-   - Build format (system or es)
 
 The agent will:
-- Collect all required parameters through interactive prompts
+- Read configuration from `config/app-config.json`
 - Execute all skills in the correct order
 - Generate all configuration files, source files, and tests
+- Install dependencies (`npm install`)
+- Create and configure environment files (`.env.local`)
 - Create a runnable application
 
-**Note**: The agent does not cache parameters between sessions. Each time you invoke `@app-starter`, you'll be prompted for the necessary parameters.
-
-### Step 3: Install Dependencies
-
-```bash
-npm install
-```
-
-### Step 4: Configure Environment
-
-```bash
-# Copy example environment file
-cp .env.local.example .env.local
-
-# Edit .env.local with your actual values
-# - VITE_ACCESS_MANAGEMENT_BASE_URL
-# - VITE_LAUNCHER_APP_URL
-# - VITE_DATADOG_APPLICATION_ID
-# - VITE_DATADOG_CLIENT_TOKEN
-```
-
-### Step 5: Run the Application
-
-```bash
-# Development mode (integrated with single-spa)
-npm run serve
-
-# Standalone mode (without launcher)
-npm run serve:standalone
-
-# Production build
-npm run build
-```
-
-### Step 6: Verify Setup
-
-After generation is complete, verify the application was created correctly:
-
-```bash
-# 1. Check TypeScript compilation (should have no errors)
-npx tsc --noEmit
-
-# 2. Run linting (should pass with no errors)
-npm run lint
-
-# 3. Run tests (should all pass)
-npm run test:unit
-
-# 4. Check test coverage (should meet thresholds: >80% for services/stores, >70% for components)
-npm run test:unit -- --coverage
-
-# 5. Start dev server and verify it runs without errors
-npm run serve
-# Open browser to http://localhost:{your_port} and verify app loads
-
-# 6. Verify build succeeds
-npm run build
-# Check that dist/ directory is created with output files
-
-# 7. Verify all required files exist
-ls -la src/main.ts src/App.vue src/router/index.ts src/store/index.ts vite.config.ts
-```
-
-**Expected Results:**
-- ✅ No TypeScript errors
-- ✅ All linting rules pass
-- ✅ All tests pass with adequate coverage
-- ✅ Dev server starts on configured port
-- ✅ Application renders in browser
-- ✅ Production build completes successfully
-- ✅ All configuration files are present
+**Note**: If you need to regenerate the project with different parameters, simply update `config/app-config.json` and run the agent again.
 
 ## Defining Your Application
 
@@ -208,8 +133,14 @@ Use GitHub Copilot with the implementation plan to generate:
 2. Create service in `src/services/yourEntityService.ts`
 3. Create tests in `src/services/yourEntityService.spec.ts`
 
-### Add a Vuex Module
+### Add a Store Module
 
+**For Pinia:**
+1. Create store in `src/stores/yourEntityStore.ts`
+2. Use composition-style setup store (recommended)
+3. Create tests in `src/stores/yourEntityStore.spec.ts`
+
+**For Vuex:**
 1. Create module in `src/store/modules/yourModule.ts`
 2. Register in `src/store/index.ts`
 3. Create tests in `src/store/modules/yourModule.spec.ts`
@@ -257,18 +188,6 @@ npm run test:unit
 npm run test:unit:watch
 ```
 
-## Docker Deployment
-
-```bash
-# Build Docker image
-docker build -t your-app-name .
-
-# Run container
-docker run -p 80:80 your-app-name
-
-# Health check
-curl http://localhost/health
-```
 
 ## Troubleshooting
 
@@ -309,7 +228,7 @@ npx tsc --noEmit
 - **Use TypeScript** for type safety
 - **Follow naming conventions** from copilot-instructions.md
 - **Keep components small** and focused
-- **Use Vuex** for shared state
+- **Use Vuex or Pinia** for shared state
 - **Use theme variables** for styling
 - **Enable scoped styles** in components
 - **Lazy load routes** for code splitting

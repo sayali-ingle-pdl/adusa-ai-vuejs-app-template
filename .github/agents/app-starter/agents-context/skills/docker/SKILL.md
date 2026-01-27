@@ -1,25 +1,46 @@
 ---
 name: docker
-description: Generates Dockerfile for application containerization and deployment. Defines multi-stage build process with Node.js build stage and nginx serving stage for production deployment.
+description: Generates Dockerfile in project root for application containerization and deployment with conditional component library and Datadog integration.
 ---
 
 # Docker Skill
 
 ## Purpose
-Generate Docker-related files for containerization and deployment.
+Generate Dockerfile in the project root directory for containerization and deployment.
 
 ## Output
-Create the file: `Dockerfile`
+Create the file: `Dockerfile` (in project root)
 
-## Example File
-See: `examples.md` in this directory for complete example.
+## Template
+See: `examples.md` for the exact configuration template with placeholders.
+
+## Conditional Logic
+
+### Component Library Authentication
+**Check parameter**: `include_component_library`
+
+**If "yes"**: Replace `{{COMPONENT_LIBRARY_AUTH}}` with:
+```dockerfile
+RUN --mount=type=secret,id=vite_access_token \
+export VITE_ACCESS_TOKEN=$(cat /run/secrets/vite_access_token) && \
+echo "@RoyalAholdDelhaize:registry=https://npm.pkg.github.com" > .npmrc && \
+echo "//npm.pkg.github.com/:_authToken=${VITE_ACCESS_TOKEN}" >> .npmrc
+```
+
+**If "no"**: Replace `{{COMPONENT_LIBRARY_AUTH}}` with empty string (remove lines)
+
+**Note**: `RUN npm install` is always present after the placeholder, regardless of component library choice.
+
+## Key Features
+- **Base image**: Ubuntu Node.js 22 LTS from Azure Container Registry
+- **Quality checks**: Runs lint, stylelint, and unit tests during build
+- **Nginx**: Installs and configures nginx for serving static files
+- **Security**: Runs as non-root user (nodejs_svc)
+- **Port**: Exposes 8080
+- **Optimization**: Cleans apt cache to reduce image size
 
 ## Notes
-- Uses Ubuntu Node.js base image with version that matches the local node version
-- Runs quality checks during build: linting, style checking, and unit tests
-- Installs and configures nginx for serving the built application
-- Cleans up apt cache to reduce image size
-- Uses entrypoint script for runtime configuration
-- Integrates with Datadog for source code tracking, **if datadog has been installed**
-- Securely handles GitHub Packages authentication using Docker secrets, **if component library has been installed**
-- Removes .npmrc after installation for security, **if component library has been installed**
+- All configuration values are production-ready defaults
+- Build fails if quality checks don't pass
+- Component library authentication uses Docker secrets for security
+- References nginx configuration files created by nginx skills
