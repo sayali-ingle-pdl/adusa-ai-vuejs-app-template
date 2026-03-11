@@ -254,7 +254,7 @@ interface TestConfig {
   setupFilesAfterEnv: string[]
   testMatch: string[]
   transform: Record<string, string>
-  moduleNameMapping: Record<string, string>
+  moduleNameMapper: Record<string, string>
   collectCoverageFrom: string[]
   coverageThreshold: CoverageThreshold
   globals: Record<string, any>
