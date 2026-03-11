@@ -168,10 +168,13 @@ interface PiniaTestConfig {
   stubActions: boolean
 }
 
+// Runner-agnostic mock function type for store actions
+type PiniaMockFn = (...args: any[]) => any
+
 interface PiniaStoreMock {
   name: string
   state: Record<string, any>
-  actions: Record<string, jest.Mock>
+  actions: Record<string, PiniaMockFn>
   getters: Record<string, any>
 }
 ```
