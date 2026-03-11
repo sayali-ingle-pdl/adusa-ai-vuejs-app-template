@@ -94,28 +94,39 @@ An intelligent coding agent specialized in creating Vue 3 components, views, and
 
 ## Skills Architecture
 
-The agent utilizes modular skills for focused tasks:
+The agent utilizes modular skills for focused tasks. Skills are organized under:
+
+- `agents-context/skills/` — root directory for all skills for this agent
+
+Each skill lives in its own subdirectory and typically contains:
+
+- `SKILL.md` — primary skill definition and behavior
+- `FORMS.md` — input forms and parameter schemas (if applicable)
+- `reference.md` — additional reference material for the skill
+- `examples.md` — usage examples and templates
+
+Example skill groups:
 
 ### Analysis Skills
-- `project-analyzer.skill.md` - Analyze existing project structure
-- `figma-parser.skill.md` - Extract specifications from Figma
-- `design-token-extractor.skill.md` - Parse and generate design tokens
+- `agents-context/skills/project-analyzer/` — analyze existing project structure and conventions
+- `agents-context/skills/figma-parser/` — extract specifications from Figma designs
+- `agents-context/skills/design-token-extractor/` — parse and generate design tokens
 
 ### Generation Skills
-- `component-generator.skill.md` - Create Vue components
-- `view-generator.skill.md` - Create page-level views
-- `layout-generator.skill.md` - Create layout components
-- `style-generator.skill.md` - Generate SCSS/CSS styles
+- `agents-context/skills/component-generator/` — create Vue components from analyzed designs
+- `agents-context/skills/view-generator/` — create page-level views and route-aligned layouts
+- `agents-context/skills/layout-generator/` — create layout wrapper components and grids
+- `agents-context/skills/style-generator/` — generate SCSS/CSS styles and design token mappings
 
 ### Integration Skills
-- `router-integrator.skill.md` - Update routing configuration
-- `store-integrator.skill.md` - Integrate state management
-- `test-generator.skill.md` - Generate comprehensive tests
+- `agents-context/skills/router-integrator/` — update and extend routing configuration
+- `agents-context/skills/store-integrator/` — integrate or extend state management
+- `agents-context/skills/test-generator/` — generate comprehensive tests
 
 ### Quality Assurance Skills
-- `accessibility-validator.skill.md` - Ensure ARIA compliance
-- `responsive-validator.skill.md` - Validate responsive behavior
-- `code-quality-checker.skill.md` - Ensure code standards
+- `agents-context/skills/accessibility-validator/` — ensure ARIA compliance and semantic structure
+- `agents-context/skills/responsive-validator/` — validate responsive behavior across breakpoints
+- `agents-context/skills/code-quality-checker/` — enforce code quality and style standards
 
 ## Input Parameters
 
