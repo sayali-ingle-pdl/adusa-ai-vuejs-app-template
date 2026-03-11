@@ -299,7 +299,7 @@
           "type": "string",
           "pattern": "^fig[a-zA-Z0-9_-]+$",
           "description": "Figma Personal Access Token",
-          "examples": ["figma_12345abcdef"]
+          "examples": ["figd_12345abcdef"]
         },
         "teamId": {
           "type": "string",
