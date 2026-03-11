@@ -7,7 +7,7 @@
 // Generated accessibility test for Button component
 import { mount } from '@vue/test-utils'
 import { axe, toHaveNoViolations } from 'jest-axe'
-import { userEvent } from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import BaseButton from '@/components/BaseButton.vue'
 
 expect.extend(toHaveNoViolations)
