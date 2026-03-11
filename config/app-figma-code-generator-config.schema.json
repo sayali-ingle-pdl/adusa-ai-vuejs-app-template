@@ -351,5 +351,11 @@
       }
     }
   },
+  "patternProperties": {
+    "^_.*$": {
+      "description": "Underscore-prefixed fields are reserved for inline comments or help text",
+      "type": "string"
+    }
+  },
   "additionalProperties": false
 }
