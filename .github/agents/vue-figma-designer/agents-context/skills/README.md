@@ -114,7 +114,7 @@ code-quality-checker/
 - **design-token-extractor** - SKILL.md + FORMS.md completed
 - **store-integrator** - SKILL.md + FORMS.md completed
 
-### ⏳ Directory Created, Files Pending (7 skills)
+### 📋 Planned (Not Yet Created)
 - project-analyzer
 - view-generator
 - layout-generator  
