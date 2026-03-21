@@ -1,3 +1,7 @@
+---
+name: vue-figma-designer
+description: Agent specializing in creating Vue 3 components, views, and layouts from Figma designs.
+---
 # Vue Figma Designer Agent
 
 ## Agent Overview
@@ -42,10 +46,15 @@ An intelligent coding agent specialized in creating Vue 3 components, views, and
 
 ## Execution Flow
 
+## Execution Flow
+
 ### Phase 1: Project Discovery
 1. **Codebase Analysis**
-   - Scan project structure and identify patterns
-   - Analyze existing components for conventions
+   - **Scan project structure** and identify patterns
+   - **Analyze existing components** for conventions
+   - **Detect component library** (Vuetify, Quasar, PrimeVue, Element Plus, Ant Design Vue)
+   - **Map available library components** and their APIs
+   - **Catalog custom components** and their patterns
    - Map dependencies and available tools
    - Identify testing frameworks and patterns
 
@@ -57,19 +66,25 @@ An intelligent coding agent specialized in creating Vue 3 components, views, and
 
 ### Phase 2: Figma Analysis
 1. **Design Inspection**
-   - Extract component specifications from Figma
+   - Extract component specifications from Figma (layer by layer)
    - Identify layout patterns and responsive behavior
    - Parse design tokens (colors, fonts, spacing)
    - Extract assets and prepare for integration
 
 2. **Component Planning**
-   - Map Figma components to Vue component structure
-   - Plan component hierarchy and relationships
+   - **Match Figma components to available library components**
+   - **Match Figma components to existing custom components**
+   - Map Figma component hierarchy to Vue component structure
+   - Plan component relationships and composition
    - Identify reusable patterns and atomic components
    - Plan state management requirements
+   - **Determine generation strategy** (reuse, extend, compose, generate)
 
 ### Phase 3: Implementation
 1. **Component Creation**
+   - **Reuse library components** when `useComponentLibrary` is configured
+   - **Leverage existing custom components** when matches found
+   - **Generate new components** following project conventions
    - Generate Vue SFC files following project conventions
    - Implement responsive layouts with CSS Grid/Flexbox
    - Add proper TypeScript support and interfaces
@@ -130,12 +145,27 @@ Example skill groups:
 
 ## Input Parameters
 
+The agent reads its configuration from `config/app-figma-code-generator-config.json` or accepts direct parameters.
+
+### Configuration File (Recommended)
+```json
+{
+  "figmaUrls": ["https://www.figma.com/file/..."],
+  "figmaToken": "figd_...",
+  "name": "ComponentName",
+  "type": "component",
+  "useComponentLibrary": "none"
+}
+```
+
 ### Required Parameters
-- `figmaUrl`: Figma design URL with proper access
-- `targetType`: 'component' | 'view' | 'layout' | 'design-tokens'
-- `componentName`: Name of the component/view to create
+- `figmaUrls`: Array of Figma design URLs (hierarchical processing: first URL is primary/high-level, subsequent URLs are variants/rows)
+- `figmaToken`: Figma Personal Access Token for API access
+- `name`: Name of the component/view to create (PascalCase)
+- `type`: 'component' | 'view'
 
 ### Optional Parameters
+- `useComponentLibrary`: Component library to use ('none' | 'vuetify' | 'quasar' | 'primevue' | 'element-plus' | 'ant-design-vue')
 - `outputPath`: Custom output directory (defaults to project conventions)
 - `includeTests`: Boolean to generate test files (default: true)
 - `includeStories`: Boolean to generate Storybook stories
@@ -144,6 +174,8 @@ Example skill groups:
 
 ### Context Parameters
 - `existingComponents`: List of available components to reuse
+- `componentLibrary`: Detected component library (Vuetify, Quasar, etc.)
+- `libraryComponents`: Catalog of available library components
 - `designSystem`: Current design token structure
 - `projectConventions`: Naming and structure patterns
 
@@ -259,15 +291,30 @@ src/theme/
 
 ## Usage Examples
 
-### Generate a Component
+### Generate a Component from Config File
+```bash
+# Using configuration file
+@vue-figma-designer generate from config/app-figma-code-generator-config.json
 ```
+
+### Generate a Component with Direct Parameters
+```bash
 @vue-figma-designer create component from https://figma.com/design/abc123
 Name: ProductCard
 Features: responsive, accessible, with-tests
 ```
 
-### Generate a View
+### Generate a View with Multiple Figma URLs
+```bash
+@vue-figma-designer create view from config
+# Using config file with multiple URLs:
+# - First URL: Desktop design (primary)
+# - Second URL: Mobile variant (row)
+# - Third URL: Tablet variant (row)
 ```
+
+### Generate a View with Direct Input
+```bash
 @vue-figma-designer create view from https://figma.com/design/def456
 Name: ProductListingView
 Layout: LayoutDefault

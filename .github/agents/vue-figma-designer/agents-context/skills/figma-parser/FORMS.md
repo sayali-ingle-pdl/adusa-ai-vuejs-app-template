@@ -1,18 +1,50 @@
 # Figma Parser Forms
 
-## Figma URL Input Form
+# Figma Parser Forms
+
+## Configuration File Input (Recommended)
+
+The Figma parser reads configuration from `config/app-figma-code-generator-config.json`:
+
+```json
+{
+  "$schema": "./app-figma-code-generator-config.schema.json",
+  "figmaUrls": [
+    "https://www.figma.com/file/ABC123/Component-Desktop?node-id=1:2",
+    "https://www.figma.com/file/ABC123/Component-Mobile?node-id=2:5"
+  ],
+  "figmaToken": "figd_12345abcdef67890ghijklmnop",
+  "name": "HomePage",
+  "type": "component",
+  "useComponentLibrary": "none"
+}
+```
+
+### Configuration Schema
+See `config/app-figma-code-generator-config.schema.json` for the complete JSON Schema definition.
+
+## Direct Input Form (Alternative)
 
 ### Required Information
-- **Figma File URL**: Complete Figma file URL (e.g., https://www.figma.com/file/abc123/MyDesign)
+- **Figma URLs**: Array of Figma file URLs (hierarchical: primary + variants)
 - **Figma Access Token**: Personal access token for API authentication
-- **Page Selection**: Specific pages to parse (optional, defaults to all)
-- **Component Filter**: Filter by component names or patterns (optional)
+- **Component Name**: Name for the generated component/view (PascalCase)
+- **Type**: 'component' or 'view'
 
 ### Form Fields
 
 #### Basic Configuration
 ```yaml
-figmaUrl:
+figmaUrls:
+  type: array
+  items:
+    type: url
+  required: true
+  validation: "Must be valid Figma file URLs"
+  placeholder: ["https://www.figma.com/file/..."]
+  description: "First URL is primary/high-level, subsequent URLs are variants/rows"
+
+accessToken:
   type: url
   required: true
   validation: "Must be a valid Figma file URL"

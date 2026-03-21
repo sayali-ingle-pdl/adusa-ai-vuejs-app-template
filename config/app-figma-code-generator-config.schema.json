@@ -1,360 +1,74 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "App Figma Code Generator Configuration",
-  "description": "Configuration schema for generating Vue applications from Figma designs",
+  "description": "Configuration schema for generating multiple Vue components/views from Figma designs",
   "type": "object",
   "required": [
-    "projectName",
-    "figmaDesigns",
-    "outputDirectory"
+    "figmaToken",
+    "components"
   ],
   "properties": {
-    "projectName": {
+    "figmaToken": {
       "type": "string",
-      "pattern": "^[a-z][a-z0-9-]*[a-z0-9]$",
-      "minLength": 2,
-      "maxLength": 50,
-      "description": "Project name used as reference for generated views (kebab-case)",
-      "examples": ["my-vue-app", "dashboard-admin", "e-commerce-platform"]
+      "pattern": "^fig[a-zA-Z0-9_-]+$",
+      "description": "Figma Personal Access Token for API access",
+      "examples": ["figd_12345abcdef67890ghijklmnop"]
     },
-    "figmaDesigns": {
-      "type": "object",
-      "description": "Figma design links organized by view type",
-      "required": ["views"],
-      "properties": {
-        "views": {
-          "type": "array",
-          "minItems": 1,
-          "description": "List of Figma designs for application views",
-          "items": {
-            "type": "object",
-            "required": ["name", "figmaUrl", "viewType"],
-            "properties": {
-              "name": {
-                "type": "string",
-                "pattern": "^[A-Z][a-zA-Z0-9]*$",
-                "description": "View component name in PascalCase",
-                "examples": ["HomePage", "UserProfile", "ProductCatalog"]
-              },
-              "figmaUrl": {
-                "type": "string",
-                "pattern": "^https://www\\.figma\\.com/(file|design)/[a-zA-Z0-9]+(/.*)?",
-                "description": "Full Figma design URL",
-                "examples": [
-                  "https://www.figma.com/file/ABC123/HomePage-Design",
-                  "https://www.figma.com/design/XYZ789/UserProfile?node-id=1%3A2"
-                ]
-              },
-              "viewType": {
-                "type": "string",
-                "enum": ["page", "modal", "sidebar", "component"],
-                "description": "Type of view being generated"
-              },
-              "route": {
-                "type": "string",
-                "pattern": "^/.*",
-                "description": "Vue Router path for this view",
-                "examples": ["/", "/profile", "/products/:id"]
-              },
-              "description": {
-                "type": "string",
-                "maxLength": 200,
-                "description": "Brief description of the view functionality"
-              },
-              "priority": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 10,
-                "default": 5,
-                "description": "Generation priority (1=highest, 10=lowest)"
-              },
-              "responsive": {
-                "type": "boolean",
-                "default": true,
-                "description": "Generate responsive design variants"
-              },
-              "authentication": {
-                "type": "object",
-                "description": "Authentication requirements for this view",
-                "properties": {
-                  "required": {
-                    "type": "boolean",
-                    "default": false
-                  },
-                  "roles": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Required user roles"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "components": {
-          "type": "array",
-          "description": "Shared component designs",
-          "items": {
-            "type": "object",
-            "required": ["name", "figmaUrl"],
-            "properties": {
-              "name": {
-                "type": "string",
-                "pattern": "^[A-Z][a-zA-Z0-9]*$",
-                "description": "Component name in PascalCase"
-              },
-              "figmaUrl": {
-                "type": "string",
-                "pattern": "^https://www\\.figma\\.com/(file|design)/[a-zA-Z0-9]+(/.*)?",
-                "description": "Figma component design URL"
-              },
-              "category": {
-                "type": "string",
-                "enum": ["form", "navigation", "layout", "data-display", "feedback", "input"],
-                "description": "Component category"
-              },
-              "reusable": {
-                "type": "boolean",
-                "default": true,
-                "description": "Whether component should be in shared components"
-              }
-            }
-          }
-        },
-        "designSystem": {
-          "type": "object",
-          "description": "Design system and tokens",
-          "properties": {
-            "figmaUrl": {
+    "useComponentLibrary": {
+      "type": "string",
+      "enum": ["none", "vuetify", "quasar", "primevue", "element-plus", "ant-design-vue"],
+      "default": "none",
+      "description": "Global component library to use for UI elements (can be overridden per component)"
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Array of component/view definitions to generate from Figma designs",
+      "items": {
+        "type": "object",
+        "required": [
+          "figmaUrls",
+          "name",
+          "type"
+        ],
+        "properties": {
+          "figmaUrls": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
               "type": "string",
               "pattern": "^https://www\\.figma\\.com/(file|design)/[a-zA-Z0-9]+(/.*)?",
-              "description": "Figma design system URL"
+              "description": "Figma design URL"
             },
-            "extractTokens": {
-              "type": "boolean",
-              "default": true,
-              "description": "Extract design tokens from Figma"
-            }
-          }
-        }
-      }
-    },
-    "outputDirectory": {
-      "type": "string",
-      "description": "Base directory for generated code",
-      "default": "./src",
-      "examples": ["./src", "./app", "./frontend/src"]
-    },
-    "configuration": {
-      "type": "object",
-      "description": "Generation configuration options",
-      "properties": {
-        "framework": {
-          "type": "object",
-          "description": "Vue framework configuration",
-          "properties": {
-            "version": {
-              "type": "string",
-              "enum": ["3"],
-              "default": "3",
-              "description": "Vue version"
-            },
-            "api": {
-              "type": "string",
-              "enum": ["options", "composition"],
-              "default": "options",
-              "description": "Vue API style"
-            },
-            "typescript": {
-              "type": "boolean",
-              "default": true,
-              "description": "Use TypeScript"
-            }
-          }
-        },
-        "styling": {
-          "type": "object",
-          "description": "Styling configuration",
-          "properties": {
-            "preprocessor": {
-              "type": "string",
-              "enum": ["scss", "sass", "less", "stylus", "css"],
-              "default": "scss",
-              "description": "CSS preprocessor"
-            },
-            "framework": {
-              "type": "string",
-              "enum": ["none", "bootstrap", "tailwind", "vuetify", "quasar"],
-              "default": "none",
-              "description": "CSS framework"
-            },
-            "designTokens": {
-              "type": "boolean",
-              "default": true,
-              "description": "Generate design token files"
-            },
-            "responsiveBreakpoints": {
-              "type": "object",
-              "properties": {
-                "mobile": { "type": "string", "default": "768px" },
-                "tablet": { "type": "string", "default": "1024px" },
-                "desktop": { "type": "string", "default": "1280px" }
-              }
-            }
-          }
-        },
-        "stateManagement": {
-          "type": "object",
-          "description": "State management configuration",
-          "properties": {
-            "library": {
-              "type": "string",
-              "enum": ["none", "pinia", "vuex"],
-              "default": "pinia",
-              "description": "State management library"
-            },
-            "generateStores": {
-              "type": "boolean",
-              "default": true,
-              "description": "Generate stores for view data"
-            }
-          }
-        },
-        "routing": {
-          "type": "object",
-          "description": "Routing configuration",
-          "properties": {
-            "library": {
-              "type": "string",
-              "enum": ["vue-router"],
-              "default": "vue-router",
-              "description": "Routing library"
-            },
-            "mode": {
-              "type": "string",
-              "enum": ["history", "hash"],
-              "default": "history",
-              "description": "Router mode"
-            },
-            "generateRoutes": {
-              "type": "boolean",
-              "default": true,
-              "description": "Auto-generate routes from views"
-            }
-          }
-        },
-        "testing": {
-          "type": "object",
-          "description": "Testing configuration",
-          "properties": {
-            "generateTests": {
-              "type": "boolean",
-              "default": true,
-              "description": "Generate test files"
-            },
-            "framework": {
-              "type": "string",
-              "enum": ["vitest", "jest"],
-              "default": "vitest",
-              "description": "Testing framework"
-            },
-            "types": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": ["unit", "integration", "accessibility", "visual"]
-              },
-              "default": ["unit", "accessibility"],
-              "description": "Types of tests to generate"
-            }
-          }
-        },
-        "accessibility": {
-          "type": "object",
-          "description": "Accessibility configuration",
-          "properties": {
-            "wcagLevel": {
-              "type": "string",
-              "enum": ["A", "AA", "AAA"],
-              "default": "AA",
-              "description": "WCAG compliance level"
-            },
-            "generateA11yTests": {
-              "type": "boolean",
-              "default": true,
-              "description": "Generate accessibility tests"
-            }
-          }
-        }
-      }
-    },
-    "figmaAccess": {
-      "type": "object",
-      "description": "Figma API access configuration",
-      "required": ["personalAccessToken"],
-      "properties": {
-        "personalAccessToken": {
-          "type": "string",
-          "pattern": "^fig[a-zA-Z0-9_-]+$",
-          "description": "Figma Personal Access Token",
-          "examples": ["figd_12345abcdef"]
-        },
-        "teamId": {
-          "type": "string",
-          "description": "Figma team ID (optional)"
-        }
-      }
-    },
-    "metadata": {
-      "type": "object",
-      "description": "Project metadata",
-      "properties": {
-        "version": {
-          "type": "string",
-          "pattern": "^\\d+\\.\\d+\\.\\d+$",
-          "default": "1.0.0",
-          "description": "Project version"
-        },
-        "author": {
-          "type": "string",
-          "description": "Project author"
-        },
-        "description": {
-          "type": "string",
-          "maxLength": 500,
-          "description": "Project description"
-        },
-        "license": {
-          "type": "string",
-          "default": "MIT",
-          "description": "Project license"
-        },
-        "repository": {
-          "type": "string",
-          "format": "uri",
-          "description": "Git repository URL"
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
+            "description": "Array of Figma design URLs processed hierarchically. First URL is the primary/high-level file providing base component structure. Subsequent URLs are processed as rows/variants, with each component in those rows being extracted individually. This allows capturing desktop/mobile variants, component states, responsive breakpoints, and theme variations.",
+            "examples": [
+              ["https://www.figma.com/file/ABC123/HomePage-Design?node-id=1%3A2"],
+              [
+                "https://www.figma.com/file/ABC123/Component-Desktop?node-id=1%3A2",
+                "https://www.figma.com/file/ABC123/Component-Mobile?node-id=2%3A5",
+                "https://www.figma.com/file/ABC123/Component-Tablet?node-id=3%3A8"
+              ]
+            ]
           },
-          "description": "Project tags"
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Z][a-zA-Z0-9]*$",
+            "description": "Component or view name in PascalCase",
+            "examples": ["HomePage", "UserProfile", "ProductCard", "SearchBar"]
+          },
+          "type": {
+            "type": "string",
+            "enum": ["component", "view"],
+            "description": "Type of code to generate: 'component' for reusable components, 'view' for page-level views"
+          },
+          "useComponentLibrary": {
+            "type": "string",
+            "enum": ["none", "vuetify", "quasar", "primevue", "element-plus", "ant-design-vue"],
+            "description": "Component library to use for this specific component (overrides global setting)"
+          }
         },
-        "generatedAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Configuration creation timestamp"
-        }
+        "additionalProperties": false
       }
-    }
-  },
-  "patternProperties": {
-    "^_.*$": {
-      "description": "Underscore-prefixed fields are reserved for inline comments or help text",
-      "type": "string"
     }
   },
   "additionalProperties": false
