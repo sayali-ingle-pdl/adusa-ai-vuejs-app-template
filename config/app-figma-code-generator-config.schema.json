@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "App Figma Code Generator Configuration",
+  "description": "Configuration schema for generating multiple Vue components/views from Figma designs",
+  "type": "object",
+  "required": [
+    "figmaToken",
+    "components"
+  ],
+  "properties": {
+    "figmaToken": {
+      "type": "string",
+      "pattern": "^fig[a-zA-Z0-9_-]+$",
+      "description": "Figma Personal Access Token for API access",
+      "examples": ["figd_12345abcdef67890ghijklmnop"]
+    },
+    "useComponentLibrary": {
+      "type": "string",
+      "enum": ["none", "vuetify", "quasar", "primevue", "element-plus", "ant-design-vue"],
+      "default": "none",
+      "description": "Global component library to use for UI elements (can be overridden per component)"
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Array of component/view definitions to generate from Figma designs",
+      "items": {
+        "type": "object",
+        "required": [
+          "figmaUrls",
+          "name",
+          "type"
+        ],
+        "properties": {
+          "figmaUrls": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "pattern": "^https://www\\.figma\\.com/(file|design)/[a-zA-Z0-9]+(/.*)?",
+              "description": "Figma design URL"
+            },
+            "description": "Array of Figma design URLs processed hierarchically. First URL is the primary/high-level file providing base component structure. Subsequent URLs are processed as rows/variants, with each component in those rows being extracted individually. This allows capturing desktop/mobile variants, component states, responsive breakpoints, and theme variations.",
+            "examples": [
+              ["https://www.figma.com/file/ABC123/HomePage-Design?node-id=1%3A2"],
+              [
+                "https://www.figma.com/file/ABC123/Component-Desktop?node-id=1%3A2",
+                "https://www.figma.com/file/ABC123/Component-Mobile?node-id=2%3A5",
+                "https://www.figma.com/file/ABC123/Component-Tablet?node-id=3%3A8"
+              ]
+            ]
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Z][a-zA-Z0-9]*$",
+            "description": "Component or view name in PascalCase",
+            "examples": ["HomePage", "UserProfile", "ProductCard", "SearchBar"]
+          },
+          "type": {
+            "type": "string",
+            "enum": ["component", "view"],
+            "description": "Type of code to generate: 'component' for reusable components, 'view' for page-level views"
+          },
+          "useComponentLibrary": {
+            "type": "string",
+            "enum": ["none", "vuetify", "quasar", "primevue", "element-plus", "ant-design-vue"],
+            "description": "Component library to use for this specific component (overrides global setting)"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

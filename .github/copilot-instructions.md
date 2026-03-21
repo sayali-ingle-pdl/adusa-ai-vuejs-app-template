@@ -18,6 +18,23 @@ Agent specializing in bootstrapping and configuring Vue 3 Vite applications. Use
 
 **Skills Directory**: `agents/app-starter/agents-context/skills/` contains all implementation details for generating specific files and configurations.
 
+### @vue-figma-designer
+Agent specializing in creating Vue 3 components, views, and layouts from Figma designs while analyzing existing project structure and conventions.
+
+**Usage**: `@vue-figma-designer create component from <figma-url>`
+
+**Complete Instructions**: See `agents/vue-figma-designer.agent.md` for:
+- Project analysis and Figma design processing
+- Component and view generation
+- Design system integration
+- Quality standards and accessibility
+
+**Skills Directory**: `agents/vue-figma-designer/agents-context/skills/` contains all implementation skills for:
+- Project analysis (project-analyzer, figma-parser, design-token-extractor)
+- Code generation (component-generator, view-generator, layout-generator, style-generator)
+- Integration (router-integrator, store-integrator, test-generator)
+- Quality assurance (accessibility-validator, responsive-validator, code-quality-checker)
+
 ## File Naming Conventions
 
 - **Vue Components**: PascalCase (e.g., `InventoryList.vue`, `SearchBar.vue`)

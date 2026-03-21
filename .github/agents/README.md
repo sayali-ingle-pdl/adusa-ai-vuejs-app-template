@@ -1,3 +1,8 @@
+---
+name: agents-readme
+description: Documentation for GitHub Copilot agents directory structure and conventions.
+---
+
 # GitHub Copilot Agents
 
 This directory contains all GitHub Copilot agents for the Vue 3 Vite application template project.
